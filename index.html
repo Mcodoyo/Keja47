@@ -12,7 +12,7 @@ body{background:#f4f6f8}
 .password-wrapper{position:relative;width:100%;margin-bottom:15px}
 .password-wrapper input{width:100%;padding:14px 45px 14px 14px;border:2px solid #ddd;border-radius:10px;font-size:16px;text-transform:uppercase}
 .eye-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:20px;cursor:pointer;padding:5px 8px}
-.login-box button.login-main{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
+.login-main{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
 .app{display:none;padding:15px;max-width:900px;margin:auto}
 .header{background:white;padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
@@ -20,7 +20,7 @@ body{background:#f4f6f8}
 .controls{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
 .controls input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px}
 .btn{flex:1;padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.btn-add{background:#198754;color:white} .btn-pdf{background:#6c757d;color:white} .btn-admin{background:#6610f2;color:white}
+.btn-add{background:#198754;color:white}.btn-pdf{background:#6c757d;color:white}.btn-admin{background:#6610f2;color:white}
 .tenant-card{background:white;padding:12px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:5px solid red}
 .tenant-card.paid{border-left-color:green}
 .admin-panel{display:none;background:#fff3cd;border:2px solid #ffc107;padding:15px;border-radius:12px;margin-bottom:15px}
@@ -31,15 +31,35 @@ body{background:#f4f6f8}
 <div id="loginScreen" class="login-screen">
   <div class="login-box">
     <h1>KejaChapChap</h1>
-    <p>Manage Rent Chap Chap - All 47 Counties</p>
+    <p style="color:#666;font-size:14px;margin-bottom:20px">Manage Rent Chap Chap - All 47 Counties</p>
     <div class="password-wrapper">
       <input type="password" id="passwordInput" placeholder="ENTER PASSWORD">
       <button type="button" class="eye-btn" onclick="togglePassword()" id="eyeBtn">👁</button>
     </div>
     <button class="login-main" onclick="login()">INGIA / LOGIN</button>
     <div style="margin-top:15px;font-size:12px;color:#888">No password? Lipa KSH 300 to<br><b>M-Pesa 0718255742 - Victor</b><br>Password valid 30 days</div>
+    <button onclick="localStorage.clear(); alert('✅ Cleared! Now login with NALIAKA4050'); location.reload();" style="margin-top:15px;padding:8px;background:#ffc107;border:none;border-radius:6px;font-size:12px;width:100%;cursor:pointer">⚠️ Login stuck? Tap to CLEAR & RESET</button>
   </div>
 </div>
+
 <div id="appScreen" class="app">
   <div class="header">
-    <div><h2>KejaChapChap
+    <div><h2>KejaChapChap</h2><small id="userInfo"></small></div>
+    <div style="display:flex;gap:8px">
+      <button id="adminBtn" onclick="toggleAdmin()" style="display:none;padding:8px 12px;background:#6610f2;color:white;border:none;border-radius:6px;font-weight:bold">👑 ADMIN</button>
+      <button onclick="logout()" style="padding:8px 12px;background:#dc3545;color:white;border:none;border-radius:6px">Logout</button>
+    </div>
+  </div>
+  <div id="adminPanel" class="admin-panel">
+    <h3>👑 Admin - Add Customers (30 Days Auto)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <input type="text" id="custName" placeholder="Name e.g Ali">
+      <input type="text" id="custPass" placeholder="Password e.g ALI300">
+    </div>
+    <div style="display:flex;gap:10px"><button class="btn btn-admin" onclick="addCustomer()">+ ADD CUSTOMER</button><button class="btn btn-pdf" onclick="exportCustomers()">EXPORT</button></div>
+    <div id="landlordList" style="margin-top:15px"></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><h3 id="totalHouses">0</h3><p>Total Houses</p></div>
+    <div class="stat-card"><h3 id="totalCollected">0</h3><p>Collected</p></div>
+    <div class="stat-card"><h3 id="
