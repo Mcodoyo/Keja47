@@ -1,29 +1,159 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap Ultimate - Victor Odoyo</title><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:10px}.card{max-width:480px;margin:0 auto;background:#fff;border-radius:18px;padding:16px;box-shadow:0 12px 35px rgba(0,0,0,.25)}h1{text-align:center;margin:0}.sub{text-align:center;color:#666;font-size:11px;margin-bottom:10px}input,button{width:100%;padding:11px;margin:4px 0;border-radius:10px;border:1px solid #ddd;font-size:14px}button{background:#667eea;color:#fff;border:0;font-weight:700;cursor:pointer}.hidden{display:none}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tabs button{background:#eef2ff;color:#333}.tabs button.active{background:#667eea;color:#fff}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:8px 0}.stats div{background:#f5f7ff;padding:8px;border-radius:10px;text-align:center;font-size:11px}.tenant{border:1px solid #eee;border-radius:10px;padding:8px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;font-size:13px}.green{color:#00b894;font-weight:700}.red{color:#d63031;font-weight:700}.subCard{background:#f8f9ff;border-radius:10px;padding:10px;margin:8px 0}</style></head><body>
-<div id="login" class="card"><h1>KejaChapChap</h1><div class="sub">ULTIMATE CLOUD - KSH 600/30Days<br>By Victor Odoyo - Garissa<br>M-Pesa 0718255742</div><input id="pass" type="password" placeholder="Enter Password"><button onclick="doLogin()">LOGIN</button><div id="err" style="color:red;text-align:center;font-size:13px;margin-top:8px"></div></div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KejaChapChap - Victor Odoyo</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f1f2f6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.top h1{margin:0;font-size:26px;font-weight:900;line-height:1}
+.sub{font-size:13px;color:#666;margin-top:2px}
+.btn{padding:8px 14px;border-radius:8px;border:0;font-weight:700;font-size:13px;cursor:pointer}
+.admin{background:#7c3aed;color:#fff}
+.logout{background:#ef4444;color:#fff}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.cardStat{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.cardStat b{font-size:22px;display:block;color:#111}
+.cardStat span{font-size:13px;color:#444}
+.formCard{border:1px solid #e5e7eb;border-radius:14px;padding:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:5px 0;font-size:14px;background:#f9fafb}
+.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;cursor:pointer;width:100%}
+.pdf{background:#6b7280;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:700;cursor:pointer;width:100%}
+.search{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:10px 0;background:#fff}
+.tenant{border:1px solid #eee;border-radius:12px;padding:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;background:#fff}
+.hidden{display:none}
+#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.center{text-align:center}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);padding:12px;overflow:auto;z-index:99}
+</style>
+</head>
+<body>
 
-<div id="app" class="card hidden"><h1>KejaChapChap</h1><div class="sub" id="cloudStatus">● Cloud</div>
-<div class="tabs"><button id="tab1" class="active" onclick="showTab('tenants')">My Tenants</button><button id="tab2" onclick="showTab('admin')">Admin Panel</button></div>
+<div id="loginWrap">
+<h1 style="text-align:center;margin:0">KejaChapChap</h1>
+<p class="center" style="font-size:12px;color:#666;margin:6px 0 14px">By Victor Odoyo - Garissa<br>M-Pesa 0718255742<br>KSH 600 / 30 Days - CLOUD</p>
+<input id="pass" type="password" placeholder="Enter Password">
+<button class="add" onclick="doLogin()">LOGIN</button>
+<p id="err" style="color:#ef4444;text-align:center;font-size:13px;margin-top:10px"></p>
+</div>
 
-<!-- TENANTS TAB -->
-<div id="tenantsTab"><div class="stats"><div><b id="cTotal">0</b><br>Total</div><div><b id="cPaid">0</b><br>Paid</div><div><b id="cUnpaid">0</b><br>Unpaid</div></div><div style="background:#eef2ff;padding:8px;border-radius:10px;text-align:center">Total Rent: <b>KSH <span id="cRent">0</span></b></div><input id="search" placeholder="Search name or house..." oninput="renderTenants()"><input id="tName" placeholder="Tenant Full Name"><input id="tPhone" placeholder="Phone 07..."><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="tHouse" placeholder="House No"><input id="tRent" type="number" placeholder="Rent KSH"></div><button onclick="addTenant()">+ Save to Cloud</button><div id="list"></div></div>
+<div id="mainApp" class="wrap hidden">
+<div class="top">
+<div><h1>KejaChapChap</h1><div class="sub" id="who">Victor Master - MASTER</div></div>
+<div style="display:flex;gap:6px"><button class="btn admin" onclick="openAdmin()">👑 ADMIN</button><button class="btn logout" onclick="location.reload()">Logout</button></div>
+</div>
 
-<!-- ADMIN TAB -->
-<div id="adminTab" class="hidden"><div id="adminOnly"><div class="subCard"><b>💰 Create New Landlord (KSH 600)</b><br><small>When someone pays you, create password for them here</small><input id="newPass" placeholder="New Password e.g. JOHN2026"><input id="days" type="number" value="30" placeholder="Days 30"><button onclick="createSub()" style="background:#00b894">Create Landlord Account</button><div id="adminMsg" style="font-size:12px;text-align:center;margin-top:6px"></div></div><div class="subCard"><b>All Landlords / Subscriptions</b><div id="subsList" style="margin-top:8px"></div></div></div><div id="notAdmin" class="hidden"><p style="text-align:center;color:#666">Admin only for MASTER<br>Your account: <b id="curUserLabel"></b></p></div></div>
+<div class="grid4">
+<div class="cardStat"><b id="sHouses">0</b><span>Total Houses</span></div>
+<div class="cardStat"><b id="sCollected">KSH 0</b><span>Collected</span></div>
+<div class="cardStat"><b id="sNotPaid">0</b><span>Not Paid</span></div>
+<div class="cardStat"><b id="sExpected">KSH 0</b><span>Expected</span></div>
+</div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button onclick="location.reload()" style="background:#dfe6e9;color:#333">Logout</button><button onclick="window.print()" style="background:#636e72">Print</button></div>
+<div class="formCard">
+<div class="row2"><input id="fHouse" placeholder="House No"><input id="fName" placeholder="Tenant Name"></div>
+<div class="row2"><input id="fRent" type="number" placeholder="Rent KSH"><input id="fPhone" placeholder="Phone"></div>
+<div class="row2" style="margin-top:8px"><button class="add" onclick="addTenant()">+ ADD TENANT</button><button class="pdf" onclick="window.print()">PDF</button></div>
+<input id="search" class="search" placeholder="🔍 Search..." oninput="render()">
+</div>
+
+<div id="list" style="text-align:center;padding:30px;color:#888">No tenants</div>
+<div class="center" style="margin:18px 0"><small>Page 1 of 1</small><br><div style="margin-top:8px"><button class="btn" style="border:1px solid #ddd;background:#fff;margin-right:6px">Prev</button><button class="btn" style="border:1px solid #ddd;background:#fff">Next</button></div></div>
+<div class="center" style="font-size:11px;color:#aaa;margin-top:10px">KejaChapChap @ 2026 - Victor Odoyo</div>
+</div>
+
+<div id="adminBox" class="modal hidden">
+<div class="wrap" style="border-radius:16px;min-height:auto">
+<h2 style="margin:0">👑 Admin Panel</h2><p style="font-size:12px;color:#666">By Victor Odoyo - Create passwords after client pays KSH 600 to 0718255742</p>
+<input id="newPass" placeholder="New Password e.g. JOHN600">
+<input id="newDays" type="number" value="30" placeholder="Days">
+<button class="add" onclick="createSub()">Create Landlord Account</button>
+<p id="adminMsg" style="font-size:13px;text-align:center;color:#0f8a5f;font-weight:700"></p>
+<div id="subsList" style="margin-top:14px"></div>
+<button class="pdf" style="margin-top:14px" onclick="closeAdmin()">Close</button>
+</div>
 </div>
 
 <script>
 const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};
-firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let curUser="", tenants=[], subs=[], currentTab='tenants'; const MASTER="NALIAKA4050";
-function doLogin(){let p=document.getElementById('pass').value.trim().toUpperCase(); if(!p) return document.getElementById('err').innerText="Enter password"; if(p===MASTER){curUser="MASTER"; enter(); return;} db.collection("subscriptions").doc(p).get().then(d=>{if(!d.exists) return document.getElementById('err').innerText="Invalid. Pay KSH 600 to 0718255742 Victor Odoyo"; if(d.data().expiry && Date.now()>d.data().expiry) return document.getElementById('err').innerText="Expired. Pay again"; curUser=p; enter();}).catch(e=>document.getElementById('err').innerText="Firestore not ready: Create DB in Test Mode");}
-function enter(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('cloudStatus').innerText="● Cloud - "+curUser+" - Victor Odoyo"; document.getElementById('curUserLabel').innerText=curUser; loadTenants(); loadSubs();}
-function showTab(t){currentTab=t; document.getElementById('tenantsTab').classList.toggle('hidden',t!=='tenants'); document.getElementById('adminTab').classList.toggle('hidden',t!=='admin'); document.getElementById('tab1').classList.toggle('active',t==='tenants'); document.getElementById('tab2').classList.toggle('active',t==='admin'); if(curUser===MASTER){document.getElementById('adminOnly').classList.remove('hidden'); document.getElementById('notAdmin').classList.add('hidden');} else {document.getElementById('adminOnly').classList.add('hidden'); document.getElementById('notAdmin').classList.remove('hidden');}}
-function loadTenants(){db.collection("tenants").where("owner","==",curUser).onSnapshot(s=>{tenants=[]; s.forEach(d=>tenants.push({id:d.id,...d.data()})); renderTenants();});}
-function loadSubs(){db.collection("subscriptions").onSnapshot(s=>{subs=[]; s.forEach(d=>subs.push({id:d.id,...d.data()})); renderSubs();});}
-function renderTenants(){let q=document.getElementById('search').value.toLowerCase(); let filtered=tenants.filter(t=>(t.name+t.house).toLowerCase().includes(q)); let paid=0,un=0,rent=0; tenants.forEach(t=>{rent+=Number(t.rent||0); if(t.paid) paid++; else un++;}); let h=""; filtered.forEach(t=>{h+=`<div class="tenant"><div><b>${t.name}</b> H:${t.house}<br><small>KSH ${t.rent} <span class="${t.paid?'green':'red'}">${t.paid?'PAID':'UNPAID'}</span> | <a href="https://wa.me/254${t.phone? t.phone.replace(/^0/,'') : ''}?text=Hello ${t.name}, Rent KSH ${t.rent} for House ${t.house} is due. - Victor Odoyo KejaChapChap" target="_blank" style="color:#25D366">WhatsApp</a></small></div><div><button style="width:auto;padding:5px 8px;background:${t.paid?'#ff7675':'#00b894'}" onclick="db.collection('tenants').doc('${t.id}').update({paid:${!t.paid}})">${t.paid?'Unpay':'Paid'}</button><button style="width:auto;padding:5px 8px;background:#636e72;margin-top:3px" onclick="if(confirm('Delete?')) db.collection('tenants').doc('${t.id}').delete()">X</button></div></div>`}); document.getElementById('list').innerHTML=h||"No tenants"; document.getElementById('cTotal').innerText=tenants.length; document.getElementById('cPaid').innerText=paid; document.getElementById('cUnpaid').innerText=un; document.getElementById('cRent').innerText=rent.toLocaleString();}
-function renderSubs(){let h=""; subs.forEach(s=>{let exp=new Date(s.expiry).toLocaleDateString(); let active=Date.now()<s.expiry; h+=`<div style="border-bottom:1px solid #eee;padding:6px 0;display:flex;justify-content:space-between"><div><b>${s.id}</b><br><small>Exp: ${exp} <span class="${active?'green':'red'}">${active?'Active':'Expired'}</span></small></div><button style="width:auto;padding:4px 8px;background:#d63031" onclick="if(confirm('Delete ${s.id}?')) db.collection('subscriptions').doc('${s.id}').delete()">Del</button></div>`}); document.getElementById('subsList').innerHTML=h||"No landlords yet";}
-function addTenant(){let n=document.getElementById('tName').value.trim(), ph=document.getElementById('tPhone').value.trim(), ho=document.getElementById('tHouse').value.trim(), r=document.getElementById('tRent').value.trim(); if(!n||!ho) return alert("Name & House required"); db.collection("tenants").add({owner:curUser,name:n,phone:ph,house:ho,rent:Number(r||0),paid:false,created:Date.now()}).then(()=>{tName.value="";tPhone.value="";tHouse.value="";tRent.value="";});}
-function createSub(){let p=document.getElementById('newPass').value.trim().toUpperCase(), d=Number(document.getElementById('days').value||30); if(!p) return alert("Enter password"); if(curUser!==MASTER) return alert("Only MASTER can create"); let expiry=Date.now()+d*24*3600*1000; db.collection("subscriptions").doc(p).set({expiry,created:Date.now(),days:d,by:curUser}).then(()=>{document.getElementById('adminMsg').innerText="✅ Created "+p+" for "+d+" days! Send to customer now."; document.getElementById('newPass').value="";});}
-</script></body></html>
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+let curUser="", tenants=[];
+const MASTER="NALIAKA4050";
+
+function doLogin(){
+ let p=document.getElementById('pass').value.trim().toUpperCase();
+ if(!p) return document.getElementById('err').innerText="Enter password";
+ if(p===MASTER){curUser="MASTER"; enter(); return;}
+ db.collection("subscriptions").doc(p).get().then(doc=>{
+  if(!doc.exists) return document.getElementById('err').innerText="Invalid password. Pay KSH 600 to 0718255742";
+  let d=doc.data(); if(d.expiry && Date.now()>d.expiry) return document.getElementById('err').innerText="Expired. Pay again KSH 600";
+  curUser=p; enter();
+ }).catch(()=>document.getElementById('err').innerText="Firestore not created. Go Firebase Console > Build > Firestore > Create Database > Test Mode");
+}
+function enter(){
+ document.getElementById('loginWrap').classList.add('hidden');
+ document.getElementById('mainApp').classList.remove('hidden');
+ document.getElementById('who').innerText=curUser==="MASTER"?"Victor Master - MASTER":curUser;
+ loadTenants();
+}
+function loadTenants(){
+ db.collection("tenants").where("owner","==",curUser).onSnapshot(s=>{
+  tenants=[]; s.forEach(d=>tenants.push({id:d.id,...d.data()})); render();
+ });
+}
+function render(){
+ let q=document.getElementById('search').value.toLowerCase();
+ let filtered=tenants.filter(t=> (t.name+t.house+(t.phone||'')).toLowerCase().includes(q));
+ let total=tenants.length, collected=0, notPaid=0, expected=0;
+ tenants.forEach(t=>{ let r=Number(t.rent||0); expected+=r; if(t.paid) collected+=r; else notPaid++; });
+ document.getElementById('sHouses').innerText=total;
+ document.getElementById('sCollected').innerText="KSH "+collected.toLocaleString();
+ document.getElementById('sNotPaid').innerText=notPaid;
+ document.getElementById('sExpected').innerText="KSH "+expected.toLocaleString();
+ let h=""; 
+ filtered.forEach(t=>{
+  h+=`<div class="tenant"><div style="text-align:left"><b>House ${t.house}</b> - ${t.name}<br><small>KSH ${t.rent} | ${t.phone||''} <span style="font-weight:800;color:${t.paid?'#0f8a5f':'#ef4444'}">${t.paid?'PAID':'NOT PAID'}</span></small></div><div style="display:flex;gap:4px"><button class="btn" style="background:${t.paid?'#ef4444':'#0f8a5f'};color:#fff;padding:6px 10px" onclick="db.collection('tenants').doc('${t.id}').update({paid:${!t.paid}})">${t.paid?'Unpay':'Paid'}</button><button class="btn" style="background:#eee;padding:6px 10px" onclick="if(confirm('Delete ${t.name}?')) db.collection('tenants').doc('${t.id}').delete()">Del</button></div></div>`;
+ });
+ document.getElementById('list').innerHTML=h||"No tenants";
+}
+function addTenant(){
+ let house=document.getElementById('fHouse').value.trim();
+ let name=document.getElementById('fName').value.trim();
+ let rent=document.getElementById('fRent').value.trim();
+ let phone=document.getElementById('fPhone').value.trim();
+ if(!house||!name) return alert("House No and Tenant Name required");
+ db.collection("tenants").add({owner:curUser,house,name,rent:Number(rent||0),phone,paid:false,created:Date.now()}).then(()=>{
+  fHouse.value=""; fName.value=""; fRent.value=""; fPhone.value="";
+ });
+}
+function openAdmin(){
+ if(curUser!=="MASTER") return alert("Only MASTER can access Admin");
+ document.getElementById('adminBox').classList.remove('hidden');
+ db.collection("subscriptions").onSnapshot(s=>{
+  let h=""; s.forEach(d=>{
+   let data=d.data(); let exp=new Date(data.expiry).toLocaleDateString(); let active=Date.now()<data.expiry;
+   h+=`<div style="display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0"><div><b>${d.id}</b><br><small>Exp: ${exp} ${active?'✅ Active':'❌ Expired'}</small></div><button class="btn logout" style="padding:4px 8px" onclick="db.collection('subscriptions').doc('${d.id}').delete()">Del</button></div>`;
+  });
+  document.getElementById('subsList').innerHTML=h||"<small>No landlords yet. Create one above.</small>";
+ });
+}
+function closeAdmin(){document.getElementById('adminBox').classList.add('hidden');}
+function createSub(){
+ let p=document.getElementById('newPass').value.trim().toUpperCase();
+ let d=Number(document.getElementById('newDays').value||30);
+ if(!p) return alert("Enter new password");
+ let expiry=Date.now()+d*24*3600*1000;
+ db.collection("subscriptions").doc(p).set({expiry,created:Date.now(),days:d}).then(()=>{
+  document.getElementById('adminMsg').innerText="✅ Created "+p+" for "+d+" days! Send to client now.";
+  document.getElementById('newPass').value="";
+ });
+}
+</script>
+</body>
+</html>
