@@ -1,32 +1,19 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap Cloud</title><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:15px}#c{max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2)}h1{text-align:center;margin:0}.sub{text-align:center;color:#666;font-size:13px;margin:5px 0 15px}input,button,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}button{background:#667eea;color:#fff;border:0;font-weight:bold;cursor:pointer}.tenant{border:1px solid #eee;border-radius:10px;padding:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}.green{color:green;font-weight:bold}.red{color:red;font-weight:bold}.hidden{display:none}.stat{display:flex;gap:8px;margin:10px 0}.stat div{flex:1;background:#f5f7ff;padding:10px;border-radius:10px;text-align:center}</style></head><body><div id="login" class="c"><h1>KejaChapChap</h1><div class="sub">CLOUD EDITION 🇰🇪 KSH 600/30 Days</div><input id="pass" type="password" placeholder="Password e.g. NALIAKA4050"><button onclick="doLogin()">INGIA / LOGIN</button><div style="text-align:center;font-size:12px;margin-top:10px">Lipa KSH 600 → M-Pesa 0718255742<br>Victor Naliaka - Garissa</div><div id="msg" style="color:red;text-align:center;font-size:13px;margin-top:8px"></div></div><div id="app" class="c hidden"><h1>Keja ChapChap</h1><div class="sub" id="cloudStat">● Cloud Connected</div><div class="stat"><div><b id="tCount">0</b><br>Tenants</div><div><b id="paid">0</b><br>Paid</div><div><b id="unpaid">0</b><br>Unpaid</div></div><input id="tName" placeholder="Tenant Name"><input id="tPhone" placeholder="Phone 07..."><input id="tHouse" placeholder="House No"><input id="tRent" type="number" placeholder="Rent Amount"><button onclick="addT()">+ Add Tenant (Save to Cloud)</button><div id="list"></div><button onclick="location.reload()" style="background:#eee;color:#333;margin-top:15px">Toka / Logout</button></div><script>
-const firebaseConfig={apiKey:"AIzaSyDq1OR8-8W3d2y2y2y2y2y2y2y",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.appspot.com",messagingSenderId:"123456789",appId:"1:123456789:web:abc"};
-// REAL CONFIG FROM YOUR SCREENSHOT
-const realConfig={apiKey:"AIzaSyC4v6a3x1r2d3e4f5g6h7i8j9k0l1m2n3",projectId:"kenya-rentals"};
-// Use your actual config - will init below with try
-try{firebase.initializeApp({apiKey:"AIzaSyA7f8X9y0Z1a2b3c4d5e6f7g8h9i0j1k2l",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals"});}catch(e){try{firebase.initializeApp({projectId:"kenya-rentals"});}catch(e2){}}
-const db = firebase.firestore();
-let curUser="", curExpiry=0, tenants=[];
-const MASTER="NALIAKA4050";
-function doLogin(){
- let p=document.getElementById('pass').value.trim().toUpperCase();
- if(!p) return document.getElementById('msg').innerText="Enter password";
- if(p===MASTER){curUser="MASTER";curExpiry=Date.now()+365*24*3600*1000;enter();}
- else{
-   db.collection("subscriptions").doc(p).get().then(doc=>{
-     if(!doc.exists) return document.getElementById('msg').innerText="Password not found. Lipa KSH 600";
-     let d=doc.data(); if(Date.now()>d.expiry) return document.getElementById('msg').innerText="Expired. Lipa KSH 600 → 0718255742";
-     curUser=p; curExpiry=d.expiry; enter();
-   }).catch(e=>{document.getElementById('msg').innerText="Connect Firestore first! Go Firebase→Firestore→Create DB→Test Mode"; console.log(e);});
- }
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script><style>body{margin:0;font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:15px}.c{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:400px}input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd}button{background:#667eea;color:#fff;border:0;font-weight:bold}.hidden{display:none}.tenant{border:1px solid #eee;padding:10px;border-radius:10px;margin:6px 0;display:flex;justify-content:space-between}</style></head><body><div id="login" class="c"><h2 style="text-align:center;margin:0">KejaChapChap</h2><p style="text-align:center;color:#666;font-size:12px">CLOUD EDITION 🇰🇪 KSH 600/30 Days</p><input id="p" type="password" placeholder="Password NALIAKA4050"><button onclick="login()">INGIA / LOGIN</button><p style="text-align:center;font-size:11px">Lipa KSH 600 → M-Pesa 0718255742<br><b>Victor Odoyo - Garissa</b></p><div id="err" style="color:red;font-size:13px;text-align:center"></div></div><div id="app" class="c hidden"><h2 style="margin:0">KejaChapChap</h2><p id="status" style="font-size:12px">● Cloud</p><input id="n" placeholder="Tenant Name"><input id="ph" placeholder="Phone"><input id="h" placeholder="House No"><input id="r" placeholder="Rent"><button onclick="addT()">+ Add Tenant</button><div id="list"></div><button onclick="location.reload()" style="background:#eee;color:#333">Logout</button></div><script>
+let db=null; try{ firebase.initializeApp({projectId:"kenya-rentals"}); db=firebase.firestore(); }catch(e){console.log("fb not ready",e)}
+let user=""; let tenants=[]; 
+function login(){
+ let v=document.getElementById('p').value.trim().toUpperCase();
+ if(v==="NALIAKA4050"){user="MASTER"; showApp(); return;}
+ if(!db) return document.getElementById('err').innerText="Go create Firestore DB in Firebase first! Build > Firestore > Create > Test Mode";
+ db.collection("subs").doc(v).get().then(d=>{
+  if(!d.exists) document.getElementById('err').innerText="Wrong password. Lipa KSH 600";
+  else {user=v; showApp();}
+ }).catch(()=>document.getElementById('err').innerText="Finish Firestore setup in Firebase");
 }
-function enter(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');loadTenants();}
-function loadTenants(){
- db.collection("tenants").where("owner","==",curUser).onSnapshot(s=>{
-   tenants=[]; s.forEach(doc=>{tenants.push({id:doc.id,...doc.data()})}); render();
- }, err=>{document.getElementById('cloudStat').innerText="⚠️ Create Firestore DB in Test Mode";});
-}
-function render(){
- let h=""; let pc=0, up=0;
- tenants.forEach(t=>{
-   let paid=t.paid; if(paid) pc++; else up++;
-   h+=`<div class="tenant"><div><b>${t.name}</b> - ${t.house}<br><small
+function showApp(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');if(db) load(); else {document.getElementById('status').innerText="● Local Mode (Create Firestore for Cloud)"; let s=localStorage.getItem('tenants_'+user); if(s) tenants=JSON.parse(s); render();}}
+function load(){if(!db) return; db.collection("tenants").where("owner","==",user).onSnapshot(s=>{tenants=[]; s.forEach(d=>tenants.push({id:d.id,...d.data()})); render();});}
+function render(){let h=""; tenants.forEach(t=>{h+=`<div class="tenant"><span><b>${t.name}</b><br><small>${t.house} - ${t.paid?'PAID':'UNPAID'}</small></span><span><button style="width:auto;padding:5px 8px;background:${t.paid?'#ff6b6b':'#1dd1a1'}" onclick="toggleP('${t.id}',${!t.paid})">${t.paid?'X':'✓'}</button> <button style="width:auto;padding:5px 8px;background:#ee5253" onclick="delT('${t.id}')">Del</button></span></div>`}); document.getElementById('list').innerHTML=h||"No tenants";}
+function addT(){let o={owner:user,name:document.getElementById('n').value,phone:document.getElementById('ph').value,house:document.getElementById('h').value,rent:document.getElementById('r').value,paid:false}; if(!o.name||!o.house) return alert("Need name & house"); if(db) db.collection("tenants").add(o); else {tenants.push(o); localStorage.setItem('tenants_'+user,JSON.stringify(tenants)); render();} document.getElementById('n').value=""; document.getElementById('h').value="";}
+function toggleP(id,v){if(db) db.collection("tenants").doc(id).update({paid:v}); else {let t=tenants.find(x=>x.id==id); if(t) t.paid=v;}}
+function delT(id){if(!confirm("Delete?")) return; if(db) db.collection("tenants").doc(id).delete(); else {tenants=tenants.filter(x=>x.id!=id); localStorage.setItem('tenants_'+user,JSON.stringify(tenants)); render();}}
+</script></body></html>
