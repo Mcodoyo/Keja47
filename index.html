@@ -1,72 +1,106 @@
 <!DOCTYPE html>
-<html lang="sw"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap - 47 Counties</title>
 <style>
-body{margin:0;font-family:Arial;background:#f0f2f5}
+body{margin:0;font-family:Arial;background:#f3f4f6}
 #login{position:fixed;inset:0;background:#0B7A42;display:flex;align-items:center;justify-content:center;z-index:9999}
-.box{background:white;padding:30px;border-radius:16px;width:85%;max-width:340px;text-align:center}
-.box input{width:100%;padding:14px;border-radius:10px;border:2px solid #ddd;margin:15px 0;font-size:18px;box-sizing:border-box;text-align:center}
-.box button{width:100%;padding:14px;background:#FF6A00;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px}
-.header{background:#0B7A42;color:white;padding:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.card{background:white;margin:10px;padding:12px;border-radius:12px;display:flex;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.green{border-left:6px solid #0B7A42}.red{border-left:6px solid red}
-.btn{padding:7px 12px;border:none;border-radius:8px;font-weight:600}.b-green{background:#0B7A42;color:white}.b-red{background:red;color:white}.b-wa{background:#25D366;color:white}
+.box{background:white;padding:30px;border-radius:16px;width:85%;max-width:350px;text-align:center}
+.box input{width:100%;padding:14px;border-radius:10px;border:2px solid #ddd;margin:15px 0;font-size:18px;text-align:center;box-sizing:border-box}
+.box button{width:100%;padding:14px;background:#FF6A00;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+.header{background:#0B7A42;color:white;padding:12px}
+.card{background:white;margin:10px;padding:12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.green{border-left:6px solid #0B7A42}.red{border-left:6px solid #ef4444}
+.btn{padding:7px 12px;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin:2px}
+.b-green{background:#0B7A42;color:white}.b-red{background:#ef4444;color:white}.b-wa{background:#25D366;color:white}.b-dark{background:#111827;color:white}
 </style></head><body>
+
 <div id="login"><div class="box">
-<h2 style="margin:0;color:#0B7A42">KejaChapChap</h2>
-<p style="color:#666">Pata Keja Kila County - ChapChap</p>
-<input type="password" id="p" placeholder="Weka Password">
-<button onclick="login()">INGIA</button>
-<p style="font-size:11px;color:#999;margin-top:15px">WhatsApp: 0718255742</p>
+<h2 style="color:#0B7A42;margin:0">KejaChapChap</h2>
+<p>Find House in Any County - Fast</p>
+<input type="password" id="p" placeholder="Enter Password">
+<button onclick="login()">LOGIN</button>
+<p style="font-size:11px;color:#999;margin-top:15px">Support: 0718255742</p>
 </div></div>
 
-<div id="app"><div class="header"><b>KejaChapChap - 47 Counties</b><div>
-<button onclick="add()" class="btn b-green">+ Ongeza Tenant</button>
-<select id="county" onchange="render()" style="padding:7px;border-radius:8px"><option value="All">Counties Zote 47</option><option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option></select>
-<button onclick="logout()" class="btn" style="background:white;color:#0B7A42">Toka</button>
-</div></div>
-<div style="padding:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn b-wa" onclick="report()">WhatsApp Report</button><button class="btn" style="background:#111;color:white" onclick="pdf()">PDF</button><input id="s" placeholder="Search jina/nyumba" oninput="render()" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #ccc"></div>
-<div id="list"></div></div>
+<div id="app">
+<div class="header">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<b>KejaChapChap - 47 Counties</b>
+<button onclick="logout()" class="btn" style="background:white;color:#0B7A42">Logout</button>
+</div>
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+<button onclick="add()" class="btn b-green">+ Add Tenant</button>
+<select id="county" onchange="render()" style="padding:8px;border-radius:8px;flex:1;min-width:180px">
+<option value="All">All 47 Counties</option>
+<option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option><option>Lamu</option><option>Taita-Taveta</option>
+<option>Garissa</option><option>Wajir</option><option>Mandera</option>
+<option>Marsabit</option><option>Isiolo</option><option>Meru</option><option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option><option>Makueni</option>
+<option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option><option>Muranga</option><option>Kiambu</option>
+<option>Turkana</option><option>West Pokot</option><option>Samburu</option><option>Trans Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option><option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option><option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
+<option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option><option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option><option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
+</select>
+</div>
+</div>
+
+<div style="padding:10px;display:flex;gap:8px;flex-wrap:wrap;background:white">
+<button class="btn b-wa" onclick="report()">WhatsApp Report</button>
+<button class="btn b-dark" onclick="pdf()">Download PDF</button>
+<input id="s" placeholder="Search name / house / phone" oninput="render()" style="flex:1;min-width:160px;padding:8px;border-radius:8px;border:1px solid #ccc">
+</div>
+
+<div id="stats" style="padding:10px;display:flex;gap:10px"></div>
+<div id="list"></div>
+</div>
 
 <script>
 const PASS="NALIAKA4050";
-// Clear old passwords
-localStorage.removeItem('keja47_pass');localStorage.removeItem('keja47_password');localStorage.removeItem('keja47_auth');
-
-function login(){
-  const v=document.getElementById('p').value.trim();
-  if(v===PASS){
-    document.getElementById('login').style.display='none';
-    localStorage.setItem('keja47_ok','1');
-    render();
-  }else{alert('Password si sahihi! Andika: NALIAKA4050');}
-}
+localStorage.removeItem('keja47_pass');localStorage.removeItem('keja47_password');
+function login(){const v=document.getElementById('p').value.trim();if(v===PASS){document.getElementById('login').style.display='none';localStorage.setItem('keja47_ok','1');render();}else{alert('Wrong password! Use: NALIAKA4050');}}
 function logout(){localStorage.removeItem('keja47_ok');location.reload();}
 if(localStorage.getItem('keja47_ok')==='1'){document.getElementById('login').style.display='none';}
 
 let tenants=JSON.parse(localStorage.getItem('keja47_data')||'[]');
 function save(){localStorage.setItem('keja47_data',JSON.stringify(tenants));}
-function add(){const n=prompt('Jina:');if(!n)return;const ph=prompt('Simu:')||'';const ho=prompt('House:')||'';const co=prompt('County:','Garissa')||'Garissa';tenants.push({id:Date.now(),name:n,phone:ph,house:ho,county:co,paid:false});save();render();}
+function add(){
+  const name=prompt('Tenant Name:');if(!name)return;
+  const phone=prompt('Phone (07...):')||'';
+  const house=prompt('House No:')||'';
+  const county=prompt('County:','Garissa')||'Garissa';
+  const rent=prompt('Monthly Rent (KSH):','5000')||'5000';
+  tenants.push({id:Date.now(),name,phone,house,county,rent,paid:false});
+  save();render();
+}
 function tog(id){const t=tenants.find(x=>x.id===id);t.paid=!t.paid;save();render();}
-function del(id){if(confirm('Futa?')){tenants=tenants.filter(x=>x.id!==id);save();render();}}
-function wa(name,phone,house){
-  if(!phone){alert('Hakuna namba');return;}
+function del(id){if(confirm('Delete tenant?')){tenants=tenants.filter(x=>x.id!==id);save();render();}}
+function wa(name,phone,house,rent){
+  if(!phone){alert('No phone number');return;}
   let c=phone.replace(/\D/g,'');if(c.startsWith('0'))c='254'+c.slice(1);if(c.startsWith('7'))c='254'+c;
-  const m=`Habari ${name}, keja namba ${house} - kodi bado haijaingia. Lipa leo. - KejaChapChap 0718255742`;
-  window.open(`https://wa.me/${c}?text=${encodeURIComponent(m)}`,'_blank');
+  const msg=`Hello ${name}, House ${house} - Your rent KSH ${rent} is pending. Please pay today. Thank you - KejaChapChap`;
+  window.open(`https://wa.me/${c}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function report(){
-  const up=tenants.filter(t=>!t.paid);
-  const txt=`*KejaChapChap Report ${new Date().toLocaleDateString()}*%0AWamelipa: ${tenants.length-up.length}%0AHajawahi: ${up.length}%0A${up.map(t=>`- ${t.name} ${t.house} ${t.phone}`).join('%0A')}`;
+  const up=tenants.filter(t=>!t.paid);const paid=tenants.filter(t=>t.paid).length;
+  let total=0;tenants.forEach(t=>{if(!t.paid)total+=parseInt(t.rent||0);});
+  const txt=`*KejaChapChap Report - ${new Date().toLocaleDateString()}*%0A%0APaid: ${paid}%0AUnpaid: ${up.length}%0ABalance Due: KSH ${total}%0A%0A*Unpaid List:*%0A${up.map(t=>`- ${t.name} (${t.house}) ${t.phone} - KSH ${t.rent}`).join('%0A')}%0A%0ASupport: 0718255742`;
   window.open(`https://wa.me/?text=${txt}`,'_blank');
 }
-function pdf(){let h=`<h1>KejaChapChap</h1><table border=1 cellpadding=6><tr><th>Jina</th><th>House</th><th>Phone</th><th>Status</th></tr>`;tenants.forEach(t=>h+=`<tr><td>${t.name}</td><td>${t.house}</td><td>${t.phone}</td><td>${t.paid?'PAID':'UNPAID'}</td></tr>`);h+='</table>';const w=window.open();w.document.write(h);w.print();}
+function pdf(){
+  let h=`<h1>KejaChapChap - 47 Counties</h1><p>${new Date().toLocaleString()}</p><table border=1 cellpadding=8 style="border-collapse:collapse;width:100%"><tr><th>Name</th><th>House</th><th>County</th><th>Phone</th><th>Rent</th><th>Status</th></tr>`;
+  tenants.forEach(t=>{h+=`<tr><td>${t.name}</td><td>${t.house}</td><td>${t.county}</td><td>${t.phone}</td><td>${t.rent}</td><td>${t.paid?'PAID':'UNPAID'}</td></tr>`});
+  h+='</table>';const w=window.open();w.document.write(h);w.print();
+}
 function render(){
-  const q=document.getElementById('s').value.toLowerCase();const co=document.getElementById('county').value;const L=document.getElementById('list');L.innerHTML='';
-  tenants.filter(t=>{const m=(t.name+t.phone+t.house).toLowerCase().includes(q);const c=co==='All'||t.county===co;return m&&c;}).forEach(t=>{
+  const q=document.getElementById('s').value.toLowerCase();const co=document.getElementById('county').value;
+  const list=document.getElementById('list');const stats=document.getElementById('stats');
+  let filtered=tenants.filter(t=>{const m=(t.name+t.phone+t.house+t.county).toLowerCase().includes(q);const c=co==='All'||t.county===co;return m&&c;});
+  let paidCount=filtered.filter(t=>t.paid).length;
+  stats.innerHTML=`<div style="background:#dcfce7;padding:8px 12px;border-radius:8px;flex:1">Paid: <b>${paidCount}</b></div><div style="background:#fee2e2;padding:8px 12px;border-radius:8px;flex:1">Unpaid: <b>${filtered.length-paidCount}</b></div><div style="background:white;padding:8px 12px;border-radius:8px;flex:1">Total: <b>${filtered.length}</b></div>`;
+  list.innerHTML='';
+  filtered.forEach(t=>{
     const d=document.createElement('div');d.className='card '+(t.paid?'green':'red');
-    d.innerHTML=`<div><b>${t.name}</b><br><small>${t.house} | ${t.county} | ${t.phone}</small><br><small style="color:${t.paid?'green':'red'}">${t.paid?'AMELIPA':'HAJALIPA'}</small></div><div style="text-align:right"><button class="btn ${t.paid?'b-red':'b-green'}" onclick="tog(${t.id})">${t.paid?'RED':'GREEN'}</button><br><button class="btn b-wa" style="margin-top:5px" onclick="wa('${t.name}','${t.phone}','${t.house}')">WhatsApp</button><br><button class="btn" style="margin-top:5px" onclick="del(${t.id})">Futa</button></div>`;
-    L.appendChild(d);
+    d.innerHTML=`<div><b>${t.name}</b><br><small>${t.house} | ${t.county} | ${t.phone}</small><br><small>Rent: KSH ${t.rent} - <b style="color:${t.paid?'green':'red'}">${t.paid?'PAID':'UNPAID'}</b></small></div><div style="text-align:right"><button class="btn ${t.paid?'b-red':'b-green'}" onclick="tog(${t.id})">${t.paid?'Mark RED':'Mark GREEN'}</button><br><button class="btn b-wa" style="margin-top:4px" onclick="wa('${t.name}','${t.phone}','${t.house}','${t.rent}')">WhatsApp</button><br><button class="btn b-dark" style="margin-top:4px" onclick="del(${t.id})">Delete</button></div>`;
+    list.appendChild(d);
   });
+  if(filtered.length===0){list.innerHTML='<p style="text-align:center;color:#999;margin-top:40px">No tenants. Click + Add Tenant</p>';}
 }
 render();
 </script></body></html>
