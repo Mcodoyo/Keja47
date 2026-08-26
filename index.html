@@ -1,61 +1,72 @@
 <!DOCTYPE html>
-<html lang="sw">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KejaChapChap - 47 Counties</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0B7A42">
+<html lang="sw"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title>
 <style>
-  body{font-family:Arial;background:#f5f5f5;margin:0;padding:0}
-  #loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0B7A42;color:white;text-align:center;padding:20px}
-  #loginScreen input{padding:12px;width:250px;margin:10px;border-radius:8px;border:none;text-align:center;font-size:18px}
-  #loginScreen button{padding:12px 30px;background:#FF6A00;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-  #mainApp{display:none;padding:15px}
-  .card{background:white;padding:12px;margin:8px 0;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}
-  .green{border-left:6px solid #0B7A42}
-  .red{border-left:6px solid red}
-  button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;margin:2px}
-  .btn-green{background:#0B7A42;color:white}
-  .btn-red{background:red;color:white}
-  .btn-wa{background:#25D366;color:white}
-</style>
-</head>
-<body>
+body{margin:0;font-family:Arial;background:#f0f2f5}
+#login{position:fixed;inset:0;background:#0B7A42;display:flex;align-items:center;justify-content:center;z-index:9999}
+.box{background:white;padding:30px;border-radius:16px;width:85%;max-width:340px;text-align:center}
+.box input{width:100%;padding:14px;border-radius:10px;border:2px solid #ddd;margin:15px 0;font-size:18px;box-sizing:border-box;text-align:center}
+.box button{width:100%;padding:14px;background:#FF6A00;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px}
+.header{background:#0B7A42;color:white;padding:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card{background:white;margin:10px;padding:12px;border-radius:12px;display:flex;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.green{border-left:6px solid #0B7A42}.red{border-left:6px solid red}
+.btn{padding:7px 12px;border:none;border-radius:8px;font-weight:600}.b-green{background:#0B7A42;color:white}.b-red{background:red;color:white}.b-wa{background:#25D366;color:white}
+</style></head><body>
+<div id="login"><div class="box">
+<h2 style="margin:0;color:#0B7A42">KejaChapChap</h2>
+<p style="color:#666">Pata Keja Kila County - ChapChap</p>
+<input type="password" id="p" placeholder="Weka Password">
+<button onclick="login()">INGIA</button>
+<p style="font-size:11px;color:#999;margin-top:15px">WhatsApp: 0718255742</p>
+</div></div>
 
-<!-- LOGIN - PASSWORD FIXED TO NALIAKA4050 -->
-<div id="loginScreen">
-  <img src="logo.png" style="width:120px;background:white;border-radius:20px;padding:10px" onerror="this.style.display='none'">
-  <h1>KejaChapChap</h1>
-  <p>Pata Keja Kila County - ChapChap</p>
-  <input type="password" id="passwordInput" placeholder="Weka Password">
-  <button onclick="checkPassword()">INGIA</button>
-  <p style="font-size:12px;margin-top:15px">Demo: mcodoyo.github.io/Keja47<br>WhatsApp: 0718255742</p>
-</div>
-
-<!-- MAIN APP -->
-<div id="mainApp">
-  <h2>KejaChapChap - <span id="countyLabel">Garissa</span></h2>
-  
-  <input type="text" id="searchInput" placeholder="Search jina / nyumba..." onkeyup="renderTenants()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc">
-  
-  <select id="countyFilter" onchange="renderTenants()" style="width:100%;padding:10px;margin:10px 0;border-radius:8px">
-    <option value="All">Counties Zote 47</option>
-    <option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Kiambu</option><option>Machakos</option>
-    <option value="All">-- Zote --</option>
-  </select>
-
-  <div style="margin:10px 0">
-    <button class="btn-green" onclick="addTenant()">+ Ongeza Tenant</button>
-    <button class="btn-wa" onclick="sendAllReport()">WhatsApp Report</button>
-    <button onclick="generatePDF()">PDF Report</button>
-  </div>
-
-  <div id="tenantList"></div>
-</div>
+<div id="app"><div class="header"><b>KejaChapChap - 47 Counties</b><div>
+<button onclick="add()" class="btn b-green">+ Ongeza Tenant</button>
+<select id="county" onchange="render()" style="padding:7px;border-radius:8px"><option value="All">Counties Zote 47</option><option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option></select>
+<button onclick="logout()" class="btn" style="background:white;color:#0B7A42">Toka</button>
+</div></div>
+<div style="padding:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn b-wa" onclick="report()">WhatsApp Report</button><button class="btn" style="background:#111;color:white" onclick="pdf()">PDF</button><input id="s" placeholder="Search jina/nyumba" oninput="render()" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #ccc"></div>
+<div id="list"></div></div>
 
 <script>
-// --- 1. PASSWORD LOCKED TO NALIAKA4050 ---
-const CORRECT_PASSWORD = "NALIAKA4050";
+const PASS="NALIAKA4050";
+// Clear old passwords
+localStorage.removeItem('keja47_pass');localStorage.removeItem('keja47_password');localStorage.removeItem('keja47_auth');
 
-function
+function login(){
+  const v=document.getElementById('p').value.trim();
+  if(v===PASS){
+    document.getElementById('login').style.display='none';
+    localStorage.setItem('keja47_ok','1');
+    render();
+  }else{alert('Password si sahihi! Andika: NALIAKA4050');}
+}
+function logout(){localStorage.removeItem('keja47_ok');location.reload();}
+if(localStorage.getItem('keja47_ok')==='1'){document.getElementById('login').style.display='none';}
+
+let tenants=JSON.parse(localStorage.getItem('keja47_data')||'[]');
+function save(){localStorage.setItem('keja47_data',JSON.stringify(tenants));}
+function add(){const n=prompt('Jina:');if(!n)return;const ph=prompt('Simu:')||'';const ho=prompt('House:')||'';const co=prompt('County:','Garissa')||'Garissa';tenants.push({id:Date.now(),name:n,phone:ph,house:ho,county:co,paid:false});save();render();}
+function tog(id){const t=tenants.find(x=>x.id===id);t.paid=!t.paid;save();render();}
+function del(id){if(confirm('Futa?')){tenants=tenants.filter(x=>x.id!==id);save();render();}}
+function wa(name,phone,house){
+  if(!phone){alert('Hakuna namba');return;}
+  let c=phone.replace(/\D/g,'');if(c.startsWith('0'))c='254'+c.slice(1);if(c.startsWith('7'))c='254'+c;
+  const m=`Habari ${name}, keja namba ${house} - kodi bado haijaingia. Lipa leo. - KejaChapChap 0718255742`;
+  window.open(`https://wa.me/${c}?text=${encodeURIComponent(m)}`,'_blank');
+}
+function report(){
+  const up=tenants.filter(t=>!t.paid);
+  const txt=`*KejaChapChap Report ${new Date().toLocaleDateString()}*%0AWamelipa: ${tenants.length-up.length}%0AHajawahi: ${up.length}%0A${up.map(t=>`- ${t.name} ${t.house} ${t.phone}`).join('%0A')}`;
+  window.open(`https://wa.me/?text=${txt}`,'_blank');
+}
+function pdf(){let h=`<h1>KejaChapChap</h1><table border=1 cellpadding=6><tr><th>Jina</th><th>House</th><th>Phone</th><th>Status</th></tr>`;tenants.forEach(t=>h+=`<tr><td>${t.name}</td><td>${t.house}</td><td>${t.phone}</td><td>${t.paid?'PAID':'UNPAID'}</td></tr>`);h+='</table>';const w=window.open();w.document.write(h);w.print();}
+function render(){
+  const q=document.getElementById('s').value.toLowerCase();const co=document.getElementById('county').value;const L=document.getElementById('list');L.innerHTML='';
+  tenants.filter(t=>{const m=(t.name+t.phone+t.house).toLowerCase().includes(q);const c=co==='All'||t.county===co;return m&&c;}).forEach(t=>{
+    const d=document.createElement('div');d.className='card '+(t.paid?'green':'red');
+    d.innerHTML=`<div><b>${t.name}</b><br><small>${t.house} | ${t.county} | ${t.phone}</small><br><small style="color:${t.paid?'green':'red'}">${t.paid?'AMELIPA':'HAJALIPA'}</small></div><div style="text-align:right"><button class="btn ${t.paid?'b-red':'b-green'}" onclick="tog(${t.id})">${t.paid?'RED':'GREEN'}</button><br><button class="btn b-wa" style="margin-top:5px" onclick="wa('${t.name}','${t.phone}','${t.house}')">WhatsApp</button><br><button class="btn" style="margin-top:5px" onclick="del(${t.id})">Futa</button></div>`;
+    L.appendChild(d);
+  });
+}
+render();
+</script></body></html>
