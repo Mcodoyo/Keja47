@@ -1,65 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KejaChapChap - Landlord Manager</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KejaChapChap Test</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#f4f6f8}
-.login-screen{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#0d6efd,#6610f2);padding:20px}
-.login-box{background:white;padding:30px;border-radius:15px;width:100%;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center}
-.password-wrapper{position:relative;width:100%;margin-bottom:15px}
-.password-wrapper input{width:100%;padding:14px 45px 14px 14px;border:2px solid #ddd;border-radius:10px;font-size:16px;text-transform:uppercase}
-.eye-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:20px;cursor:pointer;padding:5px 8px}
-.login-main{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
-.app{display:none;padding:15px;max-width:900px;margin:auto}
-.header{background:white;padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
-.stat-card{background:white;padding:15px;border-radius:12px;text-align:center}
-.controls{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
-.controls input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px}
-.btn{flex:1;padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.btn-add{background:#198754;color:white}.btn-pdf{background:#6c757d;color:white}.btn-admin{background:#6610f2;color:white}
-.tenant-card{background:white;padding:12px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:5px solid red}
-.tenant-card.paid{border-left-color:green}
-.admin-panel{display:none;background:#fff3cd;border:2px solid #ffc107;padding:15px;border-radius:12px;margin-bottom:15px}
-.copyright{text-align:center;padding:25px 15px;margin-top:30px;color:#888;font-size:13px;border-top:1px solid #ddd;background:white;border-radius:12px}
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#0d6efd,#6610f2);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.box{background:white;padding:30px;border-radius:15px;width:100%;max-width:350px;text-align:center}
+input{width:100%;padding:14px;border:2px solid #ddd;border-radius:10px;margin-bottom:15px;font-size:16px;box-sizing:border-box}
+button{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px}
+.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px}
+.wrap{position:relative}
 </style>
-</head>
-<body>
-<div id="loginScreen" class="login-screen">
-  <div class="login-box">
-    <h1>KejaChapChap</h1>
-    <p style="color:#666;font-size:14px;margin-bottom:20px">Manage Rent Chap Chap - All 47 Counties</p>
-    <div class="password-wrapper">
-      <input type="password" id="passwordInput" placeholder="ENTER PASSWORD">
-      <button type="button" class="eye-btn" onclick="togglePassword()" id="eyeBtn">👁</button>
-    </div>
-    <button class="login-main" onclick="login()">INGIA / LOGIN</button>
-    <div style="margin-top:15px;font-size:12px;color:#888">No password? Lipa KSH 300 to<br><b>M-Pesa 0718255742 - Victor</b><br>Password valid 30 days</div>
-    <button onclick="localStorage.clear(); alert('✅ Cleared! Now login with NALIAKA4050'); location.reload();" style="margin-top:15px;padding:8px;background:#ffc107;border:none;border-radius:6px;font-size:12px;width:100%;cursor:pointer">⚠️ Login stuck? Tap to CLEAR & RESET</button>
-  </div>
+</head><body>
+<div class="box" id="loginBox">
+<h2>KejaChapChap</h2>
+<p style="color:#666;font-size:13px">Test Login</p>
+<div class="wrap"><input type="password" id="pw" placeholder="PASSWORD"><button class="eye" onclick="let i=document.getElementById('pw');i.type=i.type=='password'?'text':'password'">👁</button></div>
+<button onclick="doLogin()">INGIA / LOGIN</button>
+<p style="font-size:11px;color:#888;margin-top:15px">Try: NALIAKA4050<br><button onclick="localStorage.clear();alert('Cleared');location.reload()" style="margin-top:10px;background:#ffc107;color:black;padding:6px;font-size:12px">CLEAR RESET</button></p>
 </div>
-
-<div id="appScreen" class="app">
-  <div class="header">
-    <div><h2>KejaChapChap</h2><small id="userInfo"></small></div>
-    <div style="display:flex;gap:8px">
-      <button id="adminBtn" onclick="toggleAdmin()" style="display:none;padding:8px 12px;background:#6610f2;color:white;border:none;border-radius:6px;font-weight:bold">👑 ADMIN</button>
-      <button onclick="logout()" style="padding:8px 12px;background:#dc3545;color:white;border:none;border-radius:6px">Logout</button>
-    </div>
-  </div>
-  <div id="adminPanel" class="admin-panel">
-    <h3>👑 Admin - Add Customers (30 Days Auto)</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <input type="text" id="custName" placeholder="Name e.g Ali">
-      <input type="text" id="custPass" placeholder="Password e.g ALI300">
-    </div>
-    <div style="display:flex;gap:10px"><button class="btn btn-admin" onclick="addCustomer()">+ ADD CUSTOMER</button><button class="btn btn-pdf" onclick="exportCustomers()">EXPORT</button></div>
-    <div id="landlordList" style="margin-top:15px"></div>
-  </div>
-  <div class="stats">
-    <div class="stat-card"><h3 id="totalHouses">0</h3><p>Total Houses</p></div>
-    <div class="stat-card"><h3 id="totalCollected">0</h3><p>Collected</p></div>
-    <div class="stat-card"><h3 id="
+<div class="box" id="appBox" style="display:none"><h2>✅ SUCCESS!</h2><p>Logged in as Master</p><p id="info"></p><button onclick="localStorage.clear();location.reload()" style="background:#dc3545">Logout</button></div>
+<script>
+function doLogin(){
+  var p=document.getElementById('pw').value.trim().toUpperCase();
+  alert('You typed: '+p);
+  if(p==='NALIAKA4050'){
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('appBox').style.display='block';
+    document.getElementById('info').innerText='Welcome Victor Master - '+new Date().toLocaleString();
+    localStorage.setItem('keja_logged_as','Victor Master');
+  } else {
+    alert('❌ Wrong! You typed '+p+' but need NALIAKA4050');
+  }
+}
+</script>
+</body></html>
