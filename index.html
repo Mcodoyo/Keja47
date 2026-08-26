@@ -1,44 +1,61 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Keja47 Pro - 47 Counties</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>body{margin:0;font-family:system-ui;background:#f1f5f9}header{background:#0f172a;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.btn{border:0;padding:10px 16px;border-radius:12px;font-weight:700;cursor:pointer}.btn-blue{background:#0ea5e9;color:#fff}.btn-white{background:#fff;border:1px solid #e2e8f0}
-.btn-green{background:#16a34a;color:#fff}.btn-red{background:#dc2626;color:#fff}.card{background:#fff;border-radius:16px;padding:12px;box-shadow:0 2px 8px #0001;margin-bottom:10px}
-.pill{padding:6px 12px;border-radius:20px;background:#e2e8f0;border:0;margin:4px}.pill.active{background:#0f172a;color:#fff}
-.badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}.badge-green{background:#dcfce7;color:#166534}.badge-red{background:#fee2e2;color:#991b1b}
-#logoImg{height:32px;display:none;background:#fff;border-radius:6px;padding:2px}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:16px}
-.modal.open{display:flex}.modal>div{background:#fff;border-radius:16px;padding:16px;width:100%;max-width:360px}
-input,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px;margin:6px 0;box-sizing:border-box}.row{display:flex;gap:8px;flex-wrap:wrap}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.small{font-size:12px;color:#64748b}.kpi{font-size:22px;font-weight:800}
-</style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><img id="logoImg"><div><b>Keja47</b> <span style="color:#38bdf8">47 Counties</span></div></div>
-<div class="row"><button class="btn btn-white" onclick="openLogo()">Logo</button><button class="btn btn-white" onclick="openPass()">Password</button><button class="btn btn-white" onclick="logout()">Logout</button></div></header>
-<div style="padding:12px">
-<div class="row"><button class="btn btn-blue" onclick="openAdd()">+ Ongeza Tenant</button><select id="countyFilter" style="flex:1;min-width:160px"><option value="All">All 47 Counties</option></select></div>
-<div class="row" style="margin:10px 0"><button class="btn btn-white" onclick="whatsappReport()">WhatsApp Report</button><button class="btn btn-white" onclick="pdfReport()">PDF</button><input id="search" placeholder="Search jina/phone/house..." style="flex:1" oninput="render()"></div>
-<div class="grid2"><div class="card"><div class="kpi" id="totalH">0</div><div class="small">Total Houses</div></div><div class="card"><div class="kpi" id="greenH" style="color:#16a34a">0</div><div class="small">GREEN Paid</div></div><div class="card"><div class="kpi" id="redH" style="color:#dc2626">0</div><div class="small">RED Unpaid</div></div><div class="card"><div class="kpi" id="collected">Ksh 0</div><div class="small">Collected</div></div></div>
-<div id="pills" class="row" style="margin:10px 0"></div><div id="list"></div><div id="empty" class="card small" style="text-align:center;display:none">Hakuna tenant</div></div><div id="addModal" class="modal"><div><h3>Ongeza Tenant</h3><input id="fName" placeholder="Jina - e.g Victor"><select id="fCounty"></select><input id="fHouse" placeholder="House - e.g A1"><input id="fPhone" placeholder="Phone - e.g 0708919029"><input id="fRent" type="number" placeholder="Rent - e.g 5000"><div class="row"><button class="btn btn-blue" onclick="saveTenant()">Save</button><button class="btn btn-white" onclick="closeAdd()">Cancel</button></div></div></div>
-<div id="logoModal" class="modal"><div><h3>Company Logo</h3><input id="logoFile" type="file" accept="image/*"><div class="row" style="margin-top:8px"><button class="btn btn-blue" onclick="saveLogo()">Save Logo</button><button class="btn btn-white" onclick="removeLogo()">Remove</button><button class="btn btn-white" onclick="closeLogo()">Close</button></div></div></div>
-<div id="passModal" class="modal"><div><h3>Badilisha Password</h3><input id="oldPass" type="password" placeholder="Old Password"><input id="newPass" type="password" placeholder="New Password"><input id="newPass2" type="password" placeholder="Confirm New"><div id="passMsg" class="small" style="color:#dc2626"></div><div class="row" style="margin-top:8px"><button class="btn btn-blue" onclick="changePass()">Change</button><button class="btn btn-white" onclick="closePass()">Close</button></div></div></div>
-<div id="loginModal" class="modal open" style="background:#0f172aee"><div><h2>Keja47 Login</h2><p class="small">Password</p><input id="loginPass" type="password" placeholder="Default: 1234"><button class="btn btn-blue" style="width:100%;margin-top:8px" onclick="doLogin()">Login</button><button onclick="localStorage.clear();sessionStorage.clear();location.reload();" style="width:100%;margin-top:8px;background:#fee2e2;border:0;padding:10px;border-radius:10px;color:#dc2626;font-weight:700">🔄 Forgot? Reset Everything</button><p class="small" style="margin-top:8px">Default is 1234. Change after login.</p></div></div>
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KejaChapChap - 47 Counties</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B7A42">
+<style>
+  body{font-family:Arial;background:#f5f5f5;margin:0;padding:0}
+  #loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0B7A42;color:white;text-align:center;padding:20px}
+  #loginScreen input{padding:12px;width:250px;margin:10px;border-radius:8px;border:none;text-align:center;font-size:18px}
+  #loginScreen button{padding:12px 30px;background:#FF6A00;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+  #mainApp{display:none;padding:15px}
+  .card{background:white;padding:12px;margin:8px 0;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}
+  .green{border-left:6px solid #0B7A42}
+  .red{border-left:6px solid red}
+  button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;margin:2px}
+  .btn-green{background:#0B7A42;color:white}
+  .btn-red{background:red;color:white}
+  .btn-wa{background:#25D366;color:white}
+</style>
+</head>
+<body>
+
+<!-- LOGIN - PASSWORD FIXED TO NALIAKA4050 -->
+<div id="loginScreen">
+  <img src="logo.png" style="width:120px;background:white;border-radius:20px;padding:10px" onerror="this.style.display='none'">
+  <h1>KejaChapChap</h1>
+  <p>Pata Keja Kila County - ChapChap</p>
+  <input type="password" id="passwordInput" placeholder="Weka Password">
+  <button onclick="checkPassword()">INGIA</button>
+  <p style="font-size:12px;margin-top:15px">Demo: mcodoyo.github.io/Keja47<br>WhatsApp: 0718255742</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+  <h2>KejaChapChap - <span id="countyLabel">Garissa</span></h2>
+  
+  <input type="text" id="searchInput" placeholder="Search jina / nyumba..." onkeyup="renderTenants()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc">
+  
+  <select id="countyFilter" onchange="renderTenants()" style="width:100%;padding:10px;margin:10px 0;border-radius:8px">
+    <option value="All">Counties Zote 47</option>
+    <option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Kiambu</option><option>Machakos</option>
+    <option value="All">-- Zote --</option>
+  </select>
+
+  <div style="margin:10px 0">
+    <button class="btn-green" onclick="addTenant()">+ Ongeza Tenant</button>
+    <button class="btn-wa" onclick="sendAllReport()">WhatsApp Report</button>
+    <button onclick="generatePDF()">PDF Report</button>
+  </div>
+
+  <div id="tenantList"></div>
+</div>
+
 <script>
-const COUNTIES=["Mombasa","Kwale","Kilifi","Tana River","Lamu","Taita-Taveta","Garissa","Wajir","Mandera","Marsabit","Isiolo","Meru","Tharaka-Nithi","Embu","Kitui","Machakos","Makueni","Nyandarua","Nyeri","Kirinyaga","Murang'a","Kiambu","Turkana","West Pokot","Samburu","Trans-Nzoia","Uasin Gishu","Elgeyo-Marakwet","Nandi","Baringo","Laikipia","Nakuru","Narok","Kajiado","Kericho","Bomet","Kakamega","Vihiga","Bungoma","Busia","Siaya","Kisumu","Homa Bay","Migori","Kisii","Nyamira","Nairobi"];
-let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[{"name":"Victor","county":"Garissa","house":"A1","phone":"0708919029","rent":5000,"paid":false}]');
-let filterCounty=localStorage.getItem('keja47_filter')||'All';
-function init(){const sel=document.getElementById('countyFilter');const fC=document.getElementById('fCounty');COUNTIES.forEach(c=>{let o1=document.createElement('option');o1.value=c;o1.textContent=c;sel.appendChild(o1);let o2=document.createElement('option');o2.value=c;o2.textContent=c;fC.appendChild(o2);});sel.value=filterCounty;fC.value='Garissa';const pills=document.getElementById('pills');['All',...COUNTIES].slice(0,15).forEach(c=>{let b=document.createElement('button');b.className='pill';b.textContent=c;b.onclick=()=>{document.getElementById('countyFilter').value=c;filterCounty=c;localStorage.setItem('keja47_filter',c);render();};pills.appendChild(b);});const logo=localStorage.getItem('keja47_logo');if(logo){document.getElementById('logoImg').src=logo;document.getElementById('logoImg').style.display='block';}if(!localStorage.getItem('keja47_pass')) localStorage.setItem('keja47_pass','1234');checkLogin();render();}
-function render(){const f=document.getElementById('countyFilter').value;filterCounty=f;localStorage.setItem('keja47_filter',f);let s=document.getElementById('search').value.toLowerCase();let list=f==='All'?tenants:tenants.filter(t=>t.county===f);if(s) list=list.filter(t=>(t.name+t.phone+t.house).toLowerCase().includes(s));document.getElementById('totalH').innerText=list.length;document.getElementById('greenH').innerText=list.filter(t=>t.paid).length;document.getElementById('redH').innerText=list.filter(t=>!t.paid).length;document.getElementById('collected').innerText='Ksh '+(list.filter(t=>t.paid).reduce((a,b)=>a+Number(b.rent||0),0)).toLocaleString();const cont=document.getElementById('list');cont.innerHTML='';document.getElementById('empty').style.display=list.length?'none':'block';list.forEach(t=>{const idx=tenants.indexOf(t);const d=document.createElement('div');d.className='card';d.style.borderLeft='6px solid '+(t.paid?'#16a34a':'#dc2626');d.innerHTML=`<div style="display:flex;justify-content:space-between"><b>${t.house}</b><span class="badge ${t.paid?'badge-green':'badge-red'}">${t.paid?'GREEN':'RED'}</span></div><div class="small" style="margin:4px 0"><b>${t.county}</b> | ${t.name} | ${t.phone}</div><div>Ksh ${Number(t.rent).toLocaleString()}</div><div class="row" style="margin-top:8px"><button class="btn ${t.paid?'btn-white':'btn-green'}" onclick="togglePaid(${idx})">${t.paid?'Mark RED':'Mark GREEN'}</button><button class="btn btn-white" onclick="del(${idx})">Delete</button></div>`;cont.appendChild(d);});document.querySelectorAll('.pill').forEach(p=>{p.classList.toggle('active',p.textContent===f);});}
-function openAdd(){document.getElementById('addModal').classList.add('open')}function closeAdd(){document.getElementById('addModal').classList.remove('open')}
-function saveTenant(){const t={name:document.getElementById('fName').value||'No Name',county:document.getElementById('fCounty').value,house:document.getElementById('fHouse').value||'A1',phone:document.getElementById('fPhone').value||'',rent:document.getElementById('fRent').value||0,paid:false};tenants.push(t);localStorage.setItem('keja47_tenants',JSON.stringify(tenants));closeAdd();render();}
-function togglePaid(i){tenants[i].paid=!tenants[i].paid;localStorage.setItem('keja47_tenants',JSON.stringify(tenants));render();}
-function del(i){if(confirm('Delete?')){tenants.splice(i,1);localStorage.setItem('keja47_tenants',JSON.stringify(tenants));render();}}
-function whatsappReport(){const f=document.getElementById('countyFilter').value;let list=f==='All'?tenants:tenants.filter(t=>t.county===f);let txt=`*Keja47 ${f}*\nTotal:${list.length} Paid:${list.filter(t=>t.paid).length} Unpaid:${list.filter(t=>!t.paid).length}\n`;list.forEach(t=>{txt+=`${t.house} ${t.county} ${t.name} Ksh${t.rent} ${t.paid?'✅':'❌'}\n`});window.open('https://wa.me/?text='+encodeURIComponent(txt));}
-function pdfReport(){const {jsPDF}=window.jspdf;const doc=new jsPDF();const f=document.getElementById('countyFilter').value;let list=f==='All'?tenants:tenants.filter(t=>t.county===f);const logo=localStorage.getItem('keja47_logo');if(logo){try{doc.addImage(logo,'PNG',10,10,30,15)}catch(e){}}doc.setFontSize(14);doc.text(`Keja47 - ${f} Report`,logo?50:10,20);doc.setFontSize(9);doc.text(`Date:${new Date().toLocaleDateString()} Total:${list.length} Paid:${list.filter(t=>t.paid).length} Collected:Ksh ${list.filter(t=>t.paid).reduce((a,b)=>a+Number(b.rent||0),0)}`,10,30);let y=40;list.forEach(t=>{if(y>270){doc.addPage();y=20;}doc.text(`${t.house} | ${t.county} | ${t.name} | ${t.phone} | Ksh${t.rent} | ${t.paid?'PAID':'UNPAID'}`,10,y);y+=6;});doc.save(`Keja47_${f}.pdf`);}
-function openLogo(){document.getElementById('logoModal').classList.add('open')}function closeLogo(){document.getElementById('logoModal').classList.remove('open')}
-function saveLogo(){const file=document.getElementById('logoFile').files[0];if(!file) return alert('Chagua logo');const r=new FileReader();r.onload=e=>{localStorage.setItem('keja47_logo',e.target.result);document.getElementById('logoImg').src=e.target.result;document.getElementById('logoImg').style.display='block';closeLogo();};r.readAsDataURL(file);}
-function removeLogo(){localStorage.removeItem('keja47_logo');document.getElementById('logoImg').style.display='none';closeLogo();}
-function openPass(){document.getElementById('passModal').classList.add('open')}function closePass(){document.getElementById('passModal').classList.remove('open')}
-function changePass(){const o=document.getElementById('oldPass').value;const n=document.getElementById('newPass').value;const n2=document.getElementById('newPass2').value;if(o!==localStorage.getItem('keja47_pass')) return document.getElementById('passMsg').innerText='Old password wrong';if(n.length<4) return document.getElementById('passMsg').innerText='Min 4 chars';if(n!==n2) return document.getElementById('passMsg').innerText='Hazifanani';localStorage.setItem('keja47_pass',n);document.getElementById('passMsg').innerText='Changed ✅';setTimeout(closePass,800);}
-function checkLogin(){if(sessionStorage.getItem('keja47_logged')==='1'){document.getElementById('loginModal').style.display='none';}}
-function doLogin(){if(document.getElementById('loginPass').value===localStorage.getItem('keja47_pass')){sessionStorage.setItem('keja47_logged','1');document.getElementById('loginModal').style.display='none';}else alert('Wrong! Try 1234 or Reset');}
-function logout(){sessionStorage.removeItem('keja47_logged');location.reload();}
-document.getElementById('countyFilter').addEventListener('change',()=>{filterCounty=document.getElementById('countyFilter').value;render();});init();
-</script></body></html>
+// --- 1. PASSWORD LOCKED TO NALIAKA4050 ---
+const CORRECT_PASSWORD = "NALIAKA4050";
+
+function
