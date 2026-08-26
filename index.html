@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KejaChapChap - Admin</title>
+<title>KejaChapChap - Final</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{background:#f4f6f8}
 .login-screen{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#0d6efd,#6610f2);padding:20px}
 .login-box{background:white;padding:30px;border-radius:15px;width:100%;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center}
-.pw-row{display:flex;gap:5px;margin-bottom:15px}
+.pw-row{display:flex;gap:6px;margin-bottom:15px}
 .pw-row input{flex:1;padding:14px;border:2px solid #ddd;border-radius:10px;font-size:16px}
-.eye-btn{width:50px;background:#eee;border:2px solid #ddd;border-radius:10px;font-size:20px;cursor:pointer}
-.login-main{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+.eye-btn{width:52px;background:#eee;border:2px solid #ddd;border-radius:10px;font-size:20px}
+.login-main{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px}
 .app{display:none;padding:15px;max-width:900px;margin:auto}
 .header{background:white;padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
 .stat-card{background:white;padding:15px;border-radius:12px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.05)}
 .controls{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
 .controls input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px}
-.btn{flex:1;padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.btn{flex:1;padding:12px;border:none;border-radius:8px;font-weight:bold}
 .btn-add{background:#198754;color:white}.btn-pdf{background:#6c757d;color:white}.btn-admin{background:#6610f2;color:white}
 .tenant-card{background:white;padding:12px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:5px solid red}
 .tenant-card.paid{border-left-color:green}
@@ -31,13 +31,27 @@ body{background:#f4f6f8}
 <input type="password" id="passwordInput" placeholder="ENTER PASSWORD">
 <button class="eye-btn" type="button" onclick="togglePw()" id="eyeBtn">👁</button>
 </div>
-<button class="login-main" onclick="login()">INGIA / LOGIN</button>
-<div style="margin-top:12px;font-size:11px;color:#888">Lipa KSH 1000 → M-Pesa 0718255742</div>
+<!-- DIRECT LOGIN FIX -->
+<button class="login-main" onclick="
+let p=document.getElementById('passwordInput').value.toUpperCase().trim();
+if(!p){alert('Weka password');}
+else if(p==='NALIAKA4050'){
+ document.getElementById('loginScreen').style.display='none';
+ document.getElementById('appScreen').style.display='block';
+ document.getElementById('userInfo').innerText='Victor Master - MASTER';
+ document.getElementById('adminBtn').style.display='block';
+ try{loadTenants();}catch(e){}
+ try{renderLandlords();}catch(e){}
+}else{
+ loginCustomer(p);
+}
+">INGIA / LOGIN</button>
+<div style="margin-top:12px;font-size:11px;color:#888">Lipa KSH 300 → M-Pesa 0718255742</div>
 <button onclick="localStorage.clear();alert('Cleared!');location.reload()" style="margin-top:10px;width:100%;padding:6px;background:#ffc107;border:none;border-radius:6px;font-size:11px">CLEAR RESET</button>
 </div></div>
 
 <div id="appScreen" class="app">
-<div class="header"><div><h2>KejaChapChap</h2><small id="userInfo"></small></div><div style="display:flex;gap:8px"><button id="adminBtn" onclick="toggleAdmin()" style="display:none;padding:8px 12px;background:#6610f2;color:white;border:none;border-radius:6px;font-weight:bold">👑 ADMIN</button><button onclick="logout()" style="padding:8px 12px;background:#dc3545;color:white;border:none;border-radius:6px">Logout</button></div></div>
+<div class="header"><div><h2>KejaChapChap</h2><small id="userInfo"></small></div><div style="display:flex;gap:8px"><button id="adminBtn" onclick="toggleAdmin()" style="display:none;padding:8px 12px;background:#6610f2;color:white;border:none;border-radius:6px;font-weight:bold">👑 ADMIN</button><button onclick="location.reload()" style="padding:8px 12px;background:#dc3545;color:white;border:none;border-radius:6px">Logout</button></div></div>
 
 <div id="adminPanel" class="admin-panel">
 <h3>👑 Admin - Manage Customers</h3>
@@ -60,7 +74,7 @@ body{background:#f4f6f8}
 </div>
 
 <div id="tenantList"></div><div id="pagination" style="text-align:center;margin-top:10px"></div>
-<div class="copyright"><b>KejaChapChap</b> © 2026<br>Developed by <b>Victor Naliaka</b> | Garissa, Kenya<br>M-Pesa: 0718255742 | mcodoyo@gmail.com<br>Version 2.3 - Admin Edition</div>
+<div class="copyright"><b>KejaChapChap</b> © 2026<br>Developed by <b>Victor Naliaka</b> | Garissa, Kenya<br>M-Pesa: 0718255742<br>Version 2.4 FINAL</div>
 </div>
 
 <script>
@@ -69,20 +83,20 @@ function getDB(){let s=localStorage.getItem('keja_landlords_db');let db;if(!s){d
 function saveDB(db){localStorage.setItem('keja_landlords_db',JSON.stringify(db));}
 function togglePw(){let i=document.getElementById('passwordInput');let b=document.getElementById('eyeBtn');if(i.type==='password'){i.type='text';b.textContent='🙈';}else{i.type='password';b.textContent='👁';}}
 function autoPass(){let n=document.getElementById('custName').value.trim().split(' ')[0].toUpperCase();if(n){document.getElementById('custPass').value=n+'300';}}
-function checkPass(input){let pass=input.trim().toUpperCase();if(pass==='NALIAKA4050'){return{valid:true,name:'Victor Master',pass:pass,isMaster:true,daysLeft:999};}let db=getDB();let u=db[pass];if(!u){return{valid:false,msg:'❌ Wrong password. Lipa KSH 300 to 0718255742'};}if(u.neverExpires){return{valid:true,name:u.name,pass:pass,isMaster:true,daysLeft:999};}let c=new Date(u.created);let t=new Date();t.setHours(0,0,0,0);c.setHours(0,0,0,0);let diff=Math.floor((t-c)/(1000*60*60*24));if(diff>30){return{valid:false,msg:'❌ Expired! '+diff+' days ago'};}return{valid:true,name:u.name,pass:pass,isMaster:false,daysLeft:30-diff};}
-function login(){let v=document.getElementById('passwordInput').value;if(!v){alert('Enter password');return;}let r=checkPass(v);if(!r.valid){alert(r.msg);return;}localStorage.setItem('keja_logged_as',r.name);localStorage.setItem('keja_pass_used',r.pass);localStorage.setItem('keja_is_master',r.isMaster?'1':'0');localStorage.setItem('keja_days_left',r.daysLeft);showApp();}
-function showApp(){document.getElementById('loginScreen').style.display='none';document.getElementById('appScreen').style.display='block';let name=localStorage.getItem('keja_logged_as');let isM=localStorage.getItem('keja_is_master')==='1';let dl=localStorage.getItem('keja_days_left');document.getElementById('userInfo').innerText=isM? name+' - MASTER' : name+' - '+dl+' days left';document.getElementById('adminBtn').style.display=isM?'block':'none';if(isM)renderLandlords();loadTenants();}
-function logout(){document.getElementById('loginScreen').style.display='flex';document.getElementById('appScreen').style.display='none';document.getElementById('adminPanel').style.display='none';document.getElementById('passwordInput').value='';document.getElementById('passwordInput').type='password';document.getElementById('eyeBtn').textContent='👁';}
+function loginCustomer(pass){let db=getDB();let u=db[pass];if(!u){alert('❌ Wrong password. Lipa 300 to 0718255742');return;}if(u.neverExpires){document.getElementById('loginScreen').style.display='none';document.getElementById('appScreen').style.display='block';document.getElementById('userInfo').innerText=u.name+' - MASTER';document.getElementById('adminBtn').style.display='block';loadTenants();renderLandlords();return;}let c=new Date(u.created);let t=new Date();t.setHours(0,0,0,0);c.setHours(0,0,0,0);let diff=Math.floor((t-c)/(1000*60*60*24));if(diff>30){alert('❌ Expired '+diff+' days ago!');return;}document.getElementById('loginScreen').style.display='none';document.getElementById('appScreen').style.display='block';document.getElementById('userInfo').innerText=u.name+' - '+(30-diff)+' days left';loadTenants();}
 function toggleAdmin(){let p=document.getElementById('adminPanel');p.style.display=p.style.display==='none'?'block':'none';renderLandlords();}
-function addCustomer(){let name=document.getElementById('custName').value.trim();let pass=document.getElementById('custPass').value.trim().toUpperCase();if(!name||!pass){alert('Weka Name na Password');return;}let db=getDB();if(db[pass]){alert('Exists!');return;}let today=new Date().toISOString().split('T')[0];db[pass]={name:name,created:today};saveDB(db);document.getElementById('custName').value='';document.getElementById('custPass').value='';renderLandlords();alert('✅ Added '+name+' - '+pass+' - 30 days from '+today);}
-function deleteCustomer(p){if(p==='NALIAKA4050'){alert('Cannot delete master!');return;}if(!confirm('Delete '+p+'?'))return;let db=getDB();delete db[p];saveDB(db);renderLandlords();}
-function renewCustomer(p){let db=getDB();let today=new Date().toISOString().split('T')[0];db[p].created=today;saveDB(db);renderLandlords();alert('✅ Renewed '+p+' - 30 days');}
-function renderLandlords(){let db=getDB();let c=document.getElementById('landlordList');c.innerHTML='';let today=new Date();today.setHours(0,0,0,0);for(let pass in db){let u=db[pass];if(u.neverExpires){c.innerHTML+='<div style="display:flex;justify-content:space-between;background:white;padding:10px;border-radius:8px;margin-bottom:8px"><div><b>'+pass+'</b> - '+u.name+'<br><small>MASTER - Never expires</small></div></div>';continue;}let cr=new Date(u.created);cr.setHours(0,0,0,0);let diff=Math.floor((today-cr)/(1000*60*60*24));let left=30-diff;let col=left<=5?'red':left<=10?'orange':'green';c.innerHTML+='<div style="display:flex;justify-content:space-between;background:white;padding:10px;border-radius:8px;margin-bottom:8px"><div><b>'+pass+'</b> - '+u.name+'<br><small>'+u.created+' | <span style="color:'+col+';font-weight:bold">'+left+' days left</span></small></div><div><button onclick="renewCustomer(\''+pass+'\')" style="padding:5px 8px;background:green;color:white;border:none;border-radius:5px;margin-right:5px">Renew</button><button onclick="deleteCustomer(\''+pass+'\')" style="padding:5px 8px;background:red;color:white;border:none;border-radius:5px">Block</button></div></div>';}}
-function exportCustomers(){let db=getDB();let t='KejaChapChap Export - '+new Date().toLocaleString()+'\n\n';for(let p in db){t+=p+' | '+db[p].name+' | '+(db[p].created||'MASTER')+'\n';}let b=new Blob([t],{type:'text/plain'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Customers-'+new Date().toISOString().split('T')[0]+'.txt';a.click();}
+function addCustomer(){let name=document.getElementById('custName').value.trim();let pass=document.getElementById('custPass').value.trim().toUpperCase();if(!name||!pass){alert('Weka Name na Password');return;}let db=getDB();if(db[pass]){alert('Exists!');return;}let today=new Date().toISOString().split('T')[0];db[pass]={name:name,created:today};saveDB(db);document.getElementById('custName').value='';document.getElementById('custPass').value='';renderLandlords();alert('✅ Added '+name+' '+pass+' - 30 days');}
+function deleteCustomer(p){if(p==='NALIAKA4050'){alert('Cannot delete master');return;}if(!confirm('Delete '+p+'?'))return;let db=getDB();delete db[p];saveDB(db);renderLandlords();}
+function renewCustomer(p){let db=getDB();let today=new Date().toISOString().split('T')[0];db[p].created=today;saveDB(db);renderLandlords();alert('✅ Renewed '+p);}
+function renderLandlords(){let db=getDB();let c=document.getElementById('landlordList');c.innerHTML='';let today=new Date();today.setHours(0,0,0,0);for(let pass in db){let u=db[pass];if(u.neverExpires){c.innerHTML+='<div style="display:flex;justify-content:space-between;background:white;padding:10px;border-radius:8px;margin-bottom:8px"><div><b>'+pass+'</b> - '+u.name+'<br><small>MASTER</small></div></div>';continue;}let cr=new Date(u.created);cr.setHours(0,0,0,0);let diff=Math.floor((today-cr)/(1000*60*60*24));let left=30-diff;let col=left<=5?'red':left<=10?'orange':'green';c.innerHTML+='<div style="display:flex;justify-content:space-between;background:white;padding:10px;border-radius:8px;margin-bottom:8px"><div><b>'+pass+'</b> - '+u.name+'<br><small>'+u.created+' | <span style="color:'+col+';font-weight:bold">'+left+' days left</span></small></div><div><button onclick="renewCustomer(\''+pass+'\')" style="padding:5px 8px;background:green;color:white;border:none;border-radius:5px;margin-right:5px">Renew</button><button onclick="deleteCustomer(\''+pass+'\')" style="padding:5px 8px;background:red;color:white;border:none;border-radius:5px">Block</button></div></div>';}}
+function exportCustomers(){let db=getDB();let t='Export '+new Date().toLocaleString()+'\n';for(let p in db){t+=p+' | '+db[p].name+' | '+(db[p].created||'MASTER')+'\n';}let b=new Blob([t],{type:'text/plain'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Customers.txt';a.click();}
 let allTenants=JSON.parse(localStorage.getItem('keja_tenants')||'[]');let filtered=[];let page=1;const PER=25;let st;
 function saveT(){localStorage.setItem('keja_tenants',JSON.stringify(allTenants));}
 function loadTenants(){allTenants=JSON.parse(localStorage.getItem('keja_tenants')||'[]');filtered=[...allTenants];page=1;renderT();}
 function addTenant(){let h=document.getElementById('houseNo').value.trim();let n=document.getElementById('tenantName').value.trim();let r=parseInt(document.getElementById('rentAmount').value)||0;let ph=document.getElementById('tenantPhone').value.trim();if(!h||!n){alert('Weka House No na Name');return;}allTenants.unshift({id:Date.now(),house:h,name:n,rent:r,phone:ph,paid:false});saveT();document.getElementById('houseNo').value='';document.getElementById('tenantName').value='';document.getElementById('rentAmount').value='';document.getElementById('tenantPhone').value='';filtered=[...allTenants];renderT();}
 function togglePaid(id){let t=allTenants.find(x=>x.id===id);if(t){t.paid=!t.paid;saveT();renderT();}}
 function deleteTenant(id){if(!confirm('Delete?'))return;allTenants=allTenants.filter(x=>x.id!==id);filtered=filtered.filter(x=>x.id!==id);saveT();renderT();}
-function fastSearch(q){clearTimeout(st);st=setTimeout(()=>{let qq=q.toLowerCase().trim();if(!qq)filtered=[...allTenants];else filtered
+function fastSearch(q){clearTimeout(st);st=setTimeout(()=>{let qq=q.toLowerCase().trim();if(!qq)filtered=[...allTenants];else filtered=allTenants.filter(t=>t.name.toLowerCase().includes(qq)||t.house.toLowerCase().includes(qq));page=1;renderT();},300);}
+function renderT(){let total=allTenants.length;let col=0,exp=0,not=0;for(let t of allTenants){exp+=t.rent||0;if(t.paid)col+=t.rent||0;else not++;}document.getElementById('totalHouses').innerText=total;document.getElementById('totalCollected').innerText=col.toLocaleString();document.getElementById('totalNotPaid').innerText=not;document.getElementById('totalExpected').innerText=exp.toLocaleString();let start=(page-1)*PER;let items=filtered.slice(start,start+PER);let list=document.getElementById('tenantList');list.innerHTML='';if(items.length===0)list.innerHTML='<p style="text-align:center;padding:20px;color:#888">No tenants</p>';else items.forEach(t=>{let d=document.createElement('div');d.className='tenant-card '+(t.paid?'paid':'');d.innerHTML='<div><b>'+t.house+' - '+t.name+'</b><br><small>KSH '+t.rent+' | '+(t.phone||'')+' | '+(t.paid?'✅ PAID':'❌ NOT PAID')+'</small></div><div><button onclick="togglePaid('+t.id+')" style="padding:6px 10px;border:none;border-radius:6px;background:#d1e7dd;margin:2px">Paid</button><button onclick="deleteTenant('+t.id+')" style="padding:6px 10px;border:none;border-radius:6px;background:#f8d7da;margin:2px">X</button></div>';list.appendChild(d);});let tp=Math.ceil(filtered.length/PER)||1;document.getElementById('pagination').innerHTML='Page '+page+' of '+tp+'<br><button onclick="if(page>1){page--;renderT()}" style="padding:6px 12px;margin:5px">Prev</button><button onclick="if(page<'+tp+'){page++;renderT()}" style="padding:6px 12px;margin:5px">Next</button>';}
+function downloadPDF(){let tx='Report '+new Date().toLocaleDateString()+'\n';allTenants.forEach(t=>{tx+=t.house+' | '+t.name+' | '+t.rent+' | '+t.phone+' | '+(t.paid?'PAID':'NOT PAID')+'\n';});tx+='\n© KejaChapChap - Victor Naliaka';let b=new Blob([tx],{type:'text/plain'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='KejaReport.txt';a.click();}
+</script></body></html>
