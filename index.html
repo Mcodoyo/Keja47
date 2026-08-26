@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KejaChapChap Test</title>
+<title>KejaChapChap</title>
 <style>
 body{margin:0;font-family:Arial;background:linear-gradient(135deg,#0d6efd,#6610f2);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.box{background:white;padding:30px;border-radius:15px;width:100%;max-width:350px;text-align:center}
+.box{background:white;padding:30px;border-radius:15px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
 input{width:100%;padding:14px;border:2px solid #ddd;border-radius:10px;margin-bottom:15px;font-size:16px;box-sizing:border-box}
-button{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px}
-.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px}
-.wrap{position:relative}
+button{width:100%;padding:14px;background:#0d6efd;color:white;border:none;border-radius:10px;font-weight:bold}
 </style>
 </head><body>
 <div class="box" id="loginBox">
 <h2>KejaChapChap</h2>
-<p style="color:#666;font-size:13px">Test Login</p>
-<div class="wrap"><input type="password" id="pw" placeholder="PASSWORD"><button class="eye" onclick="let i=document.getElementById('pw');i.type=i.type=='password'?'text':'password'">👁</button></div>
+<p style="color:#666">Manage Rent Chap Chap</p>
+<input type="text" id="pw" placeholder="ENTER PASSWORD">
 <button onclick="doLogin()">INGIA / LOGIN</button>
-<p style="font-size:11px;color:#888;margin-top:15px">Try: NALIAKA4050<br><button onclick="localStorage.clear();alert('Cleared');location.reload()" style="margin-top:10px;background:#ffc107;color:black;padding:6px;font-size:12px">CLEAR RESET</button></p>
+<p style="font-size:12px;color:#888;margin-top:10px">Use: NALIAKA4050<br>Password visible now to test typing</p>
+<button onclick="localStorage.clear();alert('Cleared');location.reload()" style="margin-top:10px;background:#ffc107;color:black;padding:8px;font-size:12px">CLEAR RESET</button>
 </div>
-<div class="box" id="appBox" style="display:none"><h2>✅ SUCCESS!</h2><p>Logged in as Master</p><p id="info"></p><button onclick="localStorage.clear();location.reload()" style="background:#dc3545">Logout</button></div>
+<div class="box" id="appBox" style="display:none">
+<h2>✅ SUCCESS!</h2><p id="info"></p>
+<button onclick="localStorage.clear();location.reload()" style="background:#dc3545">Logout</button>
+</div>
 <script>
 function doLogin(){
-  var p=document.getElementById('pw').value.trim().toUpperCase();
-  alert('You typed: '+p);
+  var el=document.getElementById('pw');
+  var p=el.value.trim().toUpperCase();
+  alert('You typed: ['+p+'] length='+p.length);
   if(p==='NALIAKA4050'){
     document.getElementById('loginBox').style.display='none';
     document.getElementById('appBox').style.display='block';
-    document.getElementById('info').innerText='Welcome Victor Master - '+new Date().toLocaleString();
-    localStorage.setItem('keja_logged_as','Victor Master');
+    document.getElementById('info').innerText='Welcome Victor Master';
   } else {
-    alert('❌ Wrong! You typed '+p+' but need NALIAKA4050');
+    alert('Wrong! Need NALIAKA4050 but you typed '+p);
   }
 }
 </script>
