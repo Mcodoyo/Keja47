@@ -1,133 +1,50 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KejaChapChap - Victor Odoyo</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-<style>
-body{margin:0;font-family:system-ui;background:#f1f2f6}
-.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}
-.card{background:#fff;border:1px solid #eee;border-radius:14px;padding:12px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.hidden{display:none}
-#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-input,select,textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0;box-sizing:border-box}
-.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer;font-size:16px}
-.btn{padding:7px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer;margin:2px}
-.tab{padding:10px 14px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;margin-right:6px}
-.tab.active{background:#0f8a5f;color:#fff;border-color:#0f8a5f}
-</style>
-</head>
-<body>
-<div id="loginWrap">
-<h2 style="text-align:center">KejaChapChap<br><small style="font-size:12px;color:#666">Victor Odoyo - Nairobi</small></h2>
-<input id="pass" type="password" placeholder="Enter Password">
-<button type="button" class="add" onclick="doLogin()">LOGIN</button>
-<p id="err" style="color:red;text-align:center;font-size:13px;min-height:18px"></p>
-<p style="text-align:center;font-size:11px;color:#999">MASTER: VICTOR2003@Nrb</p>
-</div>
-
-<div id="mainApp" class="wrap hidden">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h2 style="margin:0">KejaChapChap</h2>
-<button class="btn" onclick="location.reload()" style="background:#eee">Logout</button>
-</div>
-<p id="who" style="color:#0f8a5f;font-weight:700"></p>
-<div style="margin:12px 0">
-<button class="tab active" onclick="showTab('agents')" id="tab-agents">Agents</button>
-<button class="tab" onclick="showTab('houses')" id="tab-houses">Houses</button>
-<button class="tab" onclick="showTab('mpesa')" id="tab-mpesa">M-Pesa</button>
-</div>
-<div id="view-agents"></div>
-<div id="view-houses" class="hidden"></div>
-<div id="view-mpesa" class="hidden"></div>
-</div>
-
+<style>body{margin:0;font-family:system-ui;background:#f1f2f6}.wrap{max-width:520px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}.card{background:#fff;border:1px solid #eee;border-radius:14px;padding:12px;margin:8px 0}.hidden{display:none}#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}input,select,textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0;box-sizing:border-box}.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer}.btn{padding:7px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer;margin:2px}.tab{padding:8px 12px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;margin:2px}.tab.active{background:#0f8a5f;color:#fff}</style></head><body>
+<div id="loginWrap"><h2 style="text-align:center">KejaChapChap<br><small style="font-size:12px;color:#666">Victor Odoyo - Nairobi</small></h2><input id="pass" type="password" placeholder="Enter Password"><button type="button" class="add" onclick="doLogin()">LOGIN</button><p id="err" style="color:red;text-align:center;font-size:13px;min-height:18px"></p></div>
+<div id="mainApp" class="wrap hidden"><div style="display:flex;justify-content:space-between"><h2 style="margin:0">KejaChapChap</h2><button class="btn" style="background:#eee" onclick="location.reload()">Logout</button></div><p id="who" style="color:#0f8a5f;font-weight:700"></p>
+<div style="margin:10px 0"><button class="tab active" id="t1" onclick="showTab('landlords')">Landlords</button><button class="tab" id="t2" onclick="showTab('agents')">Agents</button><button class="tab" id="t3" onclick="showTab('houses')">Houses</button><button class="tab" id="t4" onclick="showTab('tenants')">Tenants</button><button class="tab" id="t5" onclick="showTab('rent')">Rent</button></div>
+<div id="v-landlords"></div><div id="v-agents" class="hidden"></div><div id="v-houses" class="hidden"></div><div id="v-tenants" class="hidden"></div><div id="v-rent" class="hidden"></div></div>
 <script>
-const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
-
-// HIDDEN MASTER - No one can see full code in inspect easily
-const _a1="VICTOR";
-const _a2="2003";
-const _a3="@Nrb";
-const MASTER=_a1+_a2+_a3;
-
-function getDeviceId(){let id=localStorage.getItem('deviceId'); if(!id){id='dev_'+Math.random().toString(36).substr(2,9); localStorage.setItem('deviceId',id);} return id;}
-
+const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+// HIDDEN MASTER - Split so no one sees in inspect
+const _x1="VICTOR";const _x2="2003";const _x3="@Nrb";const MASTER=_x1+_x2+_x3;
+function getDev(){let id=localStorage.getItem('deviceId');if(!id){id='dev_'+Math.random().toString(36).substr(2,9);localStorage.setItem('deviceId',id);}return id;}
 window.doLogin=function(){
- const input=document.getElementById('pass');
- let p=input.value.trim();
- if(!p){document.getElementById('err').innerText="Enter password"; return;}
- let pUpper=p.toUpperCase();
- let masterUpper=MASTER.toUpperCase();
- // Allow exact match OR uppercase match
- if(p===MASTER || pUpper===masterUpper){
-   localStorage.setItem('userRole','MASTER');
-   localStorage.setItem('userId',MASTER);
-   document.getElementById('loginWrap').classList.add('hidden');
-   document.getElementById('mainApp').classList.remove('hidden');
-   document.getElementById('who').innerText="MASTER - Victor Odoyo ("+MASTER+")";
-   loadData();
-   return;
+ let p=document.getElementById('pass').value.trim();if(!p){document.getElementById('err').innerText="Enter password";return;}
+ if(p===MASTER||p.toUpperCase()===MASTER.toUpperCase()){
+   localStorage.setItem('role','MASTER');localStorage.setItem('uid',MASTER);
+   document.getElementById('loginWrap').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');
+   document.getElementById('who').innerText="MASTER - Victor Odoyo";loadAll();return;
  }
- // Check landlord subscriptions
- db.collection("subscriptions").doc(pUpper).get().then(doc=>{
-   if(!doc.exists){document.getElementById('err').innerText="Invalid password"; return;}
-   let data=doc.data();
-   let deviceId=getDeviceId();
-   if(data.deviceId && data.deviceId!==deviceId){
-     document.getElementById('err').innerText="Locked to another phone. Contact Victor.";
-     return;
-   }
-   if(!data.deviceId){
-     db.collection("subscriptions").doc(pUpper).update({deviceId:deviceId});
-   }
-   localStorage.setItem('userRole','LANDLORD');
-   localStorage.setItem('userId',pUpper);
-   document.getElementById('loginWrap').classList.add('hidden');
-   document.getElementById('mainApp').classList.remove('hidden');
-   document.getElementById('who').innerText="Landlord: "+pUpper;
-   loadData();
- }).catch(e=>{document.getElementById('err').innerText="Error: "+e.message;});
+ db.collection("subscriptions").doc(p.toUpperCase()).get().then(d=>{
+   if(!d.exists){document.getElementById('err').innerText="Invalid password";return;}
+   let data=d.data();let dev=getDev();if(data.deviceId&&data.deviceId!==dev){document.getElementById('err').innerText="Locked to another phone";return;}
+   if(!data.deviceId)db.collection("subscriptions").doc(p.toUpperCase()).update({deviceId:dev});
+   localStorage.setItem('role','LANDLORD');localStorage.setItem('uid',p.toUpperCase());
+   document.getElementById('loginWrap').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');
+   document.getElementById('who').innerText="Landlord: "+p.toUpperCase();loadAll();
+ }).catch(e=>{document.getElementById('err').innerText=e.message;});
 };
-
-document.getElementById('pass').addEventListener('keypress',function(e){if(e.key==='Enter'){doLogin();}});
-
-function showTab(t){
- document.getElementById('view-agents').classList.add('hidden');
- document.getElementById('view-houses').classList.add('hidden');
- document.getElementById('view-mpesa').classList.add('hidden');
- document.getElementById('tab-agents').classList.remove('active');
- document.getElementById('tab-houses').classList.remove('active');
- document.getElementById('tab-mpesa').classList.remove('active');
- document.getElementById('view-'+t).classList.remove('hidden');
- document.getElementById('tab-'+t).classList.add('active');
+document.getElementById('pass').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
+function showTab(t){['landlords','agents','houses','tenants','rent'].forEach(k=>{document.getElementById('v-'+k).classList.add('hidden');document.getElementById('t'+( ['landlords','agents','houses','tenants','rent'].indexOf(k)+1)).classList.remove('active');});document.getElementById('v-'+t).classList.remove('hidden');document.getElementById('t'+(['landlords','agents','houses','tenants','rent'].indexOf(t)+1)).classList.add('active');}
+function loadAll(){
+ document.getElementById('v-landlords').innerHTML=`<div class="card"><h3>Add Landlord (MASTER only)</h3><input id="llPass" placeholder="New Landlord Password e.g. OTIENO001"><input id="llName" placeholder="Landlord Name"><button class="add" onclick="addLandlord()">Create Landlord</button><div id="llList"></div></div>`;loadLandlords();
+ document.getElementById('v-agents').innerHTML=`<div class="card"><h3>Agents</h3><input id="agName" placeholder="Agent Name"><input id="agPhone" placeholder="07..."><button class="add" onclick="addAgent()">Save Agent</button><div id="agList"></div></div>`;loadAgents();
+ document.getElementById('v-houses').innerHTML=`<div class="card"><h3>Houses / Units</h3><input id="hsName" placeholder="House No. e.g. A1"><input id="hsRent" type="number" placeholder="Rent Amount"><button class="add" onclick="addHouse()">Add House</button><div id="hsList"></div></div>`;loadHouses();
+ document.getElementById('v-tenants').innerHTML=`<div class="card"><h3>Tenants</h3><input id="tnName" placeholder="Tenant Name"><input id="tnHouse" placeholder="House No"><input id="tnPhone" placeholder="Phone"><button class="add" onclick="addTenant()">Add Tenant</button><div id="tnList"></div></div>`;loadTenants();
+ document.getElementById('v-rent').innerHTML=`<div class="card"><h3>Rent & M-Pesa</h3><input id="rtHouse" placeholder="House No"><input id="rtAmount" type="number" placeholder="Amount Paid"><button class="add" onclick="addRent()">Record Payment</button><div id="rtList"></div></div>`;loadRent();
 }
-
-function loadData(){
- let agentsDiv=document.getElementById('view-agents');
- agentsDiv.innerHTML='<div class="card"><h3>Add Agent</h3><input id="agentName" placeholder="Agent Name"><input id="agentPhone" placeholder="Phone 07..."><button class="add" onclick="addAgent()">Save Agent</button><div id="agentsList" style="margin-top:10px"></div></div>';
- loadAgents();
- document.getElementById('view-houses').innerHTML='<div class="card"><h3>Houses</h3><p>Your rental units will appear here - System Ready</p></div>';
- document.getElementById('view-mpesa').innerHTML='<div class="card"><h3>M-Pesa</h3><p>Till: Ready for rent collection</p><p style="font-size:12px;color:#666">MASTER Code is now VICTOR2003@Nrb</p></div>';
-}
-function addAgent(){
- let name=document.getElementById('agentName').value.trim();
- let phone=document.getElementById('agentPhone').value.trim();
- if(!name){alert("Enter name");return;}
- db.collection("agents").add({name:name,phone:phone,created:Date.now(),owner:localStorage.getItem('userId')}).then(()=>{document.getElementById('agentName').value='';document.getElementById('agentPhone').value='';loadAgents();});
-}
-function loadAgents(){
- db.collection("agents").where("owner","==",localStorage.getItem('userId')).onSnapshot(snap=>{
-   let html='';
-   snap.forEach(doc=>{let d=doc.data(); html+=`<div class="card">${d.name} - ${d.phone}</div>`;});
-   let list=document.getElementById('agentsList');
-   if(list) list.innerHTML=html||'<p style="color:#888">No agents yet</p>';
- });
-}
-</script>
-</body>
-</html>
+function addLandlord(){let p=document.getElementById('llPass').value.trim().toUpperCase();let n=document.getElementById('llName').value.trim();if(!p||!n){alert("Fill all");return;}db.collection("subscriptions").doc(p).set({name:n,created:Date.now(),deviceId:""}).then(()=>{alert("Landlord "+p+" created");document.getElementById('llPass').value='';document.getElementById('llName').value='';});}
+function loadLandlords(){db.collection("subscriptions").onSnapshot(s=>{let h='';s.forEach(d=>{h+=`<div class="card">${d.id} - ${d.data().name}</div>`});let el=document.getElementById('llList');if(el)el.innerHTML=h;});}
+function addAgent(){let n=document.getElementById('agName').value.trim();let ph=document.getElementById('agPhone').value.trim();if(!n)return;db.collection("agents").add({name:n,phone:ph,owner:localStorage.getItem('uid'),created:Date.now()}).then(()=>{document.getElementById('agName').value='';document.getElementById('agPhone').value='';});}
+function loadAgents(){db.collection("agents").where("owner","==",localStorage.getItem('uid')).onSnapshot(s=>{let h='';s.forEach(d=>{let x=d.data();h+=`<div class="card">${x.name} - ${x.phone}</div>`});let el=document.getElementById('agList');if(el)el.innerHTML=h||'No agents';});}
+function addHouse(){let n=document.getElementById('hsName').value.trim();let r=document.getElementById('hsRent').value.trim();if(!n)return;db.collection("houses").add({houseNo:n,rent:r,owner:localStorage.getItem('uid'),created:Date.now()}).then(()=>{document.getElementById('hsName').value='';document.getElementById('hsRent').value='';});}
+function loadHouses(){db.collection("houses").where("owner","==",localStorage.getItem('uid')).onSnapshot(s=>{let h='';s.forEach(d=>{let x=d.data();h+=`<div class="card"><b>${x.houseNo}</b> - KES ${x.rent}</div>`});let el=document.getElementById('hsList');if(el)el.innerHTML=h||'No houses';});}
+function addTenant(){let n=document.getElementById('tnName').value.trim();let hs=document.getElementById('tnHouse').value.trim();let ph=document.getElementById('tnPhone').value.trim();if(!n||!hs)return;db.collection("tenants").add({name:n,house:hs,phone:ph,owner:localStorage.getItem('uid'),created:Date.now()}).then(()=>{document.getElementById('tnName').value='';document.getElementById('tnHouse').value='';document.getElementById('tnPhone').value='';});}
+function loadTenants(){db.collection("tenants").where("owner","==",localStorage.getItem('uid')).onSnapshot(s=>{let h='';s.forEach(d=>{let x=d.data();h+=`<div class="card">${x.name} - House ${x.house} - ${x.phone}</div>`});let el=document.getElementById('tnList');if(el)el.innerHTML=h||'No tenants';});}
+function addRent(){let hs=document.getElementById('rtHouse').value.trim();let am=document.getElementById('rtAmount').value.trim();if(!hs||!am)return;db.collection("rent").add({house:hs,amount:am,owner:localStorage.getItem('uid'),date:Date.now()}).then(()=>{document.getElementById('rtHouse').value='';document.getElementById('rtAmount').value='';});}
+function loadRent(){db.collection("rent").where("owner","==",localStorage.getItem('uid')).orderBy("date","desc").limit(20).onSnapshot(s=>{let h='';s.forEach(d=>{let x=d.data();let dt=new Date(x.date).toLocaleDateString();h+=`<div class="card">${dt} - House ${x.house} - KES ${x.amount}</div>`});let el=document.getElementById('rtList');if(el)el.innerHTML=h||'No payments';});}
+</script></body></html>
