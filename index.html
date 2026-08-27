@@ -1,89 +1,19 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KejaChapChap - Victor Odoyo Nairobi</title>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f1f2f6;min-height:100vh}
-.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}
-.top{display:flex;justify-content:space-between;align-items:flex-start}
-.top h1{margin:0;font-size:26px;font-weight:900}.sub{font-size:13px;color:#666;margin-top:2px}
-.btn{padding:7px 10px;border-radius:8px;border:0;font-weight:700;font-size:12px;cursor:pointer}
-.admin{background:#7c3aed;color:#fff}.logout{background:#ef4444;color:#fff}.renew{background:#0f8a5f;color:#fff}.view{background:#2563eb;color:#fff}.sms{background:#0ea5e9;color:#fff}.wa{background:#25D366;color:#fff}
-.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.cardStat{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;text-align:center}
-.cardStat b{font-size:20px;display:block}.cardStat span{font-size:13px;color:#444}
-.formCard{border:1px solid #e5e7eb;border-radius:14px;padding:12px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-input{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:5px 0;font-size:14px;background:#f9fafb}
-.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer}
-.pdf{background:#6b7280;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:700;width:100%;cursor:pointer}
-.search{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:10px 0}
-.tenant{border:1px solid #eee;border-radius:12px;padding:10px;margin:8px 0}
-.hidden{display:none}#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-.center{text-align:center}.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);padding:12px;overflow:auto;z-index:99}
-.tabBtn{padding:8px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:700;cursor:pointer;margin-right:6px}
-.tabBtn.active{background:#7c3aed;color:#fff;border-color:#7c3aed}
-</style>
-</head>
-<body>
-<div id="loginWrap"><h1 style="text-align:center;margin:0">KejaChapChap</h1><p class="center" style="font-size:12px;color:#666;margin:6px 0 14px">By Victor Odoyo - Nairobi<br>M-Pesa 0718255742 - KSH 1000/30 Days<br><small>1 Password = 1 Phone</small></p><input id="pass" type="password" placeholder="Enter Password"><button class="add" onclick="doLogin()">LOGIN</button><p id="err" style="color:#ef4444;text-align:center;font-size:13px;margin-top:10px"></p></div>
-
-<div id="mainApp" class="wrap hidden">
-<div class="top"><div><h1>KejaChapChap</h1><div class="sub" id="who"></div><div id="viewingAs" style="font-size:11px;color:#2563eb;font-weight:800" class="hidden"></div></div><div style="display:flex;gap:6px"><button id="adminBtn" class="btn admin hidden" onclick="openAdmin()">👑 ADMIN</button><button id="agentBtn" class="btn view hidden" onclick="openAgentPanel()">AGENT</button><button id="backToMaster" class="btn view hidden" onclick="backMaster()">Back</button><button class="btn logout" onclick="location.reload()">Logout</button></div></div>
-<div class="grid4"><div class="cardStat"><b id="sHouses">0</b><span>Total Houses</span></div><div class="cardStat"><b id="sCollected">KSH 0</b><span>Collected</span></div><div class="cardStat"><b id="sNotPaid">0</b><span>Not Paid</span></div><div class="cardStat"><b id="sExpected">KSH 0</b><span>Expected</span></div></div>
-<div class="formCard"><div class="row2"><input id="fHouse" placeholder="House No"><input id="fName" placeholder="Tenant Name"></div><div class="row2"><input id="fRent" type="number" placeholder="Rent KSH"><input id="fPhone" placeholder="Phone 07..."></div><div class="row2" style="margin-top:8px"><button class="add" onclick="addTenant()">+ ADD TENANT</button><button class="pdf" onclick="window.print()">PDF Report</button></div><input id="search" class="search" placeholder="🔍 Search tenant..." oninput="render()"></div>
-<div id="list" style="text-align:center;padding:30px;color:#888">No tenants</div>
-<div class="center" style="font-size:11px;color:#aaa;margin-top:20px">KejaChapChap @ 2026 - Victor Odoyo - Nairobi - KSH 1000</div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div id="adminBox" class="modal hidden"><div class="wrap" style="border-radius:16px;min-height:auto">
-<h2 style="margin:0">👑 Admin Panel</h2><p style="font-size:12px;color:#666">Victor Odoyo - Nairobi | KSH 1000 | 0718255742</p>
-<div style="margin:12px 0"><button id="tabLandlord" class="tabBtn active" onclick="showTab('landlord')">Landlords</button><button id="tabAgent" class="tabBtn" onclick="showTab('agent')">Agents</button></div>
-
-<!-- LANDLORD TAB -->
-<div id="landlordTab">
-<input id="landlordName" placeholder="Landlord Full Name">
-<input id="landlordPhone" placeholder="Landlord Phone 07...">
-<input id="landlordLocation" placeholder="Location e.g. Nairobi, Garissa">
-<input id="landlordAgentCode" placeholder="Agent Code (e.g. AGENT001) - Optional">
-<input id="newPass" placeholder="Password e.g. JOHN1000" style="border:2px solid #7c3aed">
-<input id="newDays" type="number" value="30">
-<button class="add" onclick="createSub()">Create Landlord - KSH 1000</button>
-</div>
-
-<!-- AGENT TAB -->
-<div id="agentTab" class="hidden">
-<h3 style="margin:10px 0 6px">Create Agent</h3>
-<input id="agentName" placeholder="Agent Full Name">
-<input id="agentPhone" placeholder="Agent Phone 07...">
-<input id="agentTown" placeholder="Town e.g. Mombasa">
-<input id="agentPass" placeholder="Agent Password e.g. AGENTJOHN100" style="border:2px solid #2563eb">
-<button class="add" style="background:#2563eb" onclick="createAgent()">Create Agent - Earn 200</button>
-<p style="font-size:11px;color:#666;margin-top:6px">Agent Code will be auto-generated e.g. AGENT001</p>
-</div>
-
-<p id="adminMsg" style="font-size:13px;text-align:center;color:#0f8a5f;font-weight:700"></p>
-<div id="subsList" style="margin-top:14px"></div>
-<button class="pdf" style="margin-top:14px" onclick="closeAdmin()">Close</button>
-</div></div>
-
-<!-- AGENT PANEL (when agent logs in) -->
-<div id="agentBox" class="modal hidden"><div class="wrap" style="border-radius:16px;min-height:auto">
-<h2 style="margin:0">🤝 Agent Panel</h2><p id="agentInfo" style="font-size:12px;color:#666"></p>
-<div id="agentLandlordsList" style="margin-top:14px"></div>
-<div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:10px;border-radius:10px;margin-top:10px"><b id="agentCommission">Commission: KSH 0</b><br><small>You get KSH 200 per landlord</small></div>
-<button class="pdf" style="margin-top:14px" onclick="closeAgentPanel()">Close</button>
-</div></div>
-
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script><style>body{margin:0;font-family:system-ui;background:#f1f2f6}.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}.btn{padding:8px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer}.hidden{display:none}#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer}</style></head><body>
+<div id="loginWrap"><h2 style="text-align:center">KejaChapChap<br><small style="font-size:12px">Victor Odoyo - Nairobi</small></h2><input id="pass" type="password" placeholder="Enter Password"><button type="button" class="add" id="loginBtn" onclick="doLogin()">LOGIN</button><p id="err" style="color:red;text-align:center;font-size:13px"></p><p style="text-align:center;font-size:11px;color:#888;margin-top:10px">If button not working, refresh page</p></div>
+<div id="mainApp" class="wrap hidden"><h2>KejaChapChap</h2><p id="who"></p><button onclick="location.reload()">Logout</button><div id="list"></div></div>
 <script>
 const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let curUser="", viewingClient="", tenants=[], masterTenantsListener=null; 
-// MASTER hidden - built from parts
-const _m1="VicOdoyo"; const _m2="@Nrb2026!"; const MASTER=_m1+_m2;
-
-function getDeviceId(){ let id=localStorage.getItem('keja_device_id'); if(!id){ id='
+const MASTER="NALIAKA4050";
+window.doLogin=function(){
+ let p=document.getElementById('pass').value.trim().toUpperCase();
+ if(!p){ document.getElementById('err').innerText="Enter password"; return; }
+ if(p===MASTER){ document.getElementById('loginWrap').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); document.getElementById('who').innerText="MASTER - Victor Odoyo"; return; }
+ db.collection("subscriptions").doc(p).get().then(d=>{
+   if(!d.exists){ document.getElementById('err').innerText="Invalid password"; return; }
+   document.getElementById('loginWrap').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); document.getElementById('who').innerText="Landlord: "+p;
+ }).catch(e=>{ document.getElementById('err').innerText="Error: "+e.message; });
+};
+document.getElementById('pass').addEventListener('keypress',function(e){ if(e.key==='Enter'){ doLogin(); }});
+</script></body></html>
