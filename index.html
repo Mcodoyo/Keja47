@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KejaChapChap - Firebase Full Upgrade</title>
+<title>KejaChapChap - Countrywide Synced</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -12,11 +12,11 @@
 .header{background:linear-gradient(135deg,#14532d,#16a34a); color:white; padding:14px; border-radius:14px; text-align:center;}
 .header-admin{background:linear-gradient(135deg,#92400e,#d97706);}
 input,select{width:100%; padding:11px; margin:5px 0; border:1.5px solid #e2e8f0; border-radius:10px;}
-.btn{padding:10px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin:4px 0; font-size:13px;}
+.btn{padding:11px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin:4px 0;}
 .btn-green{background:#14532d; color:white;}.btn-blue{background:#2563eb; color:white;}
 .btn-yellow{background:#eab308; color:#000;}.btn-red{background:#ef4444; color:white;}
-.btn-gray{background:#64748b; color:white;}.btn-sm{width:auto; padding:5px 8px; font-size:11px; margin:2px;}
-.success{background:#dcfce7; padding:10px; border-radius:8px; text-align:center; font-weight:bold; display:none;}
+.btn-gray{background:#64748b; color:white;}.btn-sm{width:auto; padding:5px 9px; font-size:11px; margin:2px;}
+.success{background:#dcfce7; padding:10px; border-radius:8px; text-align:center; font-weight:bold; display:none; color:#14532d;}
 .info{font-size:11px; color:#64748b; text-align:center;}
 .hidden{display:none!important;}
 .tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:11px; border-radius:10px; margin:8px 0;}
@@ -42,69 +42,59 @@ input,select{width:100%; padding:11px; margin:5px 0; border:1.5px solid #e2e8f0;
 <body>
 
 <div id="loginPage" class="card">
-<div class="header"><h2 style="margin:0;">KejaChapChap - FIREBASE</h2><p style="margin:3px 0; font-size:11px;">All Phones Connected - Countrywide</p></div>
+<div class="header"><h2 style="margin:0;">KejaChapChap</h2><p style="margin:3px 0; font-size:11px;">✅ Firebase Connected - All Phones Synced</p></div>
 <div class="tabs"><button class="tab active" id="tabL" onclick="switchLogin('landlord')">Landlord Login</button><button class="tab" id="tabA" onclick="switchLogin('agent')">Agent Login</button><button class="tab" id="tabAd" onclick="switchLogin('admin')">Admin Login</button></div>
-<div id="boxLandlord"><input type="password" id="pwdL" placeholder="Landlord password"><button class="btn btn-green" onclick="doLogin('landlord')">Login to Dashboard</button><p class="info">Subscription KSH 1000 / 30 days - Device Locked</p></div>
-<div id="boxAgent" class="hidden"><input type="password" id="pwdA" placeholder="Agent password"><button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button><p class="info">Earn KSH 200 per landlord - NO countdown for agents</p></div>
+<div id="boxLandlord"><input type="password" id="pwdL" placeholder="Landlord password"><button class="btn btn-green" onclick="doLogin('landlord')">Login to Dashboard</button><p class="info">KSH 1000 / 30 days - 1 Password = 1 Phone</p></div>
+<div id="boxAgent" class="hidden"><input type="password" id="pwdA" placeholder="Agent password"><button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button><p class="info">🤝 Agents: NO countdown - Earn KSH 200</p></div>
 <div id="boxAdmin" class="hidden"><input type="password" id="pwdAd" placeholder="Admin password"><button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Login to Admin Panel</button></div>
-<div id="loginMsg" class="info" style="margin-top:10px;"></div>
-<div class="info" style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:8px;">M-Pesa: 0141694057 | Support: 0718255742<br>Firebase Connected - All devices sync</div>
+<div id="loginMsg" class="loading hidden">⏳ Connecting to Firebase...</div>
+<div class="info" style="margin-top:10px; background:#f0fdf4; padding:8px; border-radius:8px; border:1px solid #bbf7d0;">🔥 Firebase: kenya-rentals | M-Pesa: 0141694057 | Support: 0718255742</div>
 </div>
 
 <div id="landlordPage" class="card hidden">
 <div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🏠 Landlord Dashboard</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
 <p id="landInfo" style="font-size:11px; color:#64748b;"></p>
-<div id="isAdminViewing" class="hidden" style="background:#fef3c7; padding:6px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEWING AS LANDLORD</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back to Admin</button></div>
+<div id="isAdminViewing" class="hidden" style="background:#fef3c7; padding:6px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEWING</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back to Admin</button></div>
 <div id="subCountdown" class="countdown-banner"></div>
 <div class="stats" style="grid-template-columns:1fr 1fr 1fr;"><div class="stat-box"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Tenants</div></div><div class="stat-box"><div class="stat-num" id="sCollected">0</div><div class="stat-label">Collected</div></div><div class="stat-box"><div class="stat-num" id="sArrears">0</div><div class="stat-label">Arrears</div></div></div>
 <h4>➕ Add Tenant</h4><input id="tName" placeholder="Tenant Name"><input id="tHouse" placeholder="House No."><input id="tRent" type="number" placeholder="Rent KSH"><input id="tPhone" placeholder="Phone 07..."><button class="btn btn-green" onclick="addTenant()">Add Tenant</button>
-<h4>📋 My Tenants - Rent Countdown + WhatsApp/SMS</h4><input id="searchT" placeholder="Search..." onkeyup="renderTenants()"><div id="tList"></div>
+<h4>📋 My Tenants - Rent Countdown</h4><input id="searchT" placeholder="Search..." onkeyup="renderTenants()"><div id="tList"></div>
 </div>
 
 <div id="agentPage" class="card hidden">
-<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🤝 Agent Panel - NO COUNTDOWN</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
+<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🤝 Agent Panel</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
 <p id="agentInfo" style="font-size:11px;"></p>
 <div id="isAdminViewingAgent" class="hidden" style="background:#fef3c7; padding:6px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEWING AS AGENT</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back</button></div>
-<div style="background:#eff6ff; padding:10px; border-radius:10px; border:1px solid #bfdbfe;"><input id="lName" placeholder="Landlord Name"><input id="lPhone" placeholder="Phone"><input id="lLocation" placeholder="Location"><button class="btn btn-blue" onclick="submitLead()">Send to Admin for Approval</button><div id="leadOk" class="success">✅ Sent to Admin!</div></div>
-<div style="background:#f0fdf4; padding:8px; border-radius:8px; margin:8px 0;"><b id="comm">Commission: KSH 0</b><br><small>No subscription - Agents earn KSH 200</small></div>
+<div style="background:#eff6ff; padding:10px; border-radius:10px; border:1px solid #bfdbfe;"><input id="lName" placeholder="Landlord Name"><input id="lPhone" placeholder="Phone"><input id="lLocation" placeholder="Location"><button class="btn btn-blue" onclick="submitLead()">Send to Admin for Approval</button><div id="leadOk" class="success">✅ Sent to Admin - Synced!</div></div>
+<div style="background:#f0fdf4; padding:8px; border-radius:8px; margin:8px 0;"><b id="comm">Commission: KSH 0</b><br><small>No subscription for Agents - Earn KSH 200 per landlord - Payment Monday 7PM</small></div>
 <div id="agentLeads"></div>
 </div>
 
 <div id="adminPage" class="card hidden">
-<div class="header header-admin"><h2 style="margin:0; font-size:17px;">KejaChapChap Admin - Firebase</h2><p style="margin:2px 0; font-size:11px;">You control everything - All devices synced</p></div>
+<div class="header header-admin"><h2 style="margin:0; font-size:17px;">Admin Panel - Firebase Live</h2><p style="margin:2px 0; font-size:11px;">All accounts synced countrywide</p></div>
 <div class="stats"><div class="stat-box"><div class="stat-num" id="aLand">0</div><div class="stat-label">Landlords</div></div><div class="stat-box"><div class="stat-num" id="aAgents">0</div><div class="stat-label">Agents</div></div><div class="stat-box"><div class="stat-num" id="aPend">0</div><div class="stat-label">Pending</div></div><div class="stat-box"><div class="stat-num" id="aAppr">0</div><div class="stat-label">Approved</div></div></div>
 <div class="tabs"><button class="tab active" id="aTab1" onclick="switchAdmin('create')">Create Account</button><button class="tab" id="aTab2" onclick="switchAdmin('pending')">Pending Leads</button><button class="tab" id="aTab3" onclick="switchAdmin('all')">All Accounts</button></div>
-<div id="aCreate"><div style="background:#fef3c7; padding:10px; border-radius:10px;"><input id="nName" placeholder="Full Name"><input id="nPhone" placeholder="Phone"><input id="nLocation" placeholder="Location"><select id="nRole"><option value="landlord">Landlord - Has Countdown 30 days</option><option value="agent">Agent - NO Countdown, Earns Commission</option></select><input id="nPwd" placeholder="Unique Password e.g. 76ta2026"><button class="btn btn-green" style="background:#92400e;" onclick="createAcc()">Create & Sync to Firebase</button><div id="cMsg" class="success"></div></div></div>
+<div id="aCreate"><div style="background:#fef3c7; padding:10px; border-radius:10px;"><input id="nName" placeholder="Full Name"><input id="nPhone" placeholder="Phone"><input id="nLocation" placeholder="Location"><select id="nRole"><option value="landlord">Landlord - Has 30 Day Countdown</option><option value="agent">Agent - NO Countdown, Earns KSH 200</option></select><input id="nPwd" placeholder="Unique Password e.g. 76ta2026"><button class="btn btn-green" style="background:#92400e;" onclick="createAcc()">Create & Sync to All Phones</button><div id="cMsg" class="success"></div></div></div>
 <div id="aPending" class="hidden"><div id="aPendingList"></div></div>
 <div id="aAll" class="hidden"><input id="searchAll" placeholder="Search..." onkeyup="renderAll()"><div id="aAllList"></div></div>
 <button class="btn btn-gray" onclick="logout()">Logout</button>
 </div>
 
 <script>
-// ================= FIREBASE CONFIG - REPLACE WITH YOURS =================
-// For now using demo config that works - you should create your own free Firebase project
+// YOUR REAL FIREBASE CONFIG - KENYA-RENTALS
 const firebaseConfig = {
-  apiKey: "AIzaSyB7Q3u8t5p5L9x2e8n4m1k6j7h2g3f4d5s6",
-  authDomain: "kejachapchap-demo.firebaseapp.com",
-  projectId: "kejachapchap-demo",
-  storageBucket: "kejachapchap-demo.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abc123"
+  apiKey: "AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",
+  authDomain: "kenya-rentals.firebaseapp.com",
+  projectId: "kenya-rentals",
+  storageBucket: "kenya-rentals.firebasestorage.app",
+  messagingSenderId: "251007486844",
+  appId: "1:251007486844:web:359065bc5418fc882b32f9"
 };
-// Initialize with localStorage fallback if Firebase fails
-let db=null, useFirebase=false;
-try{
-  firebase.initializeApp(firebaseConfig);
-  db=firebase.firestore();
-  useFirebase=true;
-  console.log("Firebase initialized");
-}catch(e){console.log("Firebase offline, using localStorage"); useFirebase=false;}
-
-// If Firebase config is demo/invalid, auto fallback to localStorage mode (still fixed login bug)
-if(firebaseConfig.apiKey.includes("B7Q3u8")){ useFirebase=false; }
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 const ADMIN_PWDS=["VICTOR2003@Nrb","ADMIN2026@Keja","KEJA2026@Admin","ADMIN123","KejaChapChap2026"];
-const LS={ landlords:'kc_landlords_v2', agents:'kc_agents_v2', pending:'kc_pending_v2', approved:'kc_approved_v2', tenantsPrefix:'kc_tenants_', devices:'kc_devices_', sub:'kc_sub_start_' };
+const LS={ tenantsPrefix:'kc_tenants_', sub:'kc_sub_start_' };
 const getLS=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch{return d;}};
 const setLS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 function getCountdown(startTime, durationDays=30){
@@ -120,43 +110,34 @@ function showPage(id){['loginPage','landlordPage','agentPage','adminPage'].forEa
 function logout(){localStorage.removeItem('kc_role'); localStorage.removeItem('kc_admin_view'); showPage('loginPage');}
 function backToAdmin(){localStorage.setItem('kc_role','admin'); localStorage.removeItem('kc_admin_view'); showPage('adminPage'); loadAdmin();}
 
-async function getAllFromDB(collection){
- if(useFirebase && db){
-   try{ let snap=await db.collection(collection).get(); return snap.docs.map(d=>d.data()); }catch(e){console.log("Firebase error",e); return getLS(LS[collection]||collection,[]);}
- } else { return getLS(LS[collection]||collection,[]); }
-}
-async function saveToDB(collection, data){
- if(useFirebase && db){
-   try{ await db.collection(collection).doc(data.password).set(data); return true;}catch(e){console.log(e);}
- }
- let key=LS[collection]||collection; let list=getLS(key); list.push(data); setLS(key, list); return true;
-}
+async function getAll(col){ let snap=await db.collection(col).get(); return snap.docs.map(d=>d.data()); }
 
-// FIXED LOGIN - Agent goes to Agent Panel ONLY
+// FIXED LOGIN - Checks Firebase - Agent = Agent Panel ONLY
 async function doLogin(role){
  let pwd=role==='landlord'?document.getElementById('pwdL').value.trim():role==='agent'?document.getElementById('pwdA').value.trim():document.getElementById('pwdAd').value.trim();
  if(!pwd) return alert('Enter password');
- document.getElementById('loginMsg').innerText='Checking...';
- if(ADMIN_PWDS.includes(pwd)){localStorage.setItem('kc_role','admin'); localStorage.setItem('kc_pwd',pwd); showPage('adminPage'); loadAdmin(); return;}
- let landlords=await getAllFromDB('landlords'); let agents=await getAllFromDB('agents'); let approved=await getAllFromDB('approved');
- // Also check local pending for approved conversion
- if(!useFirebase){ landlords=[...landlords,...approved]; }
- let isLandlord=landlords.find(x=>x.password===pwd) || approved.find(x=>x.password===pwd);
- let isAgent=agents.find(x=>x.password===pwd);
- if(isAgent){
-   localStorage.setItem('kc_role','agent'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isAgent.name);
-   showPage('agentPage'); loadAgent(); document.getElementById('loginMsg').innerText=''; return;
- }
- if(isLandlord){
-   localStorage.setItem('kc_role','landlord'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isLandlord.name);
-   showPage('landlordPage'); loadLandlord(); document.getElementById('loginMsg').innerText=''; return;
- }
- document.getElementById('loginMsg').innerText=''; alert('❌ Wrong password. Make sure you clicked correct tab (Agent Login for agents). Contact Admin 0718255742');
+ document.getElementById('loginMsg').classList.remove('hidden'); document.getElementById('loginMsg').innerText='⏳ Checking Firebase...';
+ if(ADMIN_PWDS.includes(pwd)){localStorage.setItem('kc_role','admin'); localStorage.setItem('kc_pwd',pwd); showPage('adminPage'); loadAdmin(); document.getElementById('loginMsg').classList.add('hidden'); return;}
+ try{
+  let landlordsSnap=await db.collection('landlords').get();
+  let agentsSnap=await db.collection('agents').get();
+  let approvedSnap=await db.collection('approved').get();
+  let landlords=landlordsSnap.docs.map(d=>d.data());
+  let agents=agentsSnap.docs.map(d=>d.data());
+  let approved=approvedSnap.docs.map(d=>d.data());
+  let allLandlords=[...landlords,...approved];
+  let isLandlord=allLandlords.find(x=>x.password===pwd);
+  let isAgent=agents.find(x=>x.password===pwd);
+  document.getElementById('loginMsg').classList.add('hidden');
+  if(isAgent){ localStorage.setItem('kc_role','agent'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isAgent.name); showPage('agentPage'); loadAgent(); return; }
+  if(isLandlord){ localStorage.setItem('kc_role','landlord'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isLandlord.name); showPage('landlordPage'); loadLandlord(); return; }
+  alert('❌ Wrong password. If you are Agent, click Agent Login tab. Contact Admin 0718255742');
+ }catch(e){ document.getElementById('loginMsg').classList.add('hidden'); alert('Firebase error: '+e.message+' - Check Firestore is created in test mode'); console.error(e);}
 }
 
 function loadLandlord(){
  let name=localStorage.getItem('kc_name'), pwd=localStorage.getItem('kc_pwd');
- document.getElementById('landInfo').innerText=name+' | '+pwd.substring(0,4)+'***';
+ document.getElementById('landInfo').innerText=name+' | '+pwd.substring(0,4)+'*** | Synced';
  document.getElementById('isAdminViewing').classList.toggle('hidden',!localStorage.getItem('kc_admin_view'));
  if(!localStorage.getItem(LS.sub+pwd)){localStorage.setItem(LS.sub+pwd, Date.now());}
  renderTenants();
@@ -175,120 +156,83 @@ function renderTenants(){
  let subCount=getCountdown(subStart,30);
  let subEl=document.getElementById('subCountdown');
  subEl.className='countdown-banner countdown-'+subCount.type;
- subEl.innerHTML=subCount.left>0?`🔐 MY SUBSCRIPTION: <b>${subCount.text}</b> - Expires ${subCount.expiry.toLocaleDateString()} | Pay M-Pesa 0141694057`:`❌ SUBSCRIPTION EXPIRED ${Math.abs(subCount.left)} days ago! Pay KSH 1000 via M-Pesa 0141694057`;
+ subEl.innerHTML=subCount.left>0?`🔐 SUBSCRIPTION: <b>${subCount.text}</b> - Expires ${subCount.expiry.toLocaleDateString()} | M-Pesa 0141694057`:`❌ EXPIRED ${Math.abs(subCount.left)} days! Pay KSH 1000 M-Pesa 0141694057`;
  document.getElementById('sTotal').innerText=tenants.length;
  document.getElementById('sCollected').innerText='KSH '+tenants.reduce((s,t)=>s+t.paid,0);
  document.getElementById('sArrears').innerText='KSH '+tenants.reduce((s,t)=>s+t.balance,0);
- document.getElementById('tList').innerHTML=filtered.length===0?'<p class="info">No tenants. Add tenant - 30 day rent countdown starts.</p>':filtered.map(t=>{
-  let rentStart=t.lastPaidDate||t.createdDate;
-  let rentCount=getCountdown(rentStart,30);
+ document.getElementById('tList').innerHTML=filtered.length===0?'<p class="info">No tenants</p>':filtered.map(t=>{
+  let rentStart=t.lastPaidDate||t.createdDate; let rentCount=getCountdown(rentStart,30);
   return `<div class="tenant-card" style="border-left:5px solid ${rentCount.type==='danger'?'#dc2626':rentCount.type==='warn'?'#eab308':'#16a34a'}">
    <div style="display:flex; justify-content:space-between;"><b>${t.house} - ${t.name}</b><span class="countdown countdown-${rentCount.type}">${rentCount.text}</span></div>
-   <div style="font-size:12px;">Rent: KSH ${t.rent} | Paid: ${t.paid} | Bal: KSH ${t.balance}<br>Phone: ${t.phone} | Due: ${rentCount.expiry.toLocaleDateString()}</div>
+   <div style="font-size:12px;">Rent: ${t.rent} | Paid: ${t.paid} | Bal: ${t.balance}<br>Phone: ${t.phone} | Due: ${rentCount.expiry.toLocaleDateString()}</div>
    <div style="display:flex; gap:4px; margin-top:6px;"><button class="btn btn-sm btn-green" onclick="pay(${t.id})">💰 Pay</button><button class="btn btn-sm btn-blue" onclick="wa(${t.id})">📱 WhatsApp</button><button class="btn btn-sm btn-yellow" onclick="sms(${t.id})">💬 SMS</button><button class="btn btn-sm btn-red" onclick="delT(${t.id})">Del</button></div>
   </div>`;
  }).join('');
 }
-function pay(id){let amt=prompt('Amount KSH:'); if(!amt) return; amt=parseInt(amt); let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); t.paid+=amt; t.balance=t.rent-t.paid; t.lastPaidDate=Date.now(); if(t.balance<=0){t.status='paid'; t.balance=0; t.paid=t.rent;} else if(t.paid>0){t.status='partial';} setLS(key, tenants); renderTenants();}
-function wa(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); let rc=getCountdown(t.lastPaidDate||t.createdDate,30); let msg=`Hello ${t.name} House ${t.house} Rent KSH ${t.rent} Bal KSH ${t.balance} ${rc.text} Due ${rc.expiry.toLocaleDateString()} Pay M-Pesa 0141694057`; window.open(`https://wa.me/254${(t.phone||'').replace(/^0/,'')}?text=${encodeURIComponent(msg)}`,'_blank');}
-function sms(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); let rc=getCountdown(t.lastPaidDate||t.createdDate,30); let msg=`Hello ${t.name} House ${t.house} Rent KSH ${t.rent} Bal KSH ${t.balance} ${rc.text} Pay M-Pesa 0141694057`; window.open(`sms:${t.phone}?body=${encodeURIComponent(msg)}`,'_blank');}
+function pay(id){let amt=prompt('Amount:'); if(!amt) return; amt=parseInt(amt); let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); t.paid+=amt; t.balance=t.rent-t.paid; t.lastPaidDate=Date.now(); if(t.balance<=0){t.status='paid'; t.balance=0; t.paid=t.rent;} setLS(key, tenants); renderTenants();}
+function wa(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let t=getLS(key).find(x=>x.id===id); let rc=getCountdown(t.lastPaidDate||t.createdDate,30); let msg=`Hello ${t.name} House ${t.house} Rent ${t.rent} Bal ${t.balance} ${rc.text} Pay M-Pesa 0141694057`; window.open(`https://wa.me/254${(t.phone||'').replace(/^0/,'')}?text=${encodeURIComponent(msg)}`,'_blank');}
+function sms(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let t=getLS(key).find(x=>x.id===id); let rc=getCountdown(t.lastPaidDate||t.createdDate,30); let msg=`Hello ${t.name} House ${t.house} Rent ${t.rent} Bal ${t.balance} ${rc.text} Pay M-Pesa 0141694057`; window.open(`sms:${t.phone}?body=${encodeURIComponent(msg)}`,'_blank');}
 function delT(id){if(!confirm('Delete?')) return; let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); setLS(key, getLS(key).filter(x=>x.id!==id)); renderTenants();}
-function loadAgent(){document.getElementById('agentInfo').innerText=localStorage.getItem('kc_name')+' | KSH 200 per landlord | Monday 7PM Payment | NO SUBSCRIPTION COUNTDOWN'; document.getElementById('isAdminViewingAgent').classList.toggle('hidden',!localStorage.getItem('kc_admin_view')); renderAgent();}
+async function loadAgent(){document.getElementById('agentInfo').innerText=localStorage.getItem('kc_name')+' | KSH 200 per landlord | Monday 7PM | NO COUNTDOWN'; document.getElementById('isAdminViewingAgent').classList.toggle('hidden',!localStorage.getItem('kc_admin_view')); renderAgent();}
 async function submitLead(){
  let name=document.getElementById('lName').value.trim(), phone=document.getElementById('lPhone').value.trim(), loc=document.getElementById('lLocation').value.trim(); if(!name||!phone||!loc) return alert('Fill all');
  let data={id:Date.now(), name, phone, location:loc, status:'PENDING', agent:localStorage.getItem('kc_name')||'Agent', agentPwd:localStorage.getItem('kc_pwd'), date:new Date().toLocaleString()};
- if(useFirebase && db){ await db.collection('pending').doc(String(data.id)).set(data); } else { let pending=getLS(LS.pending); pending.push(data); setLS(LS.pending, pending); }
- document.getElementById('leadOk').style.display='block'; document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; renderAgent(); setTimeout(()=>document.getElementById('leadOk').style.display='none',4000);
+ await db.collection('pending').doc(String(data.id)).set(data);
+ document.getElementById('leadOk').style.display='block'; document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; renderAgent(); setTimeout(()=>document.getElementById('leadOk').style.display='none',3000);
 }
 async function renderAgent(){
- let agentName=localStorage.getItem('kc_name'); let pending=await getAllFromDB('pending'); let approved=await getAllFromDB('approved');
- pending=pending.filter(l=>l.agent===agentName); approved=approved.filter(l=>l.agent===agentName);
+ let agentName=localStorage.getItem('kc_name'); let pendingSnap=await db.collection('pending').where('agent','==',agentName).get(); let approvedSnap=await db.collection('approved').where('agent','==',agentName).get();
+ let pending=pendingSnap.docs.map(d=>d.data()); let approved=approvedSnap.docs.map(d=>d.data());
  document.getElementById('comm').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`;
- document.getElementById('agentLeads').innerHTML=pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone}<br><small>⏳ PENDING</small></div>`).join('')+approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b><br><small>✅ APPROVED KSH 200</small></div>`).join('')||'<p class="info">No submissions</p>';
+ document.getElementById('agentLeads').innerHTML=pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone}<br>⏳ PENDING</div>`).join('')+approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b> ✅ APPROVED KSH 200</div>`).join('')||'<p class="info">No submissions</p>';
 }
 async function loadAdmin(){
- let pending=await getAllFromDB('pending'), approved=await getAllFromDB('approved'), landlords=await getAllFromDB('landlords'), agents=await getAllFromDB('agents');
- document.getElementById('aLand').innerText=landlords.length + approved.length; document.getElementById('aAgents').innerText=agents.length; document.getElementById('aPend').innerText=pending.length; document.getElementById('aAppr').innerText=approved.length;
- document.getElementById('aPendingList').innerHTML=pending.length===0?'<p class="info">No pending</p>':pending.map((l,i)=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br>Agent: ${l.agent}<br><button class="btn btn-sm btn-green" onclick="approve('${l.id}')">✅ Approve</button><button class="btn btn-sm btn-red" onclick="reject('${l.id}')">Reject</button></div>`).join('');
+ let landlords=await getAll('landlords'), agents=await getAll('agents'), pending=await getAll('pending'), approved=await getAll('approved');
+ document.getElementById('aLand').innerText=landlords.length+approved.length; document.getElementById('aAgents').innerText=agents.length; document.getElementById('aPend').innerText=pending.length; document.getElementById('aAppr').innerText=approved.length;
+ document.getElementById('aPendingList').innerHTML=pending.length===0?'<p class="info">No pending</p>':pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br>Agent: ${l.agent}<br><button class="btn btn-sm btn-green" onclick="approve('${l.id}')">✅ Approve</button><button class="btn btn-sm btn-red" onclick="reject('${l.id}')">Reject</button></div>`).join('');
  renderAll();
 }
 async function createAcc(){
  let name=document.getElementById('nName').value.trim(), phone=document.getElementById('nPhone').value.trim(), loc=document.getElementById('nLocation').value.trim(), role=document.getElementById('nRole').value, pwd=document.getElementById('nPwd').value.trim(); if(!name||!phone||!pwd) return alert('Fill all');
  let data={id:Date.now(), name, phone, location:loc, password:pwd, role, date:new Date().toLocaleString(), subStart:Date.now()};
- if(useFirebase && db){ await db.collection(role==='landlord'?'landlords':'agents').doc(pwd).set(data); } else { let key=role==='landlord'?LS.landlords:LS.agents; let list=getLS(key); if(list.find(x=>x.password===pwd)) return alert('Password exists!'); list.push(data); setLS(key, list); }
+ await db.collection(role==='landlord'?'landlords':'agents').doc(pwd).set(data);
  if(role==='landlord'){localStorage.setItem(LS.sub+pwd, Date.now());}
- document.getElementById('cMsg').style.display='block'; document.getElementById('cMsg').innerText=`✅ ${role} ${name} | Pwd: ${pwd} ${useFirebase?'- Synced to Firebase - Works on all phones':''}`; document.getElementById('nName').value=''; document.getElementById('nPhone').value=''; document.getElementById('nLocation').value=''; document.getElementById('nPwd').value=''; loadAdmin();
+ document.getElementById('cMsg').style.display='block'; document.getElementById('cMsg').innerText=`✅ ${role} ${name} Pwd: ${pwd} - SYNCED TO FIREBASE! Works on all phones now!`; document.getElementById('nName').value=''; document.getElementById('nPhone').value=''; document.getElementById('nLocation').value=''; document.getElementById('nPwd').value=''; loadAdmin();
 }
 async function approve(id){
- let pending=await getAllFromDB('pending'); let lead=pending.find(x=>String(x.id)===String(id)); if(!lead) return;
- let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase();
+ let doc=await db.collection('pending').doc(String(id)).get(); if(!doc.exists) return; let lead=doc.data();
+ let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+(lead.location||'KEN').substring(0,3).toUpperCase();
  let landlordData={id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:new Date().toLocaleString(), subStart:Date.now()};
- if(useFirebase && db){
-   await db.collection('approved').doc(pwd).set({...lead, password:pwd, status:'APPROVED'});
-   await db.collection('landlords').doc(pwd).set(landlordData);
-   await db.collection('pending').doc(String(id)).delete();
- } else {
-   let pList=getLS(LS.pending); setLS(LS.pending, pList.filter(x=>String(x.id)!==String(id)));
-   let aList=getLS(LS.approved); lead.password=pwd; lead.status='APPROVED'; aList.push(lead); setLS(LS.approved, aList);
-   let lList=getLS(LS.landlords); lList.push(landlordData); setLS(LS.landlords, lList);
- }
+ await db.collection('approved').doc(pwd).set({...lead, password:pwd, status:'APPROVED'});
+ await db.collection('landlords').doc(pwd).set(landlordData);
+ await db.collection('pending').doc(String(id)).delete();
  localStorage.setItem(LS.sub+pwd, Date.now()); loadAdmin(); alert(`Approved! ${lead.name} Pwd: ${pwd} - Now works on all phones`);
 }
-async function reject(id){
- if(!confirm('Reject?')) return;
- if(useFirebase && db){ await db.collection('pending').doc(String(id)).delete(); } else { let pList=getLS(LS.pending); setLS(LS.pending, pList.filter(x=>String(x.id)!==String(id))); }
- loadAdmin();
-}
+async function reject(id){ if(!confirm('Reject?')) return; await db.collection('pending').doc(String(id)).delete(); loadAdmin(); }
 async function renderAll(){
- let landlords=await getAllFromDB('landlords'), agents=await getAllFromDB('agents'), approved=await getAllFromDB('approved');
+ let landlords=await getAll('landlords'), agents=await getAll('agents'), approved=await getAll('approved');
  let allLandlords=[...landlords,...approved]; let filter=(document.getElementById('searchAll').value||'').toLowerCase();
  let filteredLandlords=filter?allLandlords.filter(x=>(x.name+x.phone).toLowerCase().includes(filter)):allLandlords;
  let agentsFiltered=filter?agents.filter(x=>(x.name+x.phone).toLowerCase().includes(filter)):agents;
- let html='';
- html+=`<h4 style="margin:10px 0 5px 0;">🏠 LANDLORDS - With Subscription Countdown</h4>`;
- html+=filteredLandlords.length===0?'<p class="info">No landlords</p>':filteredLandlords.map(x=>{
-  let subStart=parseInt(localStorage.getItem(LS.sub+x.password)||x.subStart||Date.now());
-  let subCount=getCountdown(subStart,30);
-  let tenants=getLS(LS.tenantsPrefix+x.password);
-  return `<div class="admin-card landlord">
-   <div style="display:flex; justify-content:space-between;"><b>🏠 ${x.name}</b><span class="countdown countdown-${subCount.type}">${subCount.text}</span></div>
-   <div style="font-size:11px;">Phone: ${x.phone} | Loc: ${x.location||'-'} | Tenants: ${tenants.length} | Pwd: <code>${x.password}</code> | Expiry: ${subCount.expiry.toLocaleDateString()}</div>
-   <div style="display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;">
-    <button class="btn btn-sm btn-green" onclick="viewAs('${x.password}','${x.name}','Landlord')">👁️ View Tenants</button>
-    <button class="btn btn-sm" style="background:#16a34a; color:white;" onclick="renewSub('${x.password}')">🔄 Renew</button>
-    <button class="btn btn-sm btn-gray" onclick="changePwd('${x.password}')">🔑 Change Pwd</button>
-    <button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️</button>
-   </div>
-  </div>`;
- }).join('');
- html+=`<h4 style="margin:15px 0 5px 0;">🤝 AGENTS - NO COUNTDOWN, Only Commission</h4>`;
- html+=agentsFiltered.length===0?'<p class="info">No agents</p>':agentsFiltered.map(x=>{
-  let comm=approved.filter(l=>l.agent===x.name).length*200;
-  return `<div class="admin-card agent">
-   <div style="display:flex; justify-content:space-between;"><b>🤝 ${x.name}</b><span class="countdown countdown-ok">KSH ${comm}</span></div>
-   <div style="font-size:11px;">Phone: ${x.phone} | Pwd: <code>${x.password}</code> | No countdown</div>
-   <div style="display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;">
-    <button class="btn btn-sm btn-blue" onclick="viewAs('${x.password}','${x.name}','Agent')">👁️ View Agent</button>
-    <button class="btn btn-sm btn-gray" onclick="changePwd('${x.password}')">🔑 Change Pwd</button>
-    <button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️</button>
-   </div>
-  </div>`;
- }).join('');
+ let html=`<h4>🏠 LANDLORDS - With Countdown</h4>`;
+ html+=filteredLandlords.map(x=>{
+  let subStart=parseInt(localStorage.getItem(LS.sub+x.password)||x.subStart||Date.now()); let subCount=getCountdown(subStart,30); let tenants=getLS(LS.tenantsPrefix+x.password);
+  return `<div class="admin-card landlord"><div style="display:flex; justify-content:space-between;"><b>🏠 ${x.name}</b><span class="countdown countdown-${subCount.type}">${subCount.text}</span></div><div style="font-size:11px;">${x.phone} | ${x.location||'-'} | Tenants: ${tenants.length} | <code>${x.password}</code> | Exp: ${subCount.expiry.toLocaleDateString()}</div><div style="margin-top:6px;"><button class="btn btn-sm btn-green" onclick="viewAs('${x.password}','${x.name}','Landlord')">👁️ View</button><button class="btn btn-sm" style="background:#16a34a;color:white;" onclick="renewSub('${x.password}')">🔄 Renew</button><button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️</button></div></div>`;
+ }).join('')||'<p class="info">No landlords</p>';
+ html+=`<h4>🤝 AGENTS - NO Countdown</h4>`;
+ html+=agentsFiltered.map(x=>{
+  return `<div class="admin-card agent"><div><b>🤝 ${x.name}</b></div><div style="font-size:11px;">${x.phone} | <code>${x.password}</code> | No countdown - Commission only</div><div style="margin-top:6px;"><button class="btn btn-sm btn-blue" onclick="viewAs('${x.password}','${x.name}','Agent')">👁️ View</button><button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️</button></div></div>`;
+ }).join('')||'<p class="info">No agents</p>';
  document.getElementById('aAllList').innerHTML=html;
 }
 function viewAs(pwd,name,type){if(!confirm(`View as ${name}?`)) return; localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',name); localStorage.setItem('kc_admin_view','true'); if(type==='Agent'){localStorage.setItem('kc_role','agent'); showPage('agentPage'); loadAgent();} else {localStorage.setItem('kc_role','landlord'); showPage('landlordPage'); loadLandlord();}}
-function renewSub(pwd){if(!confirm(`Renew 30 days for ${pwd}? Confirm M-Pesa KSH 1000 received`)) return; localStorage.setItem(LS.sub+pwd, Date.now()); alert(`✅ RENEWED!`); renderAll();}
-async function changePwd(oldPwd){let newPwd=prompt(`New password for ${oldPwd}:`); if(!newPwd) return; newPwd=newPwd.trim(); if(useFirebase && db){ /* For Firebase need to handle manually */ alert('For Firebase: Delete old and create new with new password'); return; } let landlords=getLS(LS.landlords), agents=getLS(LS.agents); landlords=landlords.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); agents=agents.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); let approved=getLS(LS.approved); approved=approved.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); setLS(LS.landlords, landlords); setLS(LS.agents, agents); setLS(LS.approved, approved); let subTime=localStorage.getItem(LS.sub+oldPwd); if(subTime){localStorage.setItem(LS.sub+newPwd, subTime); localStorage.removeItem(LS.sub+oldPwd);} alert(`✅ Changed ${oldPwd} -> ${newPwd}`); renderAll();}
+function renewSub(pwd){if(!confirm(`Renew 30 days for ${pwd}?`)) return; localStorage.setItem(LS.sub+pwd, Date.now()); alert(`✅ RENEWED!`); renderAll();}
 async function deleteAccount(pwd){
  if(!confirm(`DELETE ${pwd}?`)) return;
- if(useFirebase && db){
-   try{ await db.collection('landlords').doc(pwd).delete(); }catch(e){}
-   try{ await db.collection('agents').doc(pwd).delete(); }catch(e){}
-   try{ await db.collection('approved').doc(pwd).delete(); }catch(e){}
- } else {
-   setLS(LS.landlords, getLS(LS.landlords).filter(x=>x.password!==pwd)); setLS(LS.agents, getLS(LS.agents).filter(x=>x.password!==pwd)); setLS(LS.approved, getLS(LS.approved).filter(x=>x.password!==pwd));
- }
- localStorage.removeItem(LS.sub+pwd); localStorage.removeItem(LS.tenantsPrefix+pwd); alert('Deleted'); renderAll(); loadAdmin();
+ try{ await db.collection('landlords').doc(pwd).delete(); }catch(e){}
+ try{ await db.collection('agents').doc(pwd).delete(); }catch(e){}
+ try{ await db.collection('approved').doc(pwd).delete(); }catch(e){}
+ localStorage.removeItem(LS.sub+pwd); localStorage.removeItem(LS.tenantsPrefix+pwd); alert('Deleted from Firebase'); renderAll(); loadAdmin();
 }
 (function(){let role=localStorage.getItem('kc_role'); if(role==='landlord'){showPage('landlordPage'); loadLandlord();} else if(role==='agent'){showPage('agentPage'); loadAgent();} else if(role==='admin'){showPage('adminPage'); loadAdmin();}})();
 </script>
