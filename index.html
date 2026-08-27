@@ -50,7 +50,7 @@ input{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin
 <script>
 const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};
 firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-let curUser="", viewingClient="", tenants=[], masterTenantsListener=null; const MASTER="NALIAKA4050";
+let curUser="", viewingClient="", tenants=[], masterTenantsListener=null; const MASTER="VICTOR2003@";
 function getDeviceId(){ let id=localStorage.getItem('keja_device_id'); if(!id){ id='dev_'+Date.now()+'_'+Math.random().toString(36).substr(2,9); localStorage.setItem('keja_device_id',id);} return id; }
 function doLogin(){
  let p=document.getElementById('pass').value.trim().toUpperCase(); 
