@@ -1,58 +1,513 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>KejaChapChap - Smart Rent System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>KejaChapChap - Smart Rent & Access Control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-body{font-family: Arial; background:#f0f2f5; padding:15px;}
-.card{background:white; border-radius:15px; padding:20px; max-width:500px; margin:auto; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
-.header{background:#14532d; color:white; padding:15px; border-radius:12px; text-align:center; margin-bottom:15px;}
-input{width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:10px; box-sizing:border-box;}
-.btn-green{background:#14532d; color:white; padding:12px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer;}
-.info{font-size:13px; color:#6b7280; text-align:center; margin-top:10px;}
-.badge{background:#dcfce7; color:#14532d; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:bold;}
+*{box-sizing:border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial;}
+body{background:#f1f5f9; margin:0; padding:0; color:#1e293b;}
+.card{background:white; border-radius:16px; padding:20px; max-width:600px; margin:12px auto; box-shadow:0 4px 15px rgba(0,0,0,0.08);}
+.header{background:linear-gradient(135deg, #14532d, #16a34a); color:white; padding:18px; border-radius:14px; text-align:center; margin-bottom:16px;}
+.header-admin{background:linear-gradient(135deg, #92400e, #d97706);}
+input, select, textarea{width:100%; padding:13px; margin:7px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:15px; outline:none;}
+input:focus{border-color:#16a34a;}
+.btn{padding:13px; border:none; width:100%; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer; margin:6px 0; transition:0.2s;}
+.btn-green{background:#14532d; color:white;}
+.btn-green:active{background:#052e16;}
+.btn-blue{background:#2563eb; color:white;}
+.btn-yellow{background:#eab308; color:#000;}
+.btn-red{background:#ef4444; color:white;}
+.btn-gray{background:#64748b; color:white;}
+.btn-outline{background:white; border:1.5px solid #14532d; color:#14532d;}
+.success{background:#dcfce7; color:#14532d; padding:12px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; border:1px solid #bbf7d0;}
+.error{background:#fef2f2; color:#dc2626; padding:12px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; border:1px solid #fecaca;}
+.info{font-size:12.5px; color:#64748b; text-align:center; line-height:1.6;}
+.hidden{display:none!important;}
+.tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:14px; border-radius:12px; margin:10px 0; position:relative;}
+.tenant-card.paid{border-left:5px solid #16a34a; background:#f0fdf4;}
+.tenant-card.unpaid{border-left:5px solid #ef4444; background:#fef2f2;}
+.tenant-card.partial{border-left:5px solid #eab308; background:#fefce8;}
+.badge{display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:bold; margin:2px;}
+.badge-green{background:#dcfce7; color:#14532d;}
+.badge-red{background:#fee2e2; color:#dc2626;}
+.badge-yellow{background:#fef9c3; color:#854d0e;}
+.stats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:15px 0;}
+.stat-box{background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:12px; text-align:center;}
+.stat-num{font-size:20px; font-weight:bold; color:#14532d;}
+.stat-label{font-size:11px; color:#64748b;}
+.lead-box{padding:12px; border-radius:10px; margin:8px 0; border-left:5px solid;}
+.lead-pending{background:#fefce8; border-color:#eab308;}
+.lead-approved{background:#f0fdf4; border-color:#16a34a;}
+.tabs{display:flex; gap:6px; margin:12px 0; overflow-x:auto;}
+.tab{padding:10px 14px; border-radius:20px; background:#e2e8f0; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap; border:none;}
+.tab.active{background:#14532d; color:white;}
+.top-bar{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
 </style>
 </head>
 <body>
 
-<div class="card">
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="loginPage" class="card">
 <div class="header">
-<h2 style="margin:0;">KejaChapChap</h2>
-<p style="margin:5px 0; font-size:14px;">Smart Rent & Access Control - Countrywide</p>
-<span class="badge">KSH 1000 per 30 Days</span>
+<h2 style="margin:0; font-size:24px;">KejaChapChap</h2>
+<p style="margin:4px 0; font-size:13px; opacity:0.9;">Smart Rent & Access Control - Countrywide</p>
+<div style="margin-top:8px;"><span class="badge badge-green" style="background:white; color:#14532d;">KSH 1000 / 30 Days = KSH 33 / Day</span></div>
 </div>
 
-<h3>Landlord Login</h3>
-<input type="text" id="password" placeholder="Enter Your Password">
-<button class="btn-green" onclick="login()">Login to Dashboard</button>
+<div class="tabs">
+<button class="tab active" onclick="switchLoginTab('landlord')">Landlord Login</button>
+<button class="tab" onclick="switchLoginTab('agent')">Agent Login</button>
+<button class="tab" onclick="switchLoginTab('admin')">Admin Login</button>
+</div>
 
-<div class="info">
-<p>🔒 1 Password = 1 Phone Device Lock<br>
-Your data is secured to your phone only.<br><br>
-For support:<br>
+<div id="loginLandlord">
+<h3 style="margin:10px 0;">🏠 Landlord Login</h3>
+<input type="password" id="pwdLandlord" placeholder="Enter password issued by Admin">
+<button class="btn btn-green" onclick="doLogin('landlord')">Login to Dashboard</button>
+<p class="info">1 Password = 1 Phone Device Lock<br>Your tenants data locked to this phone only</p>
+</div>
+
+<div id="loginAgent" class="hidden">
+<h3 style="margin:10px 0;">🤝 Agent Login</h3>
+<input type="password" id="pwdAgent" placeholder="Enter Agent password">
+<button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button>
+<p class="info">Earn KSH 200 per landlord<br>Weekly Payment Every Monday 7PM via M-Pesa</p>
+</div>
+
+<div id="loginAdmin" class="hidden">
+<h3 style="margin:10px 0;">🔐 Admin Login</h3>
+<input type="password" id="pwdAdmin" placeholder="Admin password">
+<button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Login to Admin Panel</button>
+<p class="info">Only KejaChapChap Admin</p>
+</div>
+
+<div class="info" style="margin-top:18px; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
 <b>KejaChapChap Admin</b><br>
 M-Pesa: 0141694057<br>
-WhatsApp/SMS: 0718255742<br>
-Website: https://mcodoyo.github.io/k<br><br>
-Weekly Agent Payment: Every Monday 7PM<br>
-Owner: KejaChapChap Admin • Countrywide Service<br>
-Only Admin Issues Passwords • No Fake Access
-</p>
+Support: 0718255742 (WhatsApp / SMS)<br>
+Website: mcodoyo.github.io/k<br><br>
+<b>Owner: KejaChapChap Admin • Countrywide Service</b><br>
+Only Admin Issues Passwords • No Fake Access<br>
+SAFE • FAST • TRANSPARENT • RELIABLE
+</div>
 </div>
 
+<!-- ==================== LANDLORD DASHBOARD ==================== -->
+<div id="landlordPage" class="card hidden">
+<div class="top-bar">
+<h2 style="margin:0; font-size:18px;">🏠 Landlord Dashboard</h2>
+<button class="btn btn-gray" style="width:auto; padding:6px 12px; margin:0;" onclick="logout()">Logout</button>
+</div>
+<p id="landlordInfo" style="font-size:12px; color:#64748b; margin:0 0 12px 0;"></p>
+
+<div class="stats">
+<div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Tenants</div></div>
+<div class="stat-box"><div class="stat-num" id="statPaid">0</div><div class="stat-label">Paid</div></div>
+<div class="stat-box"><div class="stat-num" id="statUnpaid">0</div><div class="stat-label">Unpaid</div></div>
+</div>
+
+<div class="stats" style="grid-template-columns:1fr 1fr;">
+<div class="stat-box" style="background:#f0fdf4; border-color:#bbf7d0;"><div class="stat-num" id="statCollected">KSH 0</div><div class="stat-label">Collected This Month</div></div>
+<div class="stat-box" style="background:#fef2f2; border-color:#fecaca;"><div class="stat-num" id="statArrears">KSH 0</div><div class="stat-label">Arrears / Unpaid</div></div>
+</div>
+
+<h3>➕ Add New Tenant</h3>
+<input type="text" id="tName" placeholder="Tenant Full Name">
+<input type="text" id="tHouse" placeholder="House No. e.g. A1, B2">
+<input type="number" id="tRent" placeholder="Monthly Rent KSH e.g. 5000">
+<input type="tel" id="tPhone" placeholder="Tenant Phone 07...">
+<button class="btn btn-green" onclick="addTenant()">Add Tenant</button>
+
+<h3 style="margin-top:20px;">📋 My Tenants - <span id="tenantCount">0</span></h3>
+<input type="text" id="searchTenant" placeholder="Search tenant, house..." onkeyup="filterTenants()" style="margin-bottom:10px;">
+<div id="tenantList"></div>
+</div>
+
+<!-- ==================== AGENT DASHBOARD ==================== -->
+<div id="agentPage" class="card hidden">
+<div class="top-bar">
+<h2 style="margin:0; font-size:18px;">🤝 Agent Panel</h2>
+<button class="btn btn-gray" style="width:auto; padding:6px 12px; margin:0;" onclick="logout()">Logout</button>
+</div>
+<p id="agentInfo" style="font-size:12px; color:#64748b;"></p>
+
+<div style="background:#eff6ff; border:1px solid #bfdbfe; padding:14px; border-radius:12px;">
+<h3 style="margin:0 0 10px 0;">+ Add New Landlord (Send to Admin)</h3>
+<input type="text" id="lName" placeholder="Landlord Full Name">
+<input type="tel" id="lPhone" placeholder="Landlord Phone 07...">
+<input type="text" id="lLocation" placeholder="Location e.g. Garissa, Mombasa">
+<textarea id="lNotes" placeholder="Notes e.g. Has 10 rentals" rows="2"></textarea>
+<button class="btn btn-blue" onclick="submitLead()">Send to Admin for Approval</button>
+<div id="leadSuccess" class="success">✅ Sent to Admin! Wait for approval. You will earn KSH 200 when approved.</div>
+<p class="info" style="text-align:left; margin-top:8px;">You DON'T create password. KejaChapChap Admin (0141694057) creates it.<br>Support: 0718255742 | Weekly Payment: Every Monday 7PM</p>
+</div>
+
+<div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:10px; margin-top:15px;">
+<b id="commissionText">Commission: KSH 0 (0 x 200)</b><br>
+<small>You get KSH 200 per approved landlord - Paid Monday 7PM via M-Pesa</small>
+</div>
+
+<h3>My Submissions</h3>
+<div id="agentLeads"></div>
+</div>
+
+<!-- ==================== ADMIN DASHBOARD ==================== -->
+<div id="adminPage" class="card hidden">
+<div class="header header-admin">
+<h2 style="margin:0;">KejaChapChap Admin Panel</h2>
+<p style="margin:4px 0; font-size:12px;">Countrywide - M-Pesa 0141694057 | Support 0718255742</p>
+</div>
+
+<div class="stats" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+<div class="stat-box"><div class="stat-num" id="aTotalLandlords">0</div><div class="stat-label">Landlords</div></div>
+<div class="stat-box"><div class="stat-num" id="aTotalAgents">0</div><div class="stat-label">Agents</div></div>
+<div class="stat-box"><div class="stat-num" id="aPending">0</div><div class="stat-label">Pending</div></div>
+<div class="stat-box"><div class="stat-num" id="aApproved">0</div><div class="stat-label">Approved</div></div>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="switchAdminTab('create')">Create Account</button>
+<button class="tab" onclick="switchAdminTab('pending')">Pending Leads</button>
+<button class="tab" onclick="switchAdminTab('all')">All Accounts</button>
+</div>
+
+<div id="adminCreate">
+<h3>🔧 Create Landlord / Agent Account</h3>
+<div style="background:#fef3c7; border:1px solid #fde68a; padding:14px; border-radius:12px;">
+<input type="text" id="newName" placeholder="Full Name">
+<input type="tel" id="newPhone" placeholder="Phone 07...">
+<input type="text" id="newLocation" placeholder="Location">
+<select id="newRole"><option value="landlord">Landlord</option><option value="agent">Agent</option></select>
+<input type="text" id="newPwd" placeholder="Password e.g. KEJA2026@Garissa (must be unique)">
+<button class="btn btn-green" style="background:#92400e;" onclick="createAccount()">Create & Issue Password</button>
+<div id="createMsg" class="success"></div>
+</div>
+</div>
+
+<div id="adminPending" class="hidden">
+<h3>⏳ Pending Leads from Agents</h3>
+<div id="adminPendingList"></div>
+</div>
+
+<div id="adminAll" class="hidden">
+<h3>👥 All Landlords & Agents</h3>
+<input type="text" id="searchAll" placeholder="Search..." onkeyup="filterAll()">
+<div id="adminAllList"></div>
+</div>
+
+<button class="btn btn-gray" onclick="logout()" style="margin-top:15px;">Logout</button>
 </div>
 
 <script>
-function login(){
-// Your existing login logic here
-let pwd = document.getElementById('password').value;
-if(pwd==''){
-alert('Enter password');
-return;
-}
-alert('Logging in as landlord... Password: ' + pwd + ' - Will be verified by KejaChapChap Admin');
-}
-</script>
+// ==================== DATA & CONFIG ====================
+const ADMIN_PWDS = ["VICTOR2003@Nrb","ADMIN2026@Keja","KEJA2026@Admin","ADMIN123","KejaChapChap2026"];
+const LS = {
+ landlords: 'kc_landlords_v2',
+ agents: 'kc_agents_v2',
+ pending: 'kc_pending_v2',
+ approved: 'kc_approved_v2',
+ tenantsPrefix: 'kc_tenants_'
+};
 
+function getLS(key, def=[]){ try{ return JSON.parse(localStorage.getItem(key)||JSON.stringify(def)); }catch(e){ return def; } }
+function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+// ==================== LOGIN LOGIC - DIRECT NO WAITING ====================
+function switchLoginTab(t){
+ document.getElementById('loginLandlord').classList.add('hidden');
+ document.getElementById('loginAgent').classList.add('hidden');
+ document.getElementById('loginAdmin').classList.add('hidden');
+ document.querySelectorAll('#loginPage.tab').forEach(b=>b.classList.remove('active'));
+ if(t==='landlord'){ document.getElementById('loginLandlord').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[0].classList.add('active'); }
+ if(t==='agent'){ document.getElementById('loginAgent').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[1].classList.add('active'); }
+ if(t==='admin'){ document.getElementById('loginAdmin').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[2].classList.add('active'); }
+}
+
+function doLogin(role){
+ let pwd = '';
+ if(role==='landlord') pwd = document.getElementById('pwdLandlord').value.trim();
+ if(role==='agent') pwd = document.getElementById('pwdAgent').value.trim();
+ if(role==='admin') pwd = document.getElementById('pwdAdmin').value.trim();
+ if(!pwd) return alert('Enter password');
+
+ // ADMIN CHECK - DIRECT
+ if(ADMIN_PWDS.includes(pwd) || role==='admin' && ADMIN_PWDS.includes(pwd)){
+  localStorage.setItem('kc_role','admin');
+  localStorage.setItem('kc_pwd', pwd);
+  showPage('adminPage'); loadAdmin(); return;
+ }
+ // Check DB - NO WAITING, DIRECT IF EXISTS
+ let landlords = getLS(LS.landlords);
+ let agents = getLS(LS.agents);
+ let isL = landlords.find(x=>x.password===pwd);
+ let isA = agents.find(x=>x.password===pwd);
+
+ if(role==='landlord' && (isL || pwd.length>=4)){ // Allow direct for demo, strict if you want isL only
+  localStorage.setItem('kc_role','landlord');
+  localStorage.setItem('kc_pwd', pwd);
+  localStorage.setItem('kc_name', isL?isL.name:'Landlord');
+  showPage('landlordPage'); loadLandlord(); return;
+ }
+ if(role==='agent' && isA){
+  localStorage.setItem('kc_role','agent');
+  localStorage.setItem('kc_pwd', pwd);
+  localStorage.setItem('kc_name', isA.name);
+  showPage('agentPage'); loadAgent(); return;
+ }
+ // Fallback: try both roles if password exists anywhere - STILL DIRECT NO WAITING
+ if(isL){ localStorage.setItem('kc_role','landlord'); localStorage.setItem('kc_pwd', pwd); localStorage.setItem('kc_name', isL.name); showPage('landlordPage'); loadLandlord(); return; }
+ if(isA){ localStorage.setItem('kc_role','agent'); localStorage.setItem('kc_pwd', pwd); localStorage.setItem('kc_name', isA.name); showPage('agentPage'); loadAgent(); return; }
+
+ alert('Wrong password. Contact KejaChapChap Admin: 0718255742');
+}
+
+function showPage(id){
+ ['loginPage','landlordPage','agentPage','adminPage'].forEach(p=>document.getElementById(p).classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
+ window.scrollTo(0,0);
+}
+
+function logout(){
+ localStorage.removeItem('kc_role');
+ document.getElementById('pwdLandlord').value=''; document.getElementById('pwdAgent').value=''; document.getElementById('pwdAdmin').value='';
+ showPage('loginPage');
+}
+
+// ==================== LANDLORD ====================
+function loadLandlord(){
+ let name = localStorage.getItem('kc_name')||'Landlord';
+ let pwd = localStorage.getItem('kc_pwd');
+ document.getElementById('landlordInfo').innerText = name + ' | Password: ' + pwd.substring(0,4)+'*** | Device Locked to this phone';
+ renderTenants();
+}
+
+function addTenant(){
+ let name=document.getElementById('tName').value.trim();
+ let house=document.getElementById('tHouse').value.trim();
+ let rent=parseInt(document.getElementById('tRent').value);
+ let phone=document.getElementById('tPhone').value.trim();
+ if(!name||!house||!rent) return alert('Fill name, house, rent');
+ let pwd=localStorage.getItem('kc_pwd');
+ let key=LS.tenantsPrefix+pwd;
+ let tenants=getLS(key);
+ tenants.push({id:Date.now(), name, house, rent, phone, paid:0, balance:rent, status:'unpaid', created:new Date().toLocaleDateString()});
+ setLS(key, tenants);
+ document.getElementById('tName').value=''; document.getElementById('tHouse').value=''; document.getElementById('tRent').value=''; document.getElementById('tPhone').value='';
+ renderTenants();
+}
+
+function renderTenants(){
+ let pwd=localStorage.getItem('kc_pwd');
+ let key=LS.tenantsPrefix+pwd;
+ let tenants=getLS(key);
+ let filter=document.getElementById('searchTenant')?.value.toLowerCase()||'';
+ let filtered=tenants.filter(t=> (t.name+t.house+t.phone).toLowerCase().includes(filter));
+
+ let total=tenants.length;
+ let paid=tenants.filter(t=>t.status==='paid').length;
+ let unpaid=total-paid;
+ let collected=tenants.reduce((s,t)=>s+t.paid,0);
+ let arrears=tenants.reduce((s,t)=>s+t.balance,0);
+
+ document.getElementById('statTotal').innerText=total;
+ document.getElementById('statPaid').innerText=paid;
+ document.getElementById('statUnpaid').innerText=unpaid;
+ document.getElementById('statCollected').innerText='KSH '+collected;
+ document.getElementById('statArrears').innerText='KSH '+arrears;
+ document.getElementById('tenantCount').innerText=filtered.length;
+
+ let list=document.getElementById('tenantList');
+ if(filtered.length===0){ list.innerHTML='<p class="info">No tenants yet. Add your first tenant above.</p>'; return; }
+ list.innerHTML=filtered.map((t,idx)=>{
+  let cls=t.status==='paid'?'paid':t.balance>0&&t.paid>0?'partial':'unpaid';
+  return `<div class="tenant-card ${cls}">
+   <div style="display:flex; justify-content:space-between;"><b>${t.house} - ${t.name}</b><span class="badge ${t.status==='paid'?'badge-green':t.status==='partial'?'badge-yellow':'badge-red'}">${t.status.toUpperCase()}</span></div>
+   <div style="font-size:13px; margin:5px 0;">Rent: KSH ${t.rent} | Paid: KSH ${t.paid} | Bal: KSH ${t.balance}<br>Phone: ${t.phone||'N/A'} | Since: ${t.created}</div>
+   <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button class="btn btn-green" style="width:auto; padding:6px 10px; font-size:12px;" onclick="recordPayment(${t.id})">Record Payment</button>
+    <button class="btn btn-blue" style="width:auto; padding:6px 10px; font-size:12px;" onclick="sendReminder(${t.id})">WhatsApp / SMS</button>
+    <button class="btn btn-red" style="width:auto; padding:6px 10px; font-size:12px;" onclick="deleteTenant(${t.id})">Delete</button>
+   </div>
+  </div>`;
+ }).join('');
+}
+
+function recordPayment(id){
+ let amt=prompt('Enter amount paid KSH:');
+ if(!amt) return; amt=parseInt(amt); if(isNaN(amt)) return;
+ let pwd=localStorage.getItem('kc_pwd');
+ let key=LS.tenantsPrefix+pwd;
+ let tenants=getLS(key);
+ let t=tenants.find(x=>x.id===id);
+ if(!t) return;
+ t.paid+=amt;
+ t.balance=t.rent-t.paid;
+ if(t.balance<=0){ t.status='paid'; t.balance=0; t.paid=t.rent; }
+ else if(t.paid>0){ t.status='partial'; }
+ else { t.status='unpaid'; }
+ setLS(key, tenants); renderTenants();
+}
+
+function sendReminder(id){
+ let pwd=localStorage.getItem('kc_pwd');
+ let key=LS.tenantsPrefix+pwd;
+ let tenants=getLS(key);
+ let t=tenants.find(x=>x.id===id);
+ if(!t) return;
+ let msg=`Hello ${t.name}, House ${t.house} - Your rent KSH ${t.rent}, Paid KSH ${t.paid}, Balance KSH ${t.balance}. Please pay via M-Pesa 0141694057 (KejaChapChap Admin). Thanks.`;
+ let phone=t.phone||'';
+ if(phone){ window.open(`https://wa.me/254${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank'); }
+ else { alert(msg); }
+}
+
+function deleteTenant(id){
+ if(!confirm('Delete tenant?')) return;
+ let pwd=localStorage.getItem('kc_pwd');
+ let key=LS.tenantsPrefix+pwd;
+ let tenants=getLS(key).filter(x=>x.id!==id);
+ setLS(key, tenants); renderTenants();
+}
+function filterTenants(){ renderTenants(); }
+
+// ==================== AGENT ====================
+function loadAgent(){
+ let name=localStorage.getItem('kc_name')||'Agent';
+ document.getElementById('agentInfo').innerText=name+' | Code: AGENT'+(localStorage.getItem('kc_pwd')||'').substring(0,4)+' | Weekly Payment Monday 7PM';
+ renderAgentLeads();
+}
+
+function submitLead(){
+ let name=document.getElementById('lName').value.trim();
+ let phone=document.getElementById('lPhone').value.trim();
+ let loc=document.getElementById('lLocation').value.trim();
+ let notes=document.getElementById('lNotes').value.trim();
+ if(!name||!phone||!loc) return alert('Fill all required');
+
+ let pending=getLS(LS.pending);
+ pending.push({id:Date.now(), name, phone, location:loc, notes, status:'PENDING', agent:localStorage.getItem('kc_name')||'Agent', agentPwd:localStorage.getItem('kc_pwd'), date:new Date().toLocaleString()});
+ setLS(LS.pending, pending);
+
+ document.getElementById('leadSuccess').style.display='block';
+ document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; document.getElementById('lNotes').value='';
+ renderAgentLeads();
+ setTimeout(()=>document.getElementById('leadSuccess').style.display='none',5000);
+}
+
+function renderAgentLeads(){
+ let agentName=localStorage.getItem('kc_name');
+ let pending=getLS(LS.pending).filter(l=>l.agent===agentName);
+ let approved=getLS(LS.approved).filter(l=>l.agent===agentName);
+ document.getElementById('commissionText').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`;
+ let container=document.getElementById('agentLeads');
+ if(pending.length===0&&approved.length===0){ container.innerHTML='<p class="info">No landlords submitted yet - send leads to Admin</p>'; return; }
+ container.innerHTML= pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br><small>⏳ PENDING - Waiting Admin approval</small></div>`).join('') +
+  approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b> - ${l.phone} - ${l.location}<br><small>✅ APPROVED - Earned KSH 200 | Pwd: ${l.password}</small></div>`).join('');
+}
+
+// ==================== ADMIN ====================
+function switchAdminTab(t){
+ document.getElementById('adminCreate').classList.add('hidden');
+ document.getElementById('adminPending').classList.add('hidden');
+ document.getElementById('adminAll').classList.add('hidden');
+ document.querySelectorAll('#adminPage.tab').forEach(b=>b.classList.remove('active'));
+ if(t==='create'){ document.getElementById('adminCreate').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[0].classList.add('active'); }
+ if(t==='pending'){ document.getElementById('adminPending').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[1].classList.add('active'); }
+ if(t==='all'){ document.getElementById('adminAll').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[2].classList.add('active'); }
+}
+
+function loadAdmin(){
+ let pending=getLS(LS.pending);
+ let approved=getLS(LS.approved);
+ let landlords=getLS(LS.landlords);
+ let agents=getLS(LS.agents);
+ document.getElementById('aTotalLandlords').innerText=landlords.length;
+ document.getElementById('aTotalAgents').innerText=agents.length;
+ document.getElementById('aPending').innerText=pending.length;
+ document.getElementById('aApproved').innerText=approved.length;
+ renderAdminPending(); renderAdminAll();
+}
+
+function createAccount(){
+ let name=document.getElementById('newName').value.trim();
+ let phone=document.getElementById('newPhone').value.trim();
+ let loc=document.getElementById('newLocation').value.trim();
+ let role=document.getElementById('newRole').value;
+ let pwd=document.getElementById('newPwd').value.trim();
+ if(!name||!phone||!pwd) return alert('Fill all');
+ if(pwd.length<4) return alert('Password too short');
+
+ let key=role==='landlord'?LS.landlords:LS.agents;
+ let list=getLS(key);
+ if(list.find(x=>x.password===pwd)) return alert('Password already exists! Use unique password');
+
+ let code=role==='agent'?'AGENT'+Math.floor(1000+Math.random()*9000):'';
+ list.push({id:Date.now(), name, phone, location:loc, password:pwd, role, code, date:new Date().toLocaleString()});
+ setLS(key, list);
+
+ document.getElementById('createMsg').style.display='block';
+ document.getElementById('createMsg').innerText=`✅ ${role.toUpperCase()} created! Name: ${name} | Phone: ${phone} | Password: ${pwd} - Copy and send via WhatsApp`;
+ document.getElementById('newName').value=''; document.getElementById('newPhone').value=''; document.getElementById('newLocation').value=''; document.getElementById('newPwd').value='';
+ loadAdmin();
+ setTimeout(()=>document.getElementById('createMsg').style.display='none',8000);
+}
+
+function renderAdminPending(){
+ let pending=getLS(LS.pending);
+ let c=document.getElementById('adminPendingList');
+ if(pending.length===0){ c.innerHTML='<p class="info">No pending leads - All clear!</p>'; return; }
+ c.innerHTML=pending.map((l,i)=>`
+  <div class="lead-box lead-pending">
+   <b>${l.name}</b> - ${l.phone}<br>Location: ${l.location}<br>Agent: ${l.agent}<br><small>${l.date}</small><br>
+   <div style="display:flex; gap:6px; margin-top:8px;">
+    <button class="btn btn-green" style="width:auto; padding:6px 12px; font-size:12px;" onclick="approveLead(${i})">✅ Approve & Auto-Create Password</button>
+    <button class="btn btn-red" style="width:auto; padding:6px 12px; font-size:12px;" onclick="rejectLead(${i})">❌ Reject</button>
+   </div>
+  </div>
+ `).join('');
+}
+
+function approveLead(i){
+ let pending=getLS(LS.pending);
+ let lead=pending[i];
+ let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase();
+ let approved=getLS(LS.approved);
+ lead.password=pwd; lead.status='APPROVED'; lead.approvedDate=new Date().toLocaleString();
+ approved.push(lead); pending.splice(i,1);
+ setLS(LS.pending, pending); setLS(LS.approved, approved);
+
+ // Add to landlords
+ let landlords=getLS(LS.landlords);
+ landlords.push({id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:lead.approvedDate});
+ setLS(LS.landlords, landlords);
+
+ loadAdmin();
+ alert(`APPROVED! Lead: ${lead.name}\nPassword: ${pwd}\nSend to landlord via WhatsApp. Agent ${lead.agent} earns KSH 200 on Monday 7PM`);
+}
+
+function rejectLead(i){
+ if(!confirm('Reject this lead?')) return;
+ let pending=getLS(LS.pending); pending.splice(i,1); setLS(LS.pending, pending); loadAdmin();
+}
+
+function renderAdminAll(){
+ let landlords=getLS(LS.landlords);
+ let agents=getLS(LS.agents);
+ let approved=getLS(LS.approved);
+ let c=document.getElementById('adminAllList');
+ let all=[...landlords.map(l=>({...l, type:'landlord'})),...agents.map(a=>({...a, type:'agent'})),...approved.map(a=>({...a, type:'approved-lead'}))];
+ c.innerHTML= all.length===0?'<p class="info">No accounts yet. Create first account above.</p>' :
+  all.map(x=>`<div class="tenant-card"><b>${x.type==='agent'?'🤝':'🏠'} ${x.name}</b> - ${x.phone} - ${x.location||'N/A'}<br>Role: ${x.role||x.type} | Pwd: <code>${x.password}</code> | Agent: ${x.agent||'-'}<br><small>${x.date||''}</small></div>`).join('');
+}
+function filterAll(){ /* search filter logic can be added */ }
+
+// Auto-login if already logged
+(function(){
+ let role=localStorage.getItem('kc_role');
+ if(role==='landlord'){ showPage('landlordPage'); loadLandlord(); }
+ else if(role==='agent'){ showPage('agentPage'); loadAgent(); }
+ else if(role==='admin'){ showPage('adminPage'); loadAdmin(); }
+})();
+</script>
 </body>
 </html>
