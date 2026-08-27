@@ -2,512 +2,208 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KejaChapChap - Smart Rent & Access Control</title>
+<title>KejaChapChap - Smart Rent System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-*{box-sizing:border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial;}
-body{background:#f1f5f9; margin:0; padding:0; color:#1e293b;}
-.card{background:white; border-radius:16px; padding:20px; max-width:600px; margin:12px auto; box-shadow:0 4px 15px rgba(0,0,0,0.08);}
-.header{background:linear-gradient(135deg, #14532d, #16a34a); color:white; padding:18px; border-radius:14px; text-align:center; margin-bottom:16px;}
-.header-admin{background:linear-gradient(135deg, #92400e, #d97706);}
-input, select, textarea{width:100%; padding:13px; margin:7px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:15px; outline:none;}
-input:focus{border-color:#16a34a;}
-.btn{padding:13px; border:none; width:100%; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer; margin:6px 0; transition:0.2s;}
-.btn-green{background:#14532d; color:white;}
-.btn-green:active{background:#052e16;}
-.btn-blue{background:#2563eb; color:white;}
-.btn-yellow{background:#eab308; color:#000;}
-.btn-red{background:#ef4444; color:white;}
-.btn-gray{background:#64748b; color:white;}
-.btn-outline{background:white; border:1.5px solid #14532d; color:#14532d;}
-.success{background:#dcfce7; color:#14532d; padding:12px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; border:1px solid #bbf7d0;}
-.error{background:#fef2f2; color:#dc2626; padding:12px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; border:1px solid #fecaca;}
-.info{font-size:12.5px; color:#64748b; text-align:center; line-height:1.6;}
+*{box-sizing:border-box; font-family:-apple-system,Arial;}
+body{background:#f1f5f9; margin:0; padding:8px;}
+.card{background:white; border-radius:16px; padding:16px; max-width:650px; margin:10px auto; box-shadow:0 4px 15px rgba(0,0,0,0.08);}
+.header{background:linear-gradient(135deg,#14532d,#16a34a); color:white; padding:14px; border-radius:14px; text-align:center;}
+.header-admin{background:linear-gradient(135deg,#92400e,#d97706);}
+input,select{width:100%; padding:11px; margin:6px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px;}
+.btn{padding:10px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin:4px 0; font-size:13px;}
+.btn-green{background:#14532d; color:white;}.btn-blue{background:#2563eb; color:white;}
+.btn-yellow{background:#eab308; color:#000;}.btn-red{background:#ef4444; color:white;}
+.btn-gray{background:#64748b; color:white;}.btn-sm{width:auto; padding:5px 9px; font-size:11px; margin:2px;}
+.success{background:#dcfce7; color:#14532d; padding:10px; border-radius:8px; margin:8px 0; text-align:center; font-weight:bold; display:none;}
+.info{font-size:11px; color:#64748b; text-align:center; line-height:1.5;}
 .hidden{display:none!important;}
-.tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:14px; border-radius:12px; margin:10px 0; position:relative;}
+.tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:10px; margin:8px 0;}
 .tenant-card.paid{border-left:5px solid #16a34a; background:#f0fdf4;}
 .tenant-card.unpaid{border-left:5px solid #ef4444; background:#fef2f2;}
 .tenant-card.partial{border-left:5px solid #eab308; background:#fefce8;}
-.badge{display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:bold; margin:2px;}
-.badge-green{background:#dcfce7; color:#14532d;}
-.badge-red{background:#fee2e2; color:#dc2626;}
-.badge-yellow{background:#fef9c3; color:#854d0e;}
-.stats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:15px 0;}
-.stat-box{background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:12px; text-align:center;}
-.stat-num{font-size:20px; font-weight:bold; color:#14532d;}
-.stat-label{font-size:11px; color:#64748b;}
-.lead-box{padding:12px; border-radius:10px; margin:8px 0; border-left:5px solid;}
-.lead-pending{background:#fefce8; border-color:#eab308;}
-.lead-approved{background:#f0fdf4; border-color:#16a34a;}
-.tabs{display:flex; gap:6px; margin:12px 0; overflow-x:auto;}
-.tab{padding:10px 14px; border-radius:20px; background:#e2e8f0; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap; border:none;}
+.tenant-card.overdue{border-left:5px solid #dc2626; background:#fee2e2; animation:blink 1.5s infinite;}
+@keyframes blink{50%{opacity:0.8;}}
+.lead-box{padding:10px; border-radius:8px; margin:6px 0; border-left:5px solid;}
+.lead-pending{background:#fefce8; border-color:#eab308;}.lead-approved{background:#f0fdf4; border-color:#16a34a;}
+.tabs{display:flex; gap:5px; margin:10px 0; overflow-x:auto;}
+.tab{padding:8px 12px; border-radius:20px; background:#e2e8f0; font-size:12px; font-weight:bold; border:none; cursor:pointer; white-space:nowrap;}
 .tab.active{background:#14532d; color:white;}
-.top-bar{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+.stats{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; margin:10px 0;}
+.stat-box{background:#f8fafc; border:1px solid #e2e8f0; padding:8px; border-radius:10px; text-align:center;}
+.stat-num{font-size:16px; font-weight:bold; color:#14532d;}.stat-label{font-size:9px; color:#64748b;}
+.countdown-banner{padding:10px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; font-size:13px;}
+.admin-actions{display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;}
+.badge{padding:2px 7px; border-radius:10px; font-size:10px; font-weight:bold;}
 </style>
 </head>
 <body>
 
-<!-- ==================== LOGIN PAGE ==================== -->
 <div id="loginPage" class="card">
-<div class="header">
-<h2 style="margin:0; font-size:24px;">KejaChapChap</h2>
-<p style="margin:4px 0; font-size:13px; opacity:0.9;">Smart Rent & Access Control - Countrywide</p>
-<div style="margin-top:8px;"><span class="badge badge-green" style="background:white; color:#14532d;">KSH 1000 / 30 Days = KSH 33 / Day</span></div>
+<div class="header"><h2 style="margin:0;">KejaChapChap</h2><p style="margin:3px 0; font-size:12px;">Smart Rent & Access Control - Countrywide</p><span style="background:white; color:#14532d; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:bold;">KSH 1000 / 30 Days = KSH 33 / Day</span></div>
+<div class="tabs"><button class="tab active" id="tabL" onclick="switchLogin('landlord')">Landlord</button><button class="tab" id="tabA" onclick="switchLogin('agent')">Agent</button><button class="tab" id="tabAd" onclick="switchLogin('admin')">Admin</button></div>
+<div id="boxLandlord"><input type="password" id="pwdL" placeholder="Landlord password"><button class="btn btn-green" onclick="doLogin('landlord')">Login - DIRECT NO WAITING</button></div>
+<div id="boxAgent" class="hidden"><input type="password" id="pwdA" placeholder="Agent password"><button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button></div>
+<div id="boxAdmin" class="hidden"><input type="password" id="pwdAd" placeholder="Admin password"><button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Login to Admin</button></div>
+<div class="info" style="margin-top:12px; background:#f8fafc; padding:8px; border-radius:8px;">KejaChapChap Admin | M-Pesa 0141694057 | Support 0718255742<br>Owner: KejaChapChap Admin • Only Admin Issues Passwords</div>
 </div>
 
-<div class="tabs">
-<button class="tab active" onclick="switchLoginTab('landlord')">Landlord Login</button>
-<button class="tab" onclick="switchLoginTab('agent')">Agent Login</button>
-<button class="tab" onclick="switchLoginTab('admin')">Admin Login</button>
-</div>
-
-<div id="loginLandlord">
-<h3 style="margin:10px 0;">🏠 Landlord Login</h3>
-<input type="password" id="pwdLandlord" placeholder="Enter password issued by Admin">
-<button class="btn btn-green" onclick="doLogin('landlord')">Login to Dashboard</button>
-<p class="info">1 Password = 1 Phone Device Lock<br>Your tenants data locked to this phone only</p>
-</div>
-
-<div id="loginAgent" class="hidden">
-<h3 style="margin:10px 0;">🤝 Agent Login</h3>
-<input type="password" id="pwdAgent" placeholder="Enter Agent password">
-<button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button>
-<p class="info">Earn KSH 200 per landlord<br>Weekly Payment Every Monday 7PM via M-Pesa</p>
-</div>
-
-<div id="loginAdmin" class="hidden">
-<h3 style="margin:10px 0;">🔐 Admin Login</h3>
-<input type="password" id="pwdAdmin" placeholder="Admin password">
-<button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Login to Admin Panel</button>
-<p class="info">Only KejaChapChap Admin</p>
-</div>
-
-<div class="info" style="margin-top:18px; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-<b>KejaChapChap Admin</b><br>
-M-Pesa: 0141694057<br>
-Support: 0718255742 (WhatsApp / SMS)<br>
-Website: mcodoyo.github.io/k<br><br>
-<b>Owner: KejaChapChap Admin • Countrywide Service</b><br>
-Only Admin Issues Passwords • No Fake Access<br>
-SAFE • FAST • TRANSPARENT • RELIABLE
-</div>
-</div>
-
-<!-- ==================== LANDLORD DASHBOARD ==================== -->
 <div id="landlordPage" class="card hidden">
-<div class="top-bar">
-<h2 style="margin:0; font-size:18px;">🏠 Landlord Dashboard</h2>
-<button class="btn btn-gray" style="width:auto; padding:6px 12px; margin:0;" onclick="logout()">Logout</button>
-</div>
-<p id="landlordInfo" style="font-size:12px; color:#64748b; margin:0 0 12px 0;"></p>
-
-<div class="stats">
-<div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Tenants</div></div>
-<div class="stat-box"><div class="stat-num" id="statPaid">0</div><div class="stat-label">Paid</div></div>
-<div class="stat-box"><div class="stat-num" id="statUnpaid">0</div><div class="stat-label">Unpaid</div></div>
-</div>
-
-<div class="stats" style="grid-template-columns:1fr 1fr;">
-<div class="stat-box" style="background:#f0fdf4; border-color:#bbf7d0;"><div class="stat-num" id="statCollected">KSH 0</div><div class="stat-label">Collected This Month</div></div>
-<div class="stat-box" style="background:#fef2f2; border-color:#fecaca;"><div class="stat-num" id="statArrears">KSH 0</div><div class="stat-label">Arrears / Unpaid</div></div>
-</div>
-
-<h3>➕ Add New Tenant</h3>
-<input type="text" id="tName" placeholder="Tenant Full Name">
-<input type="text" id="tHouse" placeholder="House No. e.g. A1, B2">
-<input type="number" id="tRent" placeholder="Monthly Rent KSH e.g. 5000">
-<input type="tel" id="tPhone" placeholder="Tenant Phone 07...">
+<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🏠 Landlord</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
+<p id="landInfo" style="font-size:11px; color:#64748b; margin:4px 0;"></p>
+<div id="isAdminViewing" class="hidden" style="background:#fef3c7; padding:7px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEW</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back to Admin</button></div>
+<div id="subCountdown" class="countdown-banner"></div>
+<div class="stats" style="grid-template-columns:1fr 1fr 1fr;"><div class="stat-box"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Tenants</div></div><div class="stat-box"><div class="stat-num" id="sCollected">0</div><div class="stat-label">Collected</div></div><div class="stat-box"><div class="stat-num" id="sArrears">0</div><div class="stat-label">Arrears</div></div></div>
+<h4 style="margin:10px 0 5px 0;">➕ Add Tenant</h4>
+<input id="tName" placeholder="Tenant Name"><input id="tHouse" placeholder="House No."><input id="tRent" type="number" placeholder="Monthly Rent KSH"><input id="tPhone" placeholder="Phone 07...">
 <button class="btn btn-green" onclick="addTenant()">Add Tenant</button>
-
-<h3 style="margin-top:20px;">📋 My Tenants - <span id="tenantCount">0</span></h3>
-<input type="text" id="searchTenant" placeholder="Search tenant, house..." onkeyup="filterTenants()" style="margin-bottom:10px;">
-<div id="tenantList"></div>
+<h4 style="margin:15px 0 5px 0;">📋 Tenants - Countdown + WhatsApp + SMS</h4>
+<input id="searchT" placeholder="Search..." onkeyup="renderTenants()"><div id="tList"></div>
 </div>
 
-<!-- ==================== AGENT DASHBOARD ==================== -->
 <div id="agentPage" class="card hidden">
-<div class="top-bar">
-<h2 style="margin:0; font-size:18px;">🤝 Agent Panel</h2>
-<button class="btn btn-gray" style="width:auto; padding:6px 12px; margin:0;" onclick="logout()">Logout</button>
+<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🤝 Agent</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
+<p id="agentInfo" style="font-size:11px; color:#64748b;"></p>
+<div id="isAdminViewingAgent" class="hidden" style="background:#fef3c7; padding:7px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEW</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back</button></div>
+<div style="background:#eff6ff; padding:10px; border-radius:10px; border:1px solid #bfdbfe;">
+<input id="lName" placeholder="Landlord Name"><input id="lPhone" placeholder="Phone"><input id="lLocation" placeholder="Location">
+<button class="btn btn-blue" onclick="submitLead()">Send to Admin - ONLY HERE WAITS</button>
+<div id="leadOk" class="success">✅ Sent to Admin! Wait for approval. Earn KSH 200</div>
+<p class="info" style="text-align:left;">Payment Every Monday 7PM via M-Pesa</p>
 </div>
-<p id="agentInfo" style="font-size:12px; color:#64748b;"></p>
-
-<div style="background:#eff6ff; border:1px solid #bfdbfe; padding:14px; border-radius:12px;">
-<h3 style="margin:0 0 10px 0;">+ Add New Landlord (Send to Admin)</h3>
-<input type="text" id="lName" placeholder="Landlord Full Name">
-<input type="tel" id="lPhone" placeholder="Landlord Phone 07...">
-<input type="text" id="lLocation" placeholder="Location e.g. Garissa, Mombasa">
-<textarea id="lNotes" placeholder="Notes e.g. Has 10 rentals" rows="2"></textarea>
-<button class="btn btn-blue" onclick="submitLead()">Send to Admin for Approval</button>
-<div id="leadSuccess" class="success">✅ Sent to Admin! Wait for approval. You will earn KSH 200 when approved.</div>
-<p class="info" style="text-align:left; margin-top:8px;">You DON'T create password. KejaChapChap Admin (0141694057) creates it.<br>Support: 0718255742 | Weekly Payment: Every Monday 7PM</p>
-</div>
-
-<div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:10px; margin-top:15px;">
-<b id="commissionText">Commission: KSH 0 (0 x 200)</b><br>
-<small>You get KSH 200 per approved landlord - Paid Monday 7PM via M-Pesa</small>
-</div>
-
-<h3>My Submissions</h3>
+<div style="background:#f0fdf4; padding:8px; border-radius:8px; margin:8px 0;"><b id="comm">Commission: KSH 0</b></div>
 <div id="agentLeads"></div>
 </div>
 
-<!-- ==================== ADMIN DASHBOARD ==================== -->
 <div id="adminPage" class="card hidden">
-<div class="header header-admin">
-<h2 style="margin:0;">KejaChapChap Admin Panel</h2>
-<p style="margin:4px 0; font-size:12px;">Countrywide - M-Pesa 0141694057 | Support 0718255742</p>
-</div>
-
-<div class="stats" style="grid-template-columns:1fr 1fr 1fr 1fr;">
-<div class="stat-box"><div class="stat-num" id="aTotalLandlords">0</div><div class="stat-label">Landlords</div></div>
-<div class="stat-box"><div class="stat-num" id="aTotalAgents">0</div><div class="stat-label">Agents</div></div>
-<div class="stat-box"><div class="stat-num" id="aPending">0</div><div class="stat-label">Pending</div></div>
-<div class="stat-box"><div class="stat-num" id="aApproved">0</div><div class="stat-label">Approved</div></div>
-</div>
-
-<div class="tabs">
-<button class="tab active" onclick="switchAdminTab('create')">Create Account</button>
-<button class="tab" onclick="switchAdminTab('pending')">Pending Leads</button>
-<button class="tab" onclick="switchAdminTab('all')">All Accounts</button>
-</div>
-
-<div id="adminCreate">
-<h3>🔧 Create Landlord / Agent Account</h3>
-<div style="background:#fef3c7; border:1px solid #fde68a; padding:14px; border-radius:12px;">
-<input type="text" id="newName" placeholder="Full Name">
-<input type="tel" id="newPhone" placeholder="Phone 07...">
-<input type="text" id="newLocation" placeholder="Location">
-<select id="newRole"><option value="landlord">Landlord</option><option value="agent">Agent</option></select>
-<input type="text" id="newPwd" placeholder="Password e.g. KEJA2026@Garissa (must be unique)">
-<button class="btn btn-green" style="background:#92400e;" onclick="createAccount()">Create & Issue Password</button>
-<div id="createMsg" class="success"></div>
-</div>
-</div>
-
-<div id="adminPending" class="hidden">
-<h3>⏳ Pending Leads from Agents</h3>
-<div id="adminPendingList"></div>
-</div>
-
-<div id="adminAll" class="hidden">
-<h3>👥 All Landlords & Agents</h3>
-<input type="text" id="searchAll" placeholder="Search..." onkeyup="filterAll()">
-<div id="adminAllList"></div>
-</div>
-
-<button class="btn btn-gray" onclick="logout()" style="margin-top:15px;">Logout</button>
+<div class="header header-admin"><h2 style="margin:0; font-size:18px;">Admin Panel - Super Access</h2><p style="margin:2px 0; font-size:11px;">M-Pesa 0141694057 | You can view ALL accounts</p></div>
+<div class="stats"><div class="stat-box"><div class="stat-num" id="aLand">0</div><div class="stat-label">Landlords</div></div><div class="stat-box"><div class="stat-num" id="aAgents">0</div><div class="stat-label">Agents</div></div><div class="stat-box"><div class="stat-num" id="aPend">0</div><div class="stat-label">Pending</div></div><div class="stat-box"><div class="stat-num" id="aAppr">0</div><div class="stat-label">Approved</div></div></div>
+<div class="tabs"><button class="tab active" id="aTab1" onclick="switchAdmin('create')">Create</button><button class="tab" id="aTab2" onclick="switchAdmin('pending')">Pending</button><button class="tab" id="aTab3" onclick="switchAdmin('all')">All Accounts</button></div>
+<div id="aCreate"><div style="background:#fef3c7; padding:10px; border-radius:10px;"><input id="nName" placeholder="Full Name"><input id="nPhone" placeholder="Phone"><input id="nLocation" placeholder="Location"><select id="nRole"><option value="landlord">Landlord</option><option value="agent">Agent</option></select><input id="nPwd" placeholder="Unique Password"><button class="btn btn-green" style="background:#92400e;" onclick="createAcc()">Create & Issue</button><div id="cMsg" class="success"></div></div></div>
+<div id="aPending" class="hidden"><div id="aPendingList"></div></div>
+<div id="aAll" class="hidden"><input id="searchAll" placeholder="Search..." onkeyup="renderAll()"><div id="aAllList"></div></div>
+<button class="btn btn-gray" onclick="logout()">Logout</button>
 </div>
 
 <script>
-// ==================== DATA & CONFIG ====================
-const ADMIN_PWDS = ["VICTOR2003@Nrb","ADMIN2026@Keja","KEJA2026@Admin","ADMIN123","KejaChapChap2026"];
-const LS = {
- landlords: 'kc_landlords_v2',
- agents: 'kc_agents_v2',
- pending: 'kc_pending_v2',
- approved: 'kc_approved_v2',
- tenantsPrefix: 'kc_tenants_'
-};
-
-function getLS(key, def=[]){ try{ return JSON.parse(localStorage.getItem(key)||JSON.stringify(def)); }catch(e){ return def; } }
-function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
-
-// ==================== LOGIN LOGIC - DIRECT NO WAITING ====================
-function switchLoginTab(t){
- document.getElementById('loginLandlord').classList.add('hidden');
- document.getElementById('loginAgent').classList.add('hidden');
- document.getElementById('loginAdmin').classList.add('hidden');
- document.querySelectorAll('#loginPage.tab').forEach(b=>b.classList.remove('active'));
- if(t==='landlord'){ document.getElementById('loginLandlord').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[0].classList.add('active'); }
- if(t==='agent'){ document.getElementById('loginAgent').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[1].classList.add('active'); }
- if(t==='admin'){ document.getElementById('loginAdmin').classList.remove('hidden'); document.querySelectorAll('#loginPage.tab')[2].classList.add('active'); }
-}
+const ADMIN_PWDS=["VICTOR2003@Nrb","ADMIN2026@Keja","KEJA2026@Admin","ADMIN123","KejaChapChap2026"];
+const LS={ landlords:'kc_landlords_v2', agents:'kc_agents_v2', pending:'kc_pending_v2', approved:'kc_approved_v2', tenantsPrefix:'kc_tenants_', devices:'kc_devices_', sub:'kc_sub_start_' };
+const getLS=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch{return d;}};
+const setLS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+function switchLogin(t){['boxLandlord','boxAgent','boxAdmin'].forEach(id=>document.getElementById(id).classList.add('hidden'));['tabL','tabA','tabAd'].forEach(id=>document.getElementById(id).classList.remove('active')); if(t==='landlord'){document.getElementById('boxLandlord').classList.remove('hidden'); document.getElementById('tabL').classList.add('active');} if(t==='agent'){document.getElementById('boxAgent').classList.remove('hidden'); document.getElementById('tabA').classList.add('active');} if(t==='admin'){document.getElementById('boxAdmin').classList.remove('hidden'); document.getElementById('tabAd').classList.add('active');}}
+function switchAdmin(t){['aCreate','aPending','aAll'].forEach(id=>document.getElementById(id).classList.add('hidden'));['aTab1','aTab2','aTab3'].forEach(id=>document.getElementById(id).classList.remove('active')); if(t==='create'){document.getElementById('aCreate').classList.remove('hidden'); document.getElementById('aTab1').classList.add('active');} if(t==='pending'){document.getElementById('aPending').classList.remove('hidden'); document.getElementById('aTab2').classList.add('active');} if(t==='all'){document.getElementById('aAll').classList.remove('hidden'); document.getElementById('aTab3').classList.add('active'); renderAll();}}
+function showPage(id){['loginPage','landlordPage','agentPage','adminPage'].forEach(p=>document.getElementById(p).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); window.scrollTo(0,0);}
+function logout(){localStorage.removeItem('kc_role'); localStorage.removeItem('kc_admin_view'); showPage('loginPage');}
+function backToAdmin(){localStorage.setItem('kc_role','admin'); localStorage.removeItem('kc_admin_view'); showPage('adminPage'); loadAdmin();}
 
 function doLogin(role){
- let pwd = '';
- if(role==='landlord') pwd = document.getElementById('pwdLandlord').value.trim();
- if(role==='agent') pwd = document.getElementById('pwdAgent').value.trim();
- if(role==='admin') pwd = document.getElementById('pwdAdmin').value.trim();
+ let pwd=role==='landlord'?document.getElementById('pwdL').value.trim():role==='agent'?document.getElementById('pwdA').value.trim():document.getElementById('pwdAd').value.trim();
  if(!pwd) return alert('Enter password');
-
- // ADMIN CHECK - DIRECT
- if(ADMIN_PWDS.includes(pwd) || role==='admin' && ADMIN_PWDS.includes(pwd)){
-  localStorage.setItem('kc_role','admin');
-  localStorage.setItem('kc_pwd', pwd);
-  showPage('adminPage'); loadAdmin(); return;
- }
- // Check DB - NO WAITING, DIRECT IF EXISTS
- let landlords = getLS(LS.landlords);
- let agents = getLS(LS.agents);
- let isL = landlords.find(x=>x.password===pwd);
- let isA = agents.find(x=>x.password===pwd);
-
- if(role==='landlord' && (isL || pwd.length>=4)){ // Allow direct for demo, strict if you want isL only
-  localStorage.setItem('kc_role','landlord');
-  localStorage.setItem('kc_pwd', pwd);
-  localStorage.setItem('kc_name', isL?isL.name:'Landlord');
-  showPage('landlordPage'); loadLandlord(); return;
- }
- if(role==='agent' && isA){
-  localStorage.setItem('kc_role','agent');
-  localStorage.setItem('kc_pwd', pwd);
-  localStorage.setItem('kc_name', isA.name);
-  showPage('agentPage'); loadAgent(); return;
- }
- // Fallback: try both roles if password exists anywhere - STILL DIRECT NO WAITING
- if(isL){ localStorage.setItem('kc_role','landlord'); localStorage.setItem('kc_pwd', pwd); localStorage.setItem('kc_name', isL.name); showPage('landlordPage'); loadLandlord(); return; }
- if(isA){ localStorage.setItem('kc_role','agent'); localStorage.setItem('kc_pwd', pwd); localStorage.setItem('kc_name', isA.name); showPage('agentPage'); loadAgent(); return; }
-
- alert('Wrong password. Contact KejaChapChap Admin: 0718255742');
+ if(ADMIN_PWDS.includes(pwd)){localStorage.setItem('kc_role','admin'); localStorage.setItem('kc_pwd',pwd); showPage('adminPage'); loadAdmin(); return;}
+ let landlords=getLS(LS.landlords), agents=getLS(LS.agents);
+ let isL=landlords.find(x=>x.password===pwd), isA=agents.find(x=>x.password===pwd);
+ let devices=getLS(LS.devices,{}); let deviceId=localStorage.getItem('deviceId')||'device_'+Math.random().toString(36).substring(2,9); localStorage.setItem('deviceId',deviceId);
+ if(isL && devices[pwd] && devices[pwd]!==deviceId){return alert('🔒 Device Locked! Contact Admin 0718255742 to reset.');}
+ if(!devices[pwd] && (isL||isA)){devices[pwd]=deviceId; setLS(LS.devices,devices);}
+ if(isL || (role==='landlord' && pwd.length>=4)){localStorage.setItem('kc_role','landlord'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isL?isL.name:'Landlord'); showPage('landlordPage'); loadLandlord(); return;}
+ if(isA){localStorage.setItem('kc_role','agent'); localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',isA.name); showPage('agentPage'); loadAgent(); return;}
+ alert('Wrong password. Contact Admin 0718255742');
 }
 
-function showPage(id){
- ['loginPage','landlordPage','agentPage','adminPage'].forEach(p=>document.getElementById(p).classList.add('hidden'));
- document.getElementById(id).classList.remove('hidden');
- window.scrollTo(0,0);
-}
-
-function logout(){
- localStorage.removeItem('kc_role');
- document.getElementById('pwdLandlord').value=''; document.getElementById('pwdAgent').value=''; document.getElementById('pwdAdmin').value='';
- showPage('loginPage');
-}
-
-// ==================== LANDLORD ====================
+// LANDLORD WITH COUNTDOWN
 function loadLandlord(){
- let name = localStorage.getItem('kc_name')||'Landlord';
- let pwd = localStorage.getItem('kc_pwd');
- document.getElementById('landlordInfo').innerText = name + ' | Password: ' + pwd.substring(0,4)+'*** | Device Locked to this phone';
+ let name=localStorage.getItem('kc_name'), pwd=localStorage.getItem('kc_pwd');
+ document.getElementById('landInfo').innerText=name+' | '+pwd.substring(0,4)+'*** | '+(localStorage.getItem('kc_admin_view')?'ADMIN VIEWING - ':'')+'Device Locked';
+ document.getElementById('isAdminViewing').classList.toggle('hidden',!localStorage.getItem('kc_admin_view'));
+ // Set sub start if not exists
+ if(!localStorage.getItem(LS.sub+pwd)){localStorage.setItem(LS.sub+pwd, Date.now());}
  renderTenants();
 }
-
 function addTenant(){
- let name=document.getElementById('tName').value.trim();
- let house=document.getElementById('tHouse').value.trim();
- let rent=parseInt(document.getElementById('tRent').value);
- let phone=document.getElementById('tPhone').value.trim();
+ let name=document.getElementById('tName').value.trim(), house=document.getElementById('tHouse').value.trim(), rent=parseInt(document.getElementById('tRent').value), phone=document.getElementById('tPhone').value.trim();
  if(!name||!house||!rent) return alert('Fill name, house, rent');
- let pwd=localStorage.getItem('kc_pwd');
- let key=LS.tenantsPrefix+pwd;
- let tenants=getLS(key);
- tenants.push({id:Date.now(), name, house, rent, phone, paid:0, balance:rent, status:'unpaid', created:new Date().toLocaleDateString()});
- setLS(key, tenants);
- document.getElementById('tName').value=''; document.getElementById('tHouse').value=''; document.getElementById('tRent').value=''; document.getElementById('tPhone').value='';
- renderTenants();
+ let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key);
+ tenants.push({id:Date.now(), name, house, rent, phone, paid:0, balance:rent, status:'unpaid', created:new Date().toLocaleDateString(), createdDate:Date.now(), lastPaidDate:null});
+ setLS(key, tenants); document.getElementById('tName').value=''; document.getElementById('tHouse').value=''; document.getElementById('tRent').value=''; document.getElementById('tPhone').value=''; renderTenants();
 }
-
 function renderTenants(){
- let pwd=localStorage.getItem('kc_pwd');
- let key=LS.tenantsPrefix+pwd;
- let tenants=getLS(key);
- let filter=document.getElementById('searchTenant')?.value.toLowerCase()||'';
- let filtered=tenants.filter(t=> (t.name+t.house+t.phone).toLowerCase().includes(filter));
+ let pwd=localStorage.getItem('kc_pwd'); let key=LS.tenantsPrefix+pwd; let tenants=getLS(key);
+ let filter=(document.getElementById('searchT').value||'').toLowerCase(); let filtered=tenants.filter(t=>(t.name+t.house).toLowerCase().includes(filter));
+ // Subscription countdown
+ let subStart=parseInt(localStorage.getItem(LS.sub+pwd)||Date.now());
+ let daysUsed=Math.floor((Date.now()-subStart)/(1000*60*60*24)); let daysLeft=30-daysUsed; if(daysLeft<0) daysLeft=0;
+ let subEl=document.getElementById('subCountdown');
+ subEl.style.background=daysLeft<=5?'#fee2e2':'#f0fdf4'; subEl.style.border='1px solid '+(daysLeft<=5?'#fecaca':'#bbf7d0');
+ subEl.innerHTML=daysLeft>0?`⏰ <b>Subscription: ${daysLeft} days left</b> - Expires ${new Date(subStart+30*24*60*60*1000).toLocaleDateString()} | KSH 1000/30days = KSH 33/day | Pay M-Pesa 0141694057`:`❌ <b>SUBSCRIPTION EXPIRED!</b> ${Math.abs(daysLeft)} days overdue - Pay KSH 1000 via M-Pesa 0141694057 to continue | Support 0718255742`;
 
- let total=tenants.length;
- let paid=tenants.filter(t=>t.status==='paid').length;
- let unpaid=total-paid;
- let collected=tenants.reduce((s,t)=>s+t.paid,0);
- let arrears=tenants.reduce((s,t)=>s+t.balance,0);
+ document.getElementById('sTotal').innerText=tenants.length;
+ document.getElementById('sCollected').innerText='KSH '+tenants.reduce((s,t)=>s+t.paid,0);
+ document.getElementById('sArrears').innerText='KSH '+tenants.reduce((s,t)=>s+t.balance,0);
 
- document.getElementById('statTotal').innerText=total;
- document.getElementById('statPaid').innerText=paid;
- document.getElementById('statUnpaid').innerText=unpaid;
- document.getElementById('statCollected').innerText='KSH '+collected;
- document.getElementById('statArrears').innerText='KSH '+arrears;
- document.getElementById('tenantCount').innerText=filtered.length;
+ document.getElementById('tList').innerHTML=filtered.length===0?'<p class="info">No tenants yet. Add first tenant above.</p>':filtered.map(t=>{
+  let rentDue=new Date(t.createdDate); rentDue.setDate(rentDue.getDate()+30);
+  if(t.lastPaidDate){rentDue=new Date(t.lastPaidDate); rentDue.setDate(rentDue.getDate()+30);}
+  let daysToRent=Math.ceil((rentDue - new Date())/(1000*60*60*24));
+  let countdownText='', color='', cardClass=t.status;
+  if(t.status==='paid'){countdownText=`✅ Paid - Next due in ${daysToRent>0?daysToRent:0} days`; color='#16a34a';}
+  else if(daysToRent>3){countdownText=`⏰ Due in ${daysToRent} days`; color='#64748b';}
+  else if(daysToRent>0){countdownText=`⚠️ Due in ${daysToRent} days - Remind now!`; color='#eab308'; cardClass='partial';}
+  else {countdownText=`❌ OVERDUE by ${Math.abs(daysToRent)} days!`; color='#dc2626'; cardClass='overdue';}
 
- let list=document.getElementById('tenantList');
- if(filtered.length===0){ list.innerHTML='<p class="info">No tenants yet. Add your first tenant above.</p>'; return; }
- list.innerHTML=filtered.map((t,idx)=>{
-  let cls=t.status==='paid'?'paid':t.balance>0&&t.paid>0?'partial':'unpaid';
-  return `<div class="tenant-card ${cls}">
-   <div style="display:flex; justify-content:space-between;"><b>${t.house} - ${t.name}</b><span class="badge ${t.status==='paid'?'badge-green':t.status==='partial'?'badge-yellow':'badge-red'}">${t.status.toUpperCase()}</span></div>
-   <div style="font-size:13px; margin:5px 0;">Rent: KSH ${t.rent} | Paid: KSH ${t.paid} | Bal: KSH ${t.balance}<br>Phone: ${t.phone||'N/A'} | Since: ${t.created}</div>
-   <div style="display:flex; gap:6px; flex-wrap:wrap;">
-    <button class="btn btn-green" style="width:auto; padding:6px 10px; font-size:12px;" onclick="recordPayment(${t.id})">Record Payment</button>
-    <button class="btn btn-blue" style="width:auto; padding:6px 10px; font-size:12px;" onclick="sendReminder(${t.id})">WhatsApp / SMS</button>
-    <button class="btn btn-red" style="width:auto; padding:6px 10px; font-size:12px;" onclick="deleteTenant(${t.id})">Delete</button>
+  return `<div class="tenant-card ${cardClass}">
+   <div style="display:flex; justify-content:space-between; align-items:center;"><b>${t.house} - ${t.name}</b><span style="color:${color}; font-size:11px; font-weight:bold; background:white; padding:2px 6px; border-radius:8px; border:1px solid ${color};">${countdownText}</span></div>
+   <div style="font-size:12px; margin:4px 0;">Rent: KSH ${t.rent} | Paid: KSH ${t.paid} | Bal: <b style="color:${t.balance>0?'#dc2626':'#16a34a'}">KSH ${t.balance}</b><br>Phone: ${t.phone||'N/A'} | Added: ${t.created}</div>
+   <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+    <button class="btn btn-sm btn-green" onclick="pay(${t.id})">💰 Pay</button>
+    <button class="btn btn-sm btn-blue" onclick="wa(${t.id})">📱 WhatsApp</button>
+    <button class="btn btn-sm btn-yellow" onclick="sms(${t.id})">💬 SMS</button>
+    <button class="btn btn-sm btn-red" onclick="delT(${t.id})">🗑️ Del</button>
    </div>
   </div>`;
  }).join('');
 }
-
-function recordPayment(id){
- let amt=prompt('Enter amount paid KSH:');
- if(!amt) return; amt=parseInt(amt); if(isNaN(amt)) return;
- let pwd=localStorage.getItem('kc_pwd');
- let key=LS.tenantsPrefix+pwd;
- let tenants=getLS(key);
- let t=tenants.find(x=>x.id===id);
- if(!t) return;
- t.paid+=amt;
- t.balance=t.rent-t.paid;
- if(t.balance<=0){ t.status='paid'; t.balance=0; t.paid=t.rent; }
- else if(t.paid>0){ t.status='partial'; }
- else { t.status='unpaid'; }
+function pay(id){
+ let amt=prompt('Enter amount paid KSH:'); if(!amt) return; amt=parseInt(amt); if(isNaN(amt)) return;
+ let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
+ t.paid+=amt; t.balance=t.rent-t.paid; t.lastPaidDate=Date.now();
+ if(t.balance<=0){t.status='paid'; t.balance=0; t.paid=t.rent;} else if(t.paid>0){t.status='partial';} else {t.status='unpaid';}
  setLS(key, tenants); renderTenants();
 }
-
-function sendReminder(id){
- let pwd=localStorage.getItem('kc_pwd');
- let key=LS.tenantsPrefix+pwd;
- let tenants=getLS(key);
- let t=tenants.find(x=>x.id===id);
- if(!t) return;
- let msg=`Hello ${t.name}, House ${t.house} - Your rent KSH ${t.rent}, Paid KSH ${t.paid}, Balance KSH ${t.balance}. Please pay via M-Pesa 0141694057 (KejaChapChap Admin). Thanks.`;
- let phone=t.phone||'';
- if(phone){ window.open(`https://wa.me/254${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank'); }
- else { alert(msg); }
+function wa(id){
+ let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
+ let due=new Date(t.lastPaidDate||t.createdDate); due.setDate(due.getDate()+30); let days=Math.ceil((due-new Date())/(1000*60*60*24));
+ let statusMsg=days<0?`❌ OVERDUE by ${Math.abs(days)} days!`:`⏰ Due in ${days} days`;
+ let msg=`Hello ${t.name} 👋\n\nHouse: ${t.house}\nRent: KSH ${t.rent}\nPaid: KSH ${t.paid}\nBalance: KSH ${t.balance}\nStatus: ${statusMsg}\n\nPlease pay via M-Pesa: 0141694057\nKejaChapChap Admin - 0718255742\n\nThank you! 🙏`;
+ window.open(`https://wa.me/254${(t.phone||'').replace(/^0/,'')}?text=${encodeURIComponent(msg)}`,'_blank');
 }
-
-function deleteTenant(id){
- if(!confirm('Delete tenant?')) return;
- let pwd=localStorage.getItem('kc_pwd');
- let key=LS.tenantsPrefix+pwd;
- let tenants=getLS(key).filter(x=>x.id!==id);
- setLS(key, tenants); renderTenants();
+function sms(id){
+ let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
+ let due=new Date(t.lastPaidDate||t.createdDate); due.setDate(due.getDate()+30); let days=Math.ceil((due-new Date())/(1000*60*60*24));
+ let msg=`Hello ${t.name}, House ${t.house} - Rent KSH ${t.rent}, Bal KSH ${t.balance}. ${days<0?`OVERDUE ${Math.abs(days)} days!`:`Due in ${days} days.`} Pay via M-Pesa 0141694057. KejaChapChap Admin 0718255742`;
+ window.open(`sms:${t.phone}?body=${encodeURIComponent(msg)}`,'_blank');
 }
-function filterTenants(){ renderTenants(); }
+function delT(id){if(!confirm('Delete tenant?')) return; let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); setLS(key, getLS(key).filter(x=>x.id!==id)); renderTenants();}
 
-// ==================== AGENT ====================
-function loadAgent(){
- let name=localStorage.getItem('kc_name')||'Agent';
- document.getElementById('agentInfo').innerText=name+' | Code: AGENT'+(localStorage.getItem('kc_pwd')||'').substring(0,4)+' | Weekly Payment Monday 7PM';
- renderAgentLeads();
+function loadAgent(){document.getElementById('agentInfo').innerText=localStorage.getItem('kc_name')+' | Payment Monday 7PM'; document.getElementById('isAdminViewingAgent').classList.toggle('hidden',!localStorage.getItem('kc_admin_view')); renderAgent();}
+function submitLead(){let name=document.getElementById('lName').value.trim(), phone=document.getElementById('lPhone').value.trim(), loc=document.getElementById('lLocation').value.trim(); if(!name||!phone||!loc) return alert('Fill all'); let pending=getLS(LS.pending); pending.push({id:Date.now(), name, phone, location:loc, status:'PENDING', agent:localStorage.getItem('kc_name')||'Agent', agentPwd:localStorage.getItem('kc_pwd'), date:new Date().toLocaleString()}); setLS(LS.pending, pending); document.getElementById('leadOk').style.display='block'; document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; renderAgent(); setTimeout(()=>document.getElementById('leadOk').style.display='none',4000);}
+function renderAgent(){let agentName=localStorage.getItem('kc_name'); let pending=getLS(LS.pending).filter(l=>l.agent===agentName); let approved=getLS(LS.approved).filter(l=>l.agent===agentName); document.getElementById('comm').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`; document.getElementById('agentLeads').innerHTML=pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone}<br><small>⏳ PENDING - Wait Admin approval</small></div>`).join('')+approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b><br><small>✅ APPROVED - KSH 200 | Pwd ${l.password}</small></div>`).join('')||'<p class="info">No submissions yet</p>';}
+
+function loadAdmin(){let pending=getLS(LS.pending), approved=getLS(LS.approved), landlords=getLS(LS.landlords), agents=getLS(LS.agents); document.getElementById('aLand').innerText=landlords.length; document.getElementById('aAgents').innerText=agents.length; document.getElementById('aPend').innerText=pending.length; document.getElementById('aAppr').innerText=approved.length; document.getElementById('aPendingList').innerHTML=pending.length===0?'<p class="info">No pending</p>':pending.map((l,i)=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br>Agent: ${l.agent}<br><button class="btn btn-sm btn-green" onclick="approve(${i})">✅ Approve</button><button class="btn btn-sm btn-red" onclick="reject(${i})">Reject</button></div>`).join(''); renderAll();}
+function createAcc(){let name=document.getElementById('nName').value.trim(), phone=document.getElementById('nPhone').value.trim(), loc=document.getElementById('nLocation').value.trim(), role=document.getElementById('nRole').value, pwd=document.getElementById('nPwd').value.trim(); if(!name||!phone||!pwd) return alert('Fill all'); let key=role==='landlord'?LS.landlords:LS.agents; let list=getLS(key); if(list.find(x=>x.password===pwd)) return alert('Password exists!'); let code=role==='agent'?'AGENT'+Math.floor(1000+Math.random()*9000):''; list.push({id:Date.now(), name, phone, location:loc, password:pwd, role, code, date:new Date().toLocaleString()}); setLS(key, list); document.getElementById('cMsg').style.display='block'; document.getElementById('cMsg').innerText=`✅ ${role} ${name} | Pwd: ${pwd}`; document.getElementById('nName').value=''; document.getElementById('nPhone').value=''; document.getElementById('nLocation').value=''; document.getElementById('nPwd').value=''; loadAdmin(); setTimeout(()=>document.getElementById('cMsg').style.display='none',6000);}
+function approve(i){let pending=getLS(LS.pending); let lead=pending[i]; let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase(); let approved=getLS(LS.approved); lead.password=pwd; lead.status='APPROVED'; approved.push(lead); pending.splice(i,1); setLS(LS.pending, pending); setLS(LS.approved, approved); let landlords=getLS(LS.landlords); landlords.push({id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:new Date().toLocaleString()}); setLS(LS.landlords, landlords); loadAdmin(); alert(`Approved! ${lead.name} Pwd: ${pwd}`);}
+function reject(i){if(!confirm('Reject?')) return; let pending=getLS(LS.pending); pending.splice(i,1); setLS(LS.pending, pending); loadAdmin();}
+function renderAll(){
+ let landlords=getLS(LS.landlords), agents=getLS(LS.agents), approved=getLS(LS.approved);
+ let all=[...landlords.map(x=>({...x, type:'Landlord'})),...agents.map(x=>({...x, type:'Agent'})),...approved.map(x=>({...x, type:'Lead', name:x.name, phone:x.phone, password:x.password, location:x.location, agent:x.agent}))];
+ let filter=(document.getElementById('searchAll').value||'').toLowerCase(); let filtered=all.filter(x=>(x.name+x.phone+x.location).toLowerCase().includes(filter));
+ document.getElementById('aAllList').innerHTML=filtered.length===0?'<p class="info">No accounts</p>':filtered.map(x=>`<div class="tenant-card"><b>${x.type==='Agent'?'🤝':'🏠'} ${x.name}</b> | ${x.phone} | ${x.location||'-'}<br><small>Pwd: <code>${x.password}</code> | Agent: ${x.agent||'-'}</small><div class="admin-actions"><button class="btn btn-sm btn-green" onclick="viewAs('${x.password}','${x.name}','${x.type}')">👁️ View</button><button class="btn btn-sm btn-blue" onclick="resetDevice('${x.password}')">🔓 Reset Device</button><button class="btn btn-sm btn-gray" onclick="changePwd('${x.password}')">🔑 Change Pwd</button><button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️ Delete</button></div></div>`).join('');
 }
+function viewAs(pwd,name,type){if(!confirm(`View as ${name}?`)) return; localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',name); localStorage.setItem('kc_admin_view','true'); if(type==='Agent'){localStorage.setItem('kc_role','agent'); showPage('agentPage'); loadAgent();} else {localStorage.setItem('kc_role','landlord'); showPage('landlordPage'); loadLandlord();}}
+function resetDevice(pwd){if(!confirm(`Reset device for ${pwd}?`)) return; let devices=getLS(LS.devices,{}); delete devices[pwd]; setLS(LS.devices, devices); alert('✅ Device reset!');}
+function changePwd(oldPwd){let newPwd=prompt(`New password for ${oldPwd}:`); if(!newPwd) return; newPwd=newPwd.trim(); if(newPwd.length<4) return alert('Too short'); let landlords=getLS(LS.landlords), agents=getLS(LS.agents); landlords=landlords.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); agents=agents.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); let approved=getLS(LS.approved); approved=approved.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); setLS(LS.landlords, landlords); setLS(LS.agents, agents); setLS(LS.approved, approved); let devices=getLS(LS.devices,{}); delete devices[oldPwd]; setLS(LS.devices, devices); alert(`✅ Changed ${oldPwd} -> ${newPwd}`); loadAdmin();}
+function deleteAccount(pwd){if(!confirm(`DELETE ${pwd}?`)) return; setLS(LS.landlords, getLS(LS.landlords).filter(x=>x.password!==pwd)); setLS(LS.agents, getLS(LS.agents).filter(x=>x.password!==pwd)); setLS(LS.pending, getLS(LS.pending).filter(x=>x.agentPwd!==pwd)); let devices=getLS(LS.devices,{}); delete devices[pwd]; setLS(LS.devices, devices); localStorage.removeItem(LS.tenantsPrefix+pwd); alert('Deleted'); loadAdmin();}
 
-function submitLead(){
- let name=document.getElementById('lName').value.trim();
- let phone=document.getElementById('lPhone').value.trim();
- let loc=document.getElementById('lLocation').value.trim();
- let notes=document.getElementById('lNotes').value.trim();
- if(!name||!phone||!loc) return alert('Fill all required');
-
- let pending=getLS(LS.pending);
- pending.push({id:Date.now(), name, phone, location:loc, notes, status:'PENDING', agent:localStorage.getItem('kc_name')||'Agent', agentPwd:localStorage.getItem('kc_pwd'), date:new Date().toLocaleString()});
- setLS(LS.pending, pending);
-
- document.getElementById('leadSuccess').style.display='block';
- document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; document.getElementById('lNotes').value='';
- renderAgentLeads();
- setTimeout(()=>document.getElementById('leadSuccess').style.display='none',5000);
-}
-
-function renderAgentLeads(){
- let agentName=localStorage.getItem('kc_name');
- let pending=getLS(LS.pending).filter(l=>l.agent===agentName);
- let approved=getLS(LS.approved).filter(l=>l.agent===agentName);
- document.getElementById('commissionText').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`;
- let container=document.getElementById('agentLeads');
- if(pending.length===0&&approved.length===0){ container.innerHTML='<p class="info">No landlords submitted yet - send leads to Admin</p>'; return; }
- container.innerHTML= pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br><small>⏳ PENDING - Waiting Admin approval</small></div>`).join('') +
-  approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b> - ${l.phone} - ${l.location}<br><small>✅ APPROVED - Earned KSH 200 | Pwd: ${l.password}</small></div>`).join('');
-}
-
-// ==================== ADMIN ====================
-function switchAdminTab(t){
- document.getElementById('adminCreate').classList.add('hidden');
- document.getElementById('adminPending').classList.add('hidden');
- document.getElementById('adminAll').classList.add('hidden');
- document.querySelectorAll('#adminPage.tab').forEach(b=>b.classList.remove('active'));
- if(t==='create'){ document.getElementById('adminCreate').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[0].classList.add('active'); }
- if(t==='pending'){ document.getElementById('adminPending').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[1].classList.add('active'); }
- if(t==='all'){ document.getElementById('adminAll').classList.remove('hidden'); document.querySelectorAll('#adminPage.tab')[2].classList.add('active'); }
-}
-
-function loadAdmin(){
- let pending=getLS(LS.pending);
- let approved=getLS(LS.approved);
- let landlords=getLS(LS.landlords);
- let agents=getLS(LS.agents);
- document.getElementById('aTotalLandlords').innerText=landlords.length;
- document.getElementById('aTotalAgents').innerText=agents.length;
- document.getElementById('aPending').innerText=pending.length;
- document.getElementById('aApproved').innerText=approved.length;
- renderAdminPending(); renderAdminAll();
-}
-
-function createAccount(){
- let name=document.getElementById('newName').value.trim();
- let phone=document.getElementById('newPhone').value.trim();
- let loc=document.getElementById('newLocation').value.trim();
- let role=document.getElementById('newRole').value;
- let pwd=document.getElementById('newPwd').value.trim();
- if(!name||!phone||!pwd) return alert('Fill all');
- if(pwd.length<4) return alert('Password too short');
-
- let key=role==='landlord'?LS.landlords:LS.agents;
- let list=getLS(key);
- if(list.find(x=>x.password===pwd)) return alert('Password already exists! Use unique password');
-
- let code=role==='agent'?'AGENT'+Math.floor(1000+Math.random()*9000):'';
- list.push({id:Date.now(), name, phone, location:loc, password:pwd, role, code, date:new Date().toLocaleString()});
- setLS(key, list);
-
- document.getElementById('createMsg').style.display='block';
- document.getElementById('createMsg').innerText=`✅ ${role.toUpperCase()} created! Name: ${name} | Phone: ${phone} | Password: ${pwd} - Copy and send via WhatsApp`;
- document.getElementById('newName').value=''; document.getElementById('newPhone').value=''; document.getElementById('newLocation').value=''; document.getElementById('newPwd').value='';
- loadAdmin();
- setTimeout(()=>document.getElementById('createMsg').style.display='none',8000);
-}
-
-function renderAdminPending(){
- let pending=getLS(LS.pending);
- let c=document.getElementById('adminPendingList');
- if(pending.length===0){ c.innerHTML='<p class="info">No pending leads - All clear!</p>'; return; }
- c.innerHTML=pending.map((l,i)=>`
-  <div class="lead-box lead-pending">
-   <b>${l.name}</b> - ${l.phone}<br>Location: ${l.location}<br>Agent: ${l.agent}<br><small>${l.date}</small><br>
-   <div style="display:flex; gap:6px; margin-top:8px;">
-    <button class="btn btn-green" style="width:auto; padding:6px 12px; font-size:12px;" onclick="approveLead(${i})">✅ Approve & Auto-Create Password</button>
-    <button class="btn btn-red" style="width:auto; padding:6px 12px; font-size:12px;" onclick="rejectLead(${i})">❌ Reject</button>
-   </div>
-  </div>
- `).join('');
-}
-
-function approveLead(i){
- let pending=getLS(LS.pending);
- let lead=pending[i];
- let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase();
- let approved=getLS(LS.approved);
- lead.password=pwd; lead.status='APPROVED'; lead.approvedDate=new Date().toLocaleString();
- approved.push(lead); pending.splice(i,1);
- setLS(LS.pending, pending); setLS(LS.approved, approved);
-
- // Add to landlords
- let landlords=getLS(LS.landlords);
- landlords.push({id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:lead.approvedDate});
- setLS(LS.landlords, landlords);
-
- loadAdmin();
- alert(`APPROVED! Lead: ${lead.name}\nPassword: ${pwd}\nSend to landlord via WhatsApp. Agent ${lead.agent} earns KSH 200 on Monday 7PM`);
-}
-
-function rejectLead(i){
- if(!confirm('Reject this lead?')) return;
- let pending=getLS(LS.pending); pending.splice(i,1); setLS(LS.pending, pending); loadAdmin();
-}
-
-function renderAdminAll(){
- let landlords=getLS(LS.landlords);
- let agents=getLS(LS.agents);
- let approved=getLS(LS.approved);
- let c=document.getElementById('adminAllList');
- let all=[...landlords.map(l=>({...l, type:'landlord'})),...agents.map(a=>({...a, type:'agent'})),...approved.map(a=>({...a, type:'approved-lead'}))];
- c.innerHTML= all.length===0?'<p class="info">No accounts yet. Create first account above.</p>' :
-  all.map(x=>`<div class="tenant-card"><b>${x.type==='agent'?'🤝':'🏠'} ${x.name}</b> - ${x.phone} - ${x.location||'N/A'}<br>Role: ${x.role||x.type} | Pwd: <code>${x.password}</code> | Agent: ${x.agent||'-'}<br><small>${x.date||''}</small></div>`).join('');
-}
-function filterAll(){ /* search filter logic can be added */ }
-
-// Auto-login if already logged
-(function(){
- let role=localStorage.getItem('kc_role');
- if(role==='landlord'){ showPage('landlordPage'); loadLandlord(); }
- else if(role==='agent'){ showPage('agentPage'); loadAgent(); }
- else if(role==='admin'){ showPage('adminPage'); loadAdmin(); }
-})();
+(function(){let role=localStorage.getItem('kc_role'); if(role==='landlord'){showPage('landlordPage'); loadLandlord();} else if(role==='agent'){showPage('agentPage'); loadAgent();} else if(role==='admin'){showPage('adminPage'); loadAdmin();}})();
 </script>
 </body>
 </html>
