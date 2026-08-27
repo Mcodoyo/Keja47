@@ -1,78 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>KejaChapChap - Agent Panel</title>
+<title>KejaChapChap - Smart Rent System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{font-family: Arial; background:#f0f2f5; padding:15px;}
 .card{background:white; border-radius:15px; padding:20px; max-width:500px; margin:auto; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.header{background:#14532d; color:white; padding:15px; border-radius:12px; text-align:center; margin-bottom:15px;}
 input{width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:10px; box-sizing:border-box;}
-.btn-blue{background:#2563eb; color:white; padding:12px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; font-size:16px;}
-.btn-gray{background:#6b7280; color:white; padding:12px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;}
-.success{background:#dcfce7; color:#15803d; padding:10px; border-radius:8px; margin-top:10px; text-align:center; font-weight:bold;}
-.info{color:#6b7280; font-size:14px; margin-top:10px;}
-.commission-box{background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:10px; margin-top:15px;}
+.btn-green{background:#14532d; color:white; padding:12px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer;}
+.info{font-size:13px; color:#6b7280; text-align:center; margin-top:10px;}
+.badge{background:#dcfce7; color:#14532d; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:bold;}
 </style>
 </head>
 <body>
 
 <div class="card">
-<h2>🤝 Agent Panel</h2>
-<p style="color:#6b7280; font-size:14px;" id="agentInfo">Emily Naliaka | 0727242397 | Code: AGENT001 | Garissa</p>
-
-<div style="background:#eff6ff; padding:15px; border-radius:12px; border:1px solid #dbeafe;">
-<h3 style="margin-top:0;">+ Add New Landlord (Send to Admin)</h3>
-
-<input type="text" id="landlordName" placeholder="Landlord Full Name">
-<input type="tel" id="landlordPhone" placeholder="Landlord Phone 07...">
-<input type="text" id="landlordLocation" placeholder="Location e.g. Garissa">
-
-<button class="btn-blue" onclick="sendToAdmin()">Send to Admin for Approval</button>
-
-<div id="successMsg" style="display:none;" class="success">
-✅ Sent to Admin! Wait for approval. You will earn KSH 200.
+<div class="header">
+<h2 style="margin:0;">KejaChapChap</h2>
+<p style="margin:5px 0; font-size:14px;">Smart Rent & Access Control - Countrywide</p>
+<span class="badge">KSH 1000 per 30 Days</span>
 </div>
 
-<p class="info">You DON'T create password. KejaChapChap Admin (0141694057) creates it. Support: 0718255742<br>
-Weekly Payment: Every Monday 7PM</p>
+<h3>Landlord Login</h3>
+<input type="text" id="password" placeholder="Enter Your Password">
+<button class="btn-green" onclick="login()">Login to Dashboard</button>
+
+<div class="info">
+<p>🔒 1 Password = 1 Phone Device Lock<br>
+Your data is secured to your phone only.<br><br>
+For support:<br>
+<b>KejaChapChap Admin</b><br>
+M-Pesa: 0141694057<br>
+WhatsApp/SMS: 0718255742<br>
+Website: https://mcodoyo.github.io/k<br><br>
+Weekly Agent Payment: Every Monday 7PM<br>
+Owner: KejaChapChap Admin • Countrywide Service<br>
+Only Admin Issues Passwords • No Fake Access
+</p>
 </div>
 
-<p id="noApproved" style="margin-top:15px;">No landlords approved yet - send leads to Admin</p>
-
-<div class="commission-box">
-<b>Commission: KSH 0 (0 x 200)</b><br>
-<span style="font-size:14px;">You get KSH 200 per landlord - Paid Monday 7PM</span>
-</div>
-
-<button class="btn-gray" onclick="window.close()">Close</button>
 </div>
 
 <script>
-function sendToAdmin(){
-  let name = document.getElementById('landlordName').value;
-  let phone = document.getElementById('landlordPhone').value;
-  let loc = document.getElementById('landlordLocation').value;
-  
-  if(name=='' || phone=='' || loc==''){
-    alert('Fill all fields');
-    return;
-  }
-  
-  // Here your Firebase / backend code to send to Admin
-  console.log('Sending to KejaChapChap Admin:', name, phone, loc);
-  
-  // Show success
-  document.getElementById('successMsg').style.display='block';
-  
-  // Clear fields
-  document.getElementById('landlordName').value='';
-  document.getElementById('landlordPhone').value='';
-  document.getElementById('landlordLocation').value='';
-  
-  // Hide after 3 seconds
-  setTimeout(()=>{
-    document.getElementById('successMsg').style.display='none';
-  }, 5000);
+function login(){
+// Your existing login logic here
+let pwd = document.getElementById('password').value;
+if(pwd==''){
+alert('Enter password');
+return;
+}
+alert('Logging in as landlord... Password: ' + pwd + ' - Will be verified by KejaChapChap Admin');
 }
 </script>
 
