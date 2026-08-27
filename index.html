@@ -2,86 +2,87 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KejaChapChap - Smart Rent System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KejaChapChap - Dual Countdown System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <style>
 *{box-sizing:border-box; font-family:-apple-system,Arial;}
 body{background:#f1f5f9; margin:0; padding:8px;}
-.card{background:white; border-radius:16px; padding:16px; max-width:650px; margin:10px auto; box-shadow:0 4px 15px rgba(0,0,0,0.08);}
+.card{background:white; border-radius:16px; padding:16px; max-width:680px; margin:10px auto; box-shadow:0 4px 15px rgba(0,0,0,0.08);}
 .header{background:linear-gradient(135deg,#14532d,#16a34a); color:white; padding:14px; border-radius:14px; text-align:center;}
 .header-admin{background:linear-gradient(135deg,#92400e,#d97706);}
-input,select{width:100%; padding:11px; margin:6px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px;}
+input,select{width:100%; padding:11px; margin:5px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:13px;}
 .btn{padding:10px; border:none; width:100%; border-radius:10px; font-weight:bold; cursor:pointer; margin:4px 0; font-size:13px;}
 .btn-green{background:#14532d; color:white;}.btn-blue{background:#2563eb; color:white;}
 .btn-yellow{background:#eab308; color:#000;}.btn-red{background:#ef4444; color:white;}
-.btn-gray{background:#64748b; color:white;}.btn-sm{width:auto; padding:5px 9px; font-size:11px; margin:2px;}
+.btn-gray{background:#64748b; color:white;}.btn-sm{width:auto; padding:5px 8px; font-size:11px; margin:2px;}
 .success{background:#dcfce7; color:#14532d; padding:10px; border-radius:8px; margin:8px 0; text-align:center; font-weight:bold; display:none;}
-.info{font-size:11px; color:#64748b; text-align:center; line-height:1.5;}
+.info{font-size:11px; color:#64748b; text-align:center;}
 .hidden{display:none!important;}
-.tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:10px; margin:8px 0;}
-.tenant-card.paid{border-left:5px solid #16a34a; background:#f0fdf4;}
-.tenant-card.unpaid{border-left:5px solid #ef4444; background:#fef2f2;}
-.tenant-card.partial{border-left:5px solid #eab308; background:#fefce8;}
-.tenant-card.overdue{border-left:5px solid #dc2626; background:#fee2e2; animation:blink 1.5s infinite;}
-@keyframes blink{50%{opacity:0.8;}}
+.tenant-card{background:#f8fafc; border:1px solid #e2e8f0; padding:11px; border-radius:10px; margin:8px 0;}
+.tenant-card.overdue{border-left:5px solid #dc2626; background:#fee2e2;}
+.tenant-card.warning{border-left:5px solid #eab308; background:#fefce8;}
+.tenant-card.ok{border-left:5px solid #16a34a; background:#f0fdf4;}
+.countdown{padding:3px 8px; border-radius:8px; font-size:11px; font-weight:bold; display:inline-block; border:1px solid;}
+.countdown-ok{background:#f0fdf4; color:#14532d; border-color:#bbf7d0;}
+.countdown-warn{background:#fefce8; color:#854d0e; border-color:#fde68a;}
+.countdown-danger{background:#fee2e2; color:#dc2626; border-color:#fecaca; animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0.7;}}
 .lead-box{padding:10px; border-radius:8px; margin:6px 0; border-left:5px solid;}
 .lead-pending{background:#fefce8; border-color:#eab308;}.lead-approved{background:#f0fdf4; border-color:#16a34a;}
-.tabs{display:flex; gap:5px; margin:10px 0; overflow-x:auto;}
-.tab{padding:8px 12px; border-radius:20px; background:#e2e8f0; font-size:12px; font-weight:bold; border:none; cursor:pointer; white-space:nowrap;}
+.tabs{display:flex; gap:4px; margin:10px 0; overflow-x:auto;}
+.tab{padding:7px 11px; border-radius:20px; background:#e2e8f0; font-size:11px; font-weight:bold; border:none; cursor:pointer; white-space:nowrap;}
 .tab.active{background:#14532d; color:white;}
 .stats{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; margin:10px 0;}
-.stat-box{background:#f8fafc; border:1px solid #e2e8f0; padding:8px; border-radius:10px; text-align:center;}
-.stat-num{font-size:16px; font-weight:bold; color:#14532d;}.stat-label{font-size:9px; color:#64748b;}
-.countdown-banner{padding:10px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; font-size:13px;}
-.admin-actions{display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;}
-.badge{padding:2px 7px; border-radius:10px; font-size:10px; font-weight:bold;}
+.stat-box{background:#f8fafc; border:1px solid #e2e8f0; padding:7px; border-radius:10px; text-align:center;}
+.stat-num{font-size:15px; font-weight:bold; color:#14532d;}.stat-label{font-size:9px; color:#64748b;}
+.countdown-banner{padding:10px; border-radius:10px; margin:10px 0; text-align:center; font-weight:bold; font-size:13px; border:2px solid;}
+.admin-card{border:2px solid #fde68a; background:#fffbeb; padding:10px; border-radius:10px; margin:8px 0;}
 </style>
 </head>
 <body>
 
 <div id="loginPage" class="card">
-<div class="header"><h2 style="margin:0;">KejaChapChap</h2><p style="margin:3px 0; font-size:12px;">Smart Rent & Access Control - Countrywide</p><span style="background:white; color:#14532d; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:bold;">KSH 1000 / 30 Days = KSH 33 / Day</span></div>
+<div class="header"><h2 style="margin:0;">KejaChapChap</h2><p style="margin:3px 0; font-size:11px;">Smart Rent - Dual Countdown System - Countrywide</p><span style="background:white; color:#14532d; padding:3px 8px; border-radius:10px; font-size:10px; font-weight:bold;">KSH 1000 / 30 Days = KSH 33 / Day</span></div>
 <div class="tabs"><button class="tab active" id="tabL" onclick="switchLogin('landlord')">Landlord</button><button class="tab" id="tabA" onclick="switchLogin('agent')">Agent</button><button class="tab" id="tabAd" onclick="switchLogin('admin')">Admin</button></div>
 <div id="boxLandlord"><input type="password" id="pwdL" placeholder="Landlord password"><button class="btn btn-green" onclick="doLogin('landlord')">Login - DIRECT NO WAITING</button></div>
-<div id="boxAgent" class="hidden"><input type="password" id="pwdA" placeholder="Agent password"><button class="btn btn-blue" onclick="doLogin('agent')">Login to Agent Panel</button></div>
-<div id="boxAdmin" class="hidden"><input type="password" id="pwdAd" placeholder="Admin password"><button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Login to Admin</button></div>
-<div class="info" style="margin-top:12px; background:#f8fafc; padding:8px; border-radius:8px;">KejaChapChap Admin | M-Pesa 0141694057 | Support 0718255742<br>Owner: KejaChapChap Admin • Only Admin Issues Passwords</div>
+<div id="boxAgent" class="hidden"><input type="password" id="pwdA" placeholder="Agent password"><button class="btn btn-blue" onclick="doLogin('agent')">Agent Login</button></div>
+<div id="boxAdmin" class="hidden"><input type="password" id="pwdAd" placeholder="Admin password"><button class="btn btn-green" style="background:#92400e;" onclick="doLogin('admin')">Admin Login</button></div>
+<div class="info" style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:8px;">KejaChapChap Admin | M-Pesa 0141694057 | Support 0718255742<br>Dual Countdown: Admin->Landlord + Landlord->Tenant</div>
 </div>
 
 <div id="landlordPage" class="card hidden">
-<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🏠 Landlord</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
+<div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🏠 Landlord Dashboard</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
 <p id="landInfo" style="font-size:11px; color:#64748b; margin:4px 0;"></p>
-<div id="isAdminViewing" class="hidden" style="background:#fef3c7; padding:7px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEW</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back to Admin</button></div>
+<div id="isAdminViewing" class="hidden" style="background:#fef3c7; padding:6px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEWING</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back to Admin</button></div>
 <div id="subCountdown" class="countdown-banner"></div>
 <div class="stats" style="grid-template-columns:1fr 1fr 1fr;"><div class="stat-box"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Tenants</div></div><div class="stat-box"><div class="stat-num" id="sCollected">0</div><div class="stat-label">Collected</div></div><div class="stat-box"><div class="stat-num" id="sArrears">0</div><div class="stat-label">Arrears</div></div></div>
 <h4 style="margin:10px 0 5px 0;">➕ Add Tenant</h4>
-<input id="tName" placeholder="Tenant Name"><input id="tHouse" placeholder="House No."><input id="tRent" type="number" placeholder="Monthly Rent KSH"><input id="tPhone" placeholder="Phone 07...">
-<button class="btn btn-green" onclick="addTenant()">Add Tenant</button>
-<h4 style="margin:15px 0 5px 0;">📋 Tenants - Countdown + WhatsApp + SMS</h4>
+<input id="tName" placeholder="Tenant Name"><input id="tHouse" placeholder="House No."><input id="tRent" type="number" placeholder="Rent KSH"><input id="tPhone" placeholder="Phone 07...">
+<button class="btn btn-green" onclick="addTenant()">Add Tenant - Starts 30 Day Rent Countdown</button>
+<h4 style="margin:12px 0 5px 0;">📋 Tenants - Rent Countdown + WhatsApp + SMS</h4>
 <input id="searchT" placeholder="Search..." onkeyup="renderTenants()"><div id="tList"></div>
 </div>
 
 <div id="agentPage" class="card hidden">
 <div style="display:flex; justify-content:space-between;"><h3 style="margin:0;">🤝 Agent</h3><button class="btn btn-gray btn-sm" onclick="logout()">Logout</button></div>
 <p id="agentInfo" style="font-size:11px; color:#64748b;"></p>
-<div id="isAdminViewingAgent" class="hidden" style="background:#fef3c7; padding:7px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEW</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back</button></div>
+<div id="isAdminViewingAgent" class="hidden" style="background:#fef3c7; padding:6px; border-radius:8px; font-size:11px; text-align:center;"><b>👁️ ADMIN VIEW</b> <button class="btn btn-sm btn-green" style="background:#92400e;" onclick="backToAdmin()">Back</button></div>
 <div style="background:#eff6ff; padding:10px; border-radius:10px; border:1px solid #bfdbfe;">
 <input id="lName" placeholder="Landlord Name"><input id="lPhone" placeholder="Phone"><input id="lLocation" placeholder="Location">
-<button class="btn btn-blue" onclick="submitLead()">Send to Admin - ONLY HERE WAITS</button>
-<div id="leadOk" class="success">✅ Sent to Admin! Wait for approval. Earn KSH 200</div>
-<p class="info" style="text-align:left;">Payment Every Monday 7PM via M-Pesa</p>
+<button class="btn btn-blue" onclick="submitLead()">Send to Admin for Approval</button>
+<div id="leadOk" class="success">✅ Sent! Wait for approval. Earn KSH 200</div>
 </div>
 <div style="background:#f0fdf4; padding:8px; border-radius:8px; margin:8px 0;"><b id="comm">Commission: KSH 0</b></div>
 <div id="agentLeads"></div>
 </div>
 
 <div id="adminPage" class="card hidden">
-<div class="header header-admin"><h2 style="margin:0; font-size:18px;">Admin Panel - Super Access</h2><p style="margin:2px 0; font-size:11px;">M-Pesa 0141694057 | You can view ALL accounts</p></div>
+<div class="header header-admin"><h2 style="margin:0; font-size:17px;">Admin Panel - Dual Countdown Control</h2><p style="margin:2px 0; font-size:11px;">You control subscription countdown for ALL landlords</p></div>
 <div class="stats"><div class="stat-box"><div class="stat-num" id="aLand">0</div><div class="stat-label">Landlords</div></div><div class="stat-box"><div class="stat-num" id="aAgents">0</div><div class="stat-label">Agents</div></div><div class="stat-box"><div class="stat-num" id="aPend">0</div><div class="stat-label">Pending</div></div><div class="stat-box"><div class="stat-num" id="aAppr">0</div><div class="stat-label">Approved</div></div></div>
-<div class="tabs"><button class="tab active" id="aTab1" onclick="switchAdmin('create')">Create</button><button class="tab" id="aTab2" onclick="switchAdmin('pending')">Pending</button><button class="tab" id="aTab3" onclick="switchAdmin('all')">All Accounts</button></div>
+<div class="tabs"><button class="tab active" id="aTab1" onclick="switchAdmin('create')">Create Account</button><button class="tab" id="aTab2" onclick="switchAdmin('pending')">Pending Leads</button><button class="tab" id="aTab3" onclick="switchAdmin('all')">All Landlords - Countdown Here</button></div>
 <div id="aCreate"><div style="background:#fef3c7; padding:10px; border-radius:10px;"><input id="nName" placeholder="Full Name"><input id="nPhone" placeholder="Phone"><input id="nLocation" placeholder="Location"><select id="nRole"><option value="landlord">Landlord</option><option value="agent">Agent</option></select><input id="nPwd" placeholder="Unique Password"><button class="btn btn-green" style="background:#92400e;" onclick="createAcc()">Create & Issue</button><div id="cMsg" class="success"></div></div></div>
 <div id="aPending" class="hidden"><div id="aPendingList"></div></div>
-<div id="aAll" class="hidden"><input id="searchAll" placeholder="Search..." onkeyup="renderAll()"><div id="aAllList"></div></div>
+<div id="aAll" class="hidden"><input id="searchAll" placeholder="Search landlord..." onkeyup="renderAll()"><div id="aAllList"></div></div>
 <button class="btn btn-gray" onclick="logout()">Logout</button>
 </div>
 
@@ -90,9 +91,16 @@ const ADMIN_PWDS=["VICTOR2003@Nrb","ADMIN2026@Keja","KEJA2026@Admin","ADMIN123",
 const LS={ landlords:'kc_landlords_v2', agents:'kc_agents_v2', pending:'kc_pending_v2', approved:'kc_approved_v2', tenantsPrefix:'kc_tenants_', devices:'kc_devices_', sub:'kc_sub_start_' };
 const getLS=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch{return d;}};
 const setLS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+function getCountdown(startTime, durationDays=30){
+ let elapsed=Math.floor((Date.now()-startTime)/(1000*60*60*24));
+ let left=durationDays-elapsed;
+ let type=left<=0?'danger':left<=5?'warn':'ok';
+ let text=left<=0?`❌ OVERDUE ${Math.abs(left)} days`:left===0?`⚠️ EXPIRES TODAY`:`⏰ ${left} days left`;
+ return {left, type, text, elapsed, expiry:new Date(startTime+durationDays*24*60*60*1000)};
+}
 function switchLogin(t){['boxLandlord','boxAgent','boxAdmin'].forEach(id=>document.getElementById(id).classList.add('hidden'));['tabL','tabA','tabAd'].forEach(id=>document.getElementById(id).classList.remove('active')); if(t==='landlord'){document.getElementById('boxLandlord').classList.remove('hidden'); document.getElementById('tabL').classList.add('active');} if(t==='agent'){document.getElementById('boxAgent').classList.remove('hidden'); document.getElementById('tabA').classList.add('active');} if(t==='admin'){document.getElementById('boxAdmin').classList.remove('hidden'); document.getElementById('tabAd').classList.add('active');}}
 function switchAdmin(t){['aCreate','aPending','aAll'].forEach(id=>document.getElementById(id).classList.add('hidden'));['aTab1','aTab2','aTab3'].forEach(id=>document.getElementById(id).classList.remove('active')); if(t==='create'){document.getElementById('aCreate').classList.remove('hidden'); document.getElementById('aTab1').classList.add('active');} if(t==='pending'){document.getElementById('aPending').classList.remove('hidden'); document.getElementById('aTab2').classList.add('active');} if(t==='all'){document.getElementById('aAll').classList.remove('hidden'); document.getElementById('aTab3').classList.add('active'); renderAll();}}
-function showPage(id){['loginPage','landlordPage','agentPage','adminPage'].forEach(p=>document.getElementById(p).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); window.scrollTo(0,0);}
+function showPage(id){['loginPage','landlordPage','agentPage','adminPage'].forEach(p=>document.getElementById(p).classList.add('hidden')); document.getElementById(id).classList.remove('hidden');}
 function logout(){localStorage.removeItem('kc_role'); localStorage.removeItem('kc_admin_view'); showPage('loginPage');}
 function backToAdmin(){localStorage.setItem('kc_role','admin'); localStorage.removeItem('kc_admin_view'); showPage('adminPage'); loadAdmin();}
 
@@ -110,12 +118,10 @@ function doLogin(role){
  alert('Wrong password. Contact Admin 0718255742');
 }
 
-// LANDLORD WITH COUNTDOWN
 function loadLandlord(){
  let name=localStorage.getItem('kc_name'), pwd=localStorage.getItem('kc_pwd');
  document.getElementById('landInfo').innerText=name+' | '+pwd.substring(0,4)+'*** | '+(localStorage.getItem('kc_admin_view')?'ADMIN VIEWING - ':'')+'Device Locked';
  document.getElementById('isAdminViewing').classList.toggle('hidden',!localStorage.getItem('kc_admin_view'));
- // Set sub start if not exists
  if(!localStorage.getItem(LS.sub+pwd)){localStorage.setItem(LS.sub+pwd, Date.now());}
  renderTenants();
 }
@@ -129,79 +135,85 @@ function addTenant(){
 function renderTenants(){
  let pwd=localStorage.getItem('kc_pwd'); let key=LS.tenantsPrefix+pwd; let tenants=getLS(key);
  let filter=(document.getElementById('searchT').value||'').toLowerCase(); let filtered=tenants.filter(t=>(t.name+t.house).toLowerCase().includes(filter));
- // Subscription countdown
+ // ADMIN TO LANDLORD COUNTDOWN
  let subStart=parseInt(localStorage.getItem(LS.sub+pwd)||Date.now());
- let daysUsed=Math.floor((Date.now()-subStart)/(1000*60*60*24)); let daysLeft=30-daysUsed; if(daysLeft<0) daysLeft=0;
+ let subCount=getCountdown(subStart,30);
  let subEl=document.getElementById('subCountdown');
- subEl.style.background=daysLeft<=5?'#fee2e2':'#f0fdf4'; subEl.style.border='1px solid '+(daysLeft<=5?'#fecaca':'#bbf7d0');
- subEl.innerHTML=daysLeft>0?`⏰ <b>Subscription: ${daysLeft} days left</b> - Expires ${new Date(subStart+30*24*60*60*1000).toLocaleDateString()} | KSH 1000/30days = KSH 33/day | Pay M-Pesa 0141694057`:`❌ <b>SUBSCRIPTION EXPIRED!</b> ${Math.abs(daysLeft)} days overdue - Pay KSH 1000 via M-Pesa 0141694057 to continue | Support 0718255742`;
+ subEl.className='countdown-banner countdown-'+subCount.type;
+ subEl.style.borderColor=subCount.type==='danger'?'#fecaca':subCount.type==='warn'?'#fde68a':'#bbf7d0';
+ subEl.innerHTML=subCount.left>0?`🔐 <b>MY SUBSCRIPTION TO ADMIN: ${subCount.text}</b><br>Expires ${subCount.expiry.toLocaleDateString()} | KSH 1000/30days = KSH 33/day | Pay M-Pesa 0141694057 | Support 0718255742`:`❌ <b>SUBSCRIPTION EXPIRED ${Math.abs(subCount.left)} days ago!</b><br>Pay KSH 1000 via M-Pesa 0141694057 to continue - Your tenants data still safe`;
 
  document.getElementById('sTotal').innerText=tenants.length;
  document.getElementById('sCollected').innerText='KSH '+tenants.reduce((s,t)=>s+t.paid,0);
  document.getElementById('sArrears').innerText='KSH '+tenants.reduce((s,t)=>s+t.balance,0);
 
- document.getElementById('tList').innerHTML=filtered.length===0?'<p class="info">No tenants yet. Add first tenant above.</p>':filtered.map(t=>{
-  let rentDue=new Date(t.createdDate); rentDue.setDate(rentDue.getDate()+30);
-  if(t.lastPaidDate){rentDue=new Date(t.lastPaidDate); rentDue.setDate(rentDue.getDate()+30);}
-  let daysToRent=Math.ceil((rentDue - new Date())/(1000*60*60*24));
-  let countdownText='', color='', cardClass=t.status;
-  if(t.status==='paid'){countdownText=`✅ Paid - Next due in ${daysToRent>0?daysToRent:0} days`; color='#16a34a';}
-  else if(daysToRent>3){countdownText=`⏰ Due in ${daysToRent} days`; color='#64748b';}
-  else if(daysToRent>0){countdownText=`⚠️ Due in ${daysToRent} days - Remind now!`; color='#eab308'; cardClass='partial';}
-  else {countdownText=`❌ OVERDUE by ${Math.abs(daysToRent)} days!`; color='#dc2626'; cardClass='overdue';}
+ document.getElementById('tList').innerHTML=filtered.length===0?'<p class="info">No tenants yet. Add first tenant - 30 day rent countdown will start.</p>':filtered.map(t=>{
+  let rentStart=t.lastPaidDate||t.createdDate;
+  let rentCount=getCountdown(rentStart,30);
+  let cardClass=rentCount.type==='danger'?'overdue':rentCount.type==='warn'?'warning':'ok';
+  if(t.status==='paid' && rentCount.left>0) cardClass='ok';
 
   return `<div class="tenant-card ${cardClass}">
-   <div style="display:flex; justify-content:space-between; align-items:center;"><b>${t.house} - ${t.name}</b><span style="color:${color}; font-size:11px; font-weight:bold; background:white; padding:2px 6px; border-radius:8px; border:1px solid ${color};">${countdownText}</span></div>
-   <div style="font-size:12px; margin:4px 0;">Rent: KSH ${t.rent} | Paid: KSH ${t.paid} | Bal: <b style="color:${t.balance>0?'#dc2626':'#16a34a'}">KSH ${t.balance}</b><br>Phone: ${t.phone||'N/A'} | Added: ${t.created}</div>
+   <div style="display:flex; justify-content:space-between; align-items:center;"><b>${t.house} - ${t.name}</b><span class="countdown countdown-${rentCount.type}">${rentCount.text}</span></div>
+   <div style="font-size:12px; margin:4px 0;">Rent: KSH ${t.rent} | Paid: KSH ${t.paid} | Bal: <b style="color:${t.balance>0?'#dc2626':'#16a34a'}">KSH ${t.balance}</b><br>Phone: ${t.phone||'N/A'} | Due: ${rentCount.expiry.toLocaleDateString()} | Added: ${t.created}</div>
+   <div style="font-size:11px; color:#64748b; margin:3px 0;"><b>LANDLORD TO TENANT COUNTDOWN:</b> ${rentCount.text} - Rent cycle 30 days</div>
    <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
     <button class="btn btn-sm btn-green" onclick="pay(${t.id})">💰 Pay</button>
     <button class="btn btn-sm btn-blue" onclick="wa(${t.id})">📱 WhatsApp</button>
     <button class="btn btn-sm btn-yellow" onclick="sms(${t.id})">💬 SMS</button>
-    <button class="btn btn-sm btn-red" onclick="delT(${t.id})">🗑️ Del</button>
+    <button class="btn btn-sm btn-red" onclick="delT(${t.id})">🗑️</button>
    </div>
   </div>`;
  }).join('');
 }
-function pay(id){
- let amt=prompt('Enter amount paid KSH:'); if(!amt) return; amt=parseInt(amt); if(isNaN(amt)) return;
- let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
- t.paid+=amt; t.balance=t.rent-t.paid; t.lastPaidDate=Date.now();
- if(t.balance<=0){t.status='paid'; t.balance=0; t.paid=t.rent;} else if(t.paid>0){t.status='partial';} else {t.status='unpaid';}
- setLS(key, tenants); renderTenants();
-}
-function wa(id){
- let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
- let due=new Date(t.lastPaidDate||t.createdDate); due.setDate(due.getDate()+30); let days=Math.ceil((due-new Date())/(1000*60*60*24));
- let statusMsg=days<0?`❌ OVERDUE by ${Math.abs(days)} days!`:`⏰ Due in ${days} days`;
- let msg=`Hello ${t.name} 👋\n\nHouse: ${t.house}\nRent: KSH ${t.rent}\nPaid: KSH ${t.paid}\nBalance: KSH ${t.balance}\nStatus: ${statusMsg}\n\nPlease pay via M-Pesa: 0141694057\nKejaChapChap Admin - 0718255742\n\nThank you! 🙏`;
- window.open(`https://wa.me/254${(t.phone||'').replace(/^0/,'')}?text=${encodeURIComponent(msg)}`,'_blank');
-}
-function sms(id){
- let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id);
- let due=new Date(t.lastPaidDate||t.createdDate); due.setDate(due.getDate()+30); let days=Math.ceil((due-new Date())/(1000*60*60*24));
- let msg=`Hello ${t.name}, House ${t.house} - Rent KSH ${t.rent}, Bal KSH ${t.balance}. ${days<0?`OVERDUE ${Math.abs(days)} days!`:`Due in ${days} days.`} Pay via M-Pesa 0141694057. KejaChapChap Admin 0718255742`;
- window.open(`sms:${t.phone}?body=${encodeURIComponent(msg)}`,'_blank');
-}
+function pay(id){let amt=prompt('Enter amount KSH:'); if(!amt) return; amt=parseInt(amt); if(isNaN(amt)) return; let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); t.paid+=amt; t.balance=t.rent-t.paid; t.lastPaidDate=Date.now(); if(t.balance<=0){t.status='paid'; t.balance=0; t.paid=t.rent;} else if(t.paid>0){t.status='partial';} setLS(key, tenants); renderTenants();}
+function wa(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); let rentStart=t.lastPaidDate||t.createdDate; let rc=getCountdown(rentStart,30); let msg=`Hello ${t.name} 👋\nHouse: ${t.house}\nRent: KSH ${t.rent} | Paid: KSH ${t.paid} | Balance: KSH ${t.balance}\nStatus: ${rc.text} - Due ${rc.expiry.toLocaleDateString()}\n\nPay via M-Pesa 0141694057\nKejaChapChap Admin 0718255742\nThank you! 🙏`; window.open(`https://wa.me/254${(t.phone||'').replace(/^0/,'')}?text=${encodeURIComponent(msg)}`,'_blank');}
+function sms(id){let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); let tenants=getLS(key); let t=tenants.find(x=>x.id===id); let rc=getCountdown(t.lastPaidDate||t.createdDate,30); let msg=`Hello ${t.name}, House ${t.house} - Rent KSH ${t.rent}, Bal KSH ${t.balance}. ${rc.text}. Due ${rc.expiry.toLocaleDateString()}. Pay M-Pesa 0141694057. KejaChapChap Admin`; window.open(`sms:${t.phone}?body=${encodeURIComponent(msg)}`,'_blank');}
 function delT(id){if(!confirm('Delete tenant?')) return; let key=LS.tenantsPrefix+localStorage.getItem('kc_pwd'); setLS(key, getLS(key).filter(x=>x.id!==id)); renderTenants();}
 
 function loadAgent(){document.getElementById('agentInfo').innerText=localStorage.getItem('kc_name')+' | Payment Monday 7PM'; document.getElementById('isAdminViewingAgent').classList.toggle('hidden',!localStorage.getItem('kc_admin_view')); renderAgent();}
 function submitLead(){let name=document.getElementById('lName').value.trim(), phone=document.getElementById('lPhone').value.trim(), loc=document.getElementById('lLocation').value.trim(); if(!name||!phone||!loc) return alert('Fill all'); let pending=getLS(LS.pending); pending.push({id:Date.now(), name, phone, location:loc, status:'PENDING', agent:localStorage.getItem('kc_name')||'Agent', agentPwd:localStorage.getItem('kc_pwd'), date:new Date().toLocaleString()}); setLS(LS.pending, pending); document.getElementById('leadOk').style.display='block'; document.getElementById('lName').value=''; document.getElementById('lPhone').value=''; document.getElementById('lLocation').value=''; renderAgent(); setTimeout(()=>document.getElementById('leadOk').style.display='none',4000);}
-function renderAgent(){let agentName=localStorage.getItem('kc_name'); let pending=getLS(LS.pending).filter(l=>l.agent===agentName); let approved=getLS(LS.approved).filter(l=>l.agent===agentName); document.getElementById('comm').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`; document.getElementById('agentLeads').innerHTML=pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone}<br><small>⏳ PENDING - Wait Admin approval</small></div>`).join('')+approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b><br><small>✅ APPROVED - KSH 200 | Pwd ${l.password}</small></div>`).join('')||'<p class="info">No submissions yet</p>';}
+function renderAgent(){let agentName=localStorage.getItem('kc_name'); let pending=getLS(LS.pending).filter(l=>l.agent===agentName); let approved=getLS(LS.approved).filter(l=>l.agent===agentName); document.getElementById('comm').innerText=`Commission: KSH ${approved.length*200} (${approved.length} x 200)`; document.getElementById('agentLeads').innerHTML=pending.map(l=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone}<br><small>⏳ PENDING</small></div>`).join('')+approved.map(l=>`<div class="lead-box lead-approved"><b>${l.name}</b><br><small>✅ APPROVED KSH 200 | Pwd ${l.password}</small></div>`).join('')||'<p class="info">No submissions</p>';}
 
 function loadAdmin(){let pending=getLS(LS.pending), approved=getLS(LS.approved), landlords=getLS(LS.landlords), agents=getLS(LS.agents); document.getElementById('aLand').innerText=landlords.length; document.getElementById('aAgents').innerText=agents.length; document.getElementById('aPend').innerText=pending.length; document.getElementById('aAppr').innerText=approved.length; document.getElementById('aPendingList').innerHTML=pending.length===0?'<p class="info">No pending</p>':pending.map((l,i)=>`<div class="lead-box lead-pending"><b>${l.name}</b> - ${l.phone} - ${l.location}<br>Agent: ${l.agent}<br><button class="btn btn-sm btn-green" onclick="approve(${i})">✅ Approve</button><button class="btn btn-sm btn-red" onclick="reject(${i})">Reject</button></div>`).join(''); renderAll();}
-function createAcc(){let name=document.getElementById('nName').value.trim(), phone=document.getElementById('nPhone').value.trim(), loc=document.getElementById('nLocation').value.trim(), role=document.getElementById('nRole').value, pwd=document.getElementById('nPwd').value.trim(); if(!name||!phone||!pwd) return alert('Fill all'); let key=role==='landlord'?LS.landlords:LS.agents; let list=getLS(key); if(list.find(x=>x.password===pwd)) return alert('Password exists!'); let code=role==='agent'?'AGENT'+Math.floor(1000+Math.random()*9000):''; list.push({id:Date.now(), name, phone, location:loc, password:pwd, role, code, date:new Date().toLocaleString()}); setLS(key, list); document.getElementById('cMsg').style.display='block'; document.getElementById('cMsg').innerText=`✅ ${role} ${name} | Pwd: ${pwd}`; document.getElementById('nName').value=''; document.getElementById('nPhone').value=''; document.getElementById('nLocation').value=''; document.getElementById('nPwd').value=''; loadAdmin(); setTimeout(()=>document.getElementById('cMsg').style.display='none',6000);}
-function approve(i){let pending=getLS(LS.pending); let lead=pending[i]; let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase(); let approved=getLS(LS.approved); lead.password=pwd; lead.status='APPROVED'; approved.push(lead); pending.splice(i,1); setLS(LS.pending, pending); setLS(LS.approved, approved); let landlords=getLS(LS.landlords); landlords.push({id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:new Date().toLocaleString()}); setLS(LS.landlords, landlords); loadAdmin(); alert(`Approved! ${lead.name} Pwd: ${pwd}`);}
+function createAcc(){let name=document.getElementById('nName').value.trim(), phone=document.getElementById('nPhone').value.trim(), loc=document.getElementById('nLocation').value.trim(), role=document.getElementById('nRole').value, pwd=document.getElementById('nPwd').value.trim(); if(!name||!phone||!pwd) return alert('Fill all'); let key=role==='landlord'?LS.landlords:LS.agents; let list=getLS(key); if(list.find(x=>x.password===pwd)) return alert('Password exists!'); let code=role==='agent'?'AGENT'+Math.floor(1000+Math.random()*9000):''; list.push({id:Date.now(), name, phone, location:loc, password:pwd, role, code, date:new Date().toLocaleString(), subStart:Date.now()}); setLS(key, list); localStorage.setItem(LS.sub+pwd, Date.now()); document.getElementById('cMsg').style.display='block'; document.getElementById('cMsg').innerText=`✅ ${role} ${name} | Pwd: ${pwd} - 30 days starts now`; document.getElementById('nName').value=''; document.getElementById('nPhone').value=''; document.getElementById('nLocation').value=''; document.getElementById('nPwd').value=''; loadAdmin(); setTimeout(()=>document.getElementById('cMsg').style.display='none',6000);}
+function approve(i){let pending=getLS(LS.pending); let lead=pending[i]; let pwd='KEJA'+Math.floor(100+Math.random()*900)+'@'+lead.location.substring(0,3).toUpperCase(); let approved=getLS(LS.approved); lead.password=pwd; lead.status='APPROVED'; lead.subStart=Date.now(); approved.push(lead); pending.splice(i,1); setLS(LS.pending, pending); setLS(LS.approved, approved); let landlords=getLS(LS.landlords); landlords.push({id:Date.now(), name:lead.name, phone:lead.phone, location:lead.location, password:pwd, role:'landlord', agent:lead.agent, date:new Date().toLocaleString(), subStart:Date.now()}); setLS(LS.landlords, landlords); localStorage.setItem(LS.sub+pwd, Date.now()); loadAdmin(); alert(`Approved! ${lead.name} Pwd: ${pwd} - 30 days countdown started`);}
 function reject(i){if(!confirm('Reject?')) return; let pending=getLS(LS.pending); pending.splice(i,1); setLS(LS.pending, pending); loadAdmin();}
+
 function renderAll(){
- let landlords=getLS(LS.landlords), agents=getLS(LS.agents), approved=getLS(LS.approved);
- let all=[...landlords.map(x=>({...x, type:'Landlord'})),...agents.map(x=>({...x, type:'Agent'})),...approved.map(x=>({...x, type:'Lead', name:x.name, phone:x.phone, password:x.password, location:x.location, agent:x.agent}))];
+ let landlords=getLS(LS.landlords), agents=getLS(LS.agents);
+ let all=[...landlords.map(x=>({...x, type:'Landlord'})),...agents.map(x=>({...x, type:'Agent'}))];
  let filter=(document.getElementById('searchAll').value||'').toLowerCase(); let filtered=all.filter(x=>(x.name+x.phone+x.location).toLowerCase().includes(filter));
- document.getElementById('aAllList').innerHTML=filtered.length===0?'<p class="info">No accounts</p>':filtered.map(x=>`<div class="tenant-card"><b>${x.type==='Agent'?'🤝':'🏠'} ${x.name}</b> | ${x.phone} | ${x.location||'-'}<br><small>Pwd: <code>${x.password}</code> | Agent: ${x.agent||'-'}</small><div class="admin-actions"><button class="btn btn-sm btn-green" onclick="viewAs('${x.password}','${x.name}','${x.type}')">👁️ View</button><button class="btn btn-sm btn-blue" onclick="resetDevice('${x.password}')">🔓 Reset Device</button><button class="btn btn-sm btn-gray" onclick="changePwd('${x.password}')">🔑 Change Pwd</button><button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️ Delete</button></div></div>`).join('');
+ document.getElementById('aAllList').innerHTML=filtered.length===0?'<p class="info">No landlords yet. Create account above.</p>':filtered.map(x=>{
+  let subStart=parseInt(localStorage.getItem(LS.sub+x.password)||x.subStart||Date.now());
+  let subCount=getCountdown(subStart,30);
+  let tenants=getLS(LS.tenantsPrefix+x.password);
+  let totalTenants=tenants.length;
+  let collected=tenants.reduce((s,t)=>s+t.paid,0);
+  return `<div class="admin-card">
+   <div style="display:flex; justify-content:space-between;"><b>${x.type==='Agent'?'🤝':'🏠'} ${x.name}</b><span class="countdown countdown-${subCount.type}">${subCount.text}</span></div>
+   <div style="font-size:11px; margin:4px 0;">Phone: ${x.phone} | Loc: ${x.location||'-'} | Tenants: ${totalTenants} | Collected: KSH ${collected}<br>Pwd: <code style="background:white; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0;">${x.password}</code> | Agent: ${x.agent||'-'}<br>Subs Expiry: ${subCount.expiry.toLocaleDateString()} | <b>ADMIN TO LANDLORD COUNTDOWN: ${subCount.text}</b></div>
+   <div style="display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;">
+    <button class="btn btn-sm btn-green" onclick="viewAs('${x.password}','${x.name}','${x.type}')">👁️ View Tenants</button>
+    <button class="btn btn-sm" style="background:#16a34a; color:white;" onclick="renewSub('${x.password}')">🔄 Renew 30 Days</button>
+    <button class="btn btn-sm btn-blue" onclick="resetDevice('${x.password}')">🔓 Reset Device</button>
+    <button class="btn btn-sm btn-gray" onclick="changePwd('${x.password}')">🔑 Change Pwd</button>
+    <button class="btn btn-sm btn-red" onclick="deleteAccount('${x.password}')">🗑️</button>
+   </div>
+  </div>`;
+ }).join('');
 }
-function viewAs(pwd,name,type){if(!confirm(`View as ${name}?`)) return; localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',name); localStorage.setItem('kc_admin_view','true'); if(type==='Agent'){localStorage.setItem('kc_role','agent'); showPage('agentPage'); loadAgent();} else {localStorage.setItem('kc_role','landlord'); showPage('landlordPage'); loadLandlord();}}
+function viewAs(pwd,name,type){if(!confirm(`View as ${name}? See his tenants + rent countdown?`)) return; localStorage.setItem('kc_pwd',pwd); localStorage.setItem('kc_name',name); localStorage.setItem('kc_admin_view','true'); if(type==='Agent'){localStorage.setItem('kc_role','agent'); showPage('agentPage'); loadAgent();} else {localStorage.setItem('kc_role','landlord'); showPage('landlordPage'); loadLandlord();}}
+function renewSub(pwd){
+ if(!confirm(`Renew 30 days for ${pwd}? Confirm M-Pesa KSH 1000 received on 0141694057`)) return;
+ localStorage.setItem(LS.sub+pwd, Date.now());
+ let landlords=getLS(LS.landlords); landlords=landlords.map(x=>{if(x.password===pwd){x.subStart=Date.now();} return x;}); setLS(LS.landlords, landlords);
+ alert(`✅ RENEWED! 30 days added - New expiry: ${new Date(Date.now()+30*24*60*60*1000).toLocaleDateString()}`);
+ renderAll();
+}
 function resetDevice(pwd){if(!confirm(`Reset device for ${pwd}?`)) return; let devices=getLS(LS.devices,{}); delete devices[pwd]; setLS(LS.devices, devices); alert('✅ Device reset!');}
-function changePwd(oldPwd){let newPwd=prompt(`New password for ${oldPwd}:`); if(!newPwd) return; newPwd=newPwd.trim(); if(newPwd.length<4) return alert('Too short'); let landlords=getLS(LS.landlords), agents=getLS(LS.agents); landlords=landlords.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); agents=agents.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); let approved=getLS(LS.approved); approved=approved.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); setLS(LS.landlords, landlords); setLS(LS.agents, agents); setLS(LS.approved, approved); let devices=getLS(LS.devices,{}); delete devices[oldPwd]; setLS(LS.devices, devices); alert(`✅ Changed ${oldPwd} -> ${newPwd}`); loadAdmin();}
-function deleteAccount(pwd){if(!confirm(`DELETE ${pwd}?`)) return; setLS(LS.landlords, getLS(LS.landlords).filter(x=>x.password!==pwd)); setLS(LS.agents, getLS(LS.agents).filter(x=>x.password!==pwd)); setLS(LS.pending, getLS(LS.pending).filter(x=>x.agentPwd!==pwd)); let devices=getLS(LS.devices,{}); delete devices[pwd]; setLS(LS.devices, devices); localStorage.removeItem(LS.tenantsPrefix+pwd); alert('Deleted'); loadAdmin();}
+function changePwd(oldPwd){let newPwd=prompt(`New password for ${oldPwd}:`); if(!newPwd) return; newPwd=newPwd.trim(); if(newPwd.length<4) return alert('Too short'); let landlords=getLS(LS.landlords), agents=getLS(LS.agents); landlords=landlords.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); agents=agents.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); let approved=getLS(LS.approved); approved=approved.map(x=>{if(x.password===oldPwd){x.password=newPwd;} return x;}); setLS(LS.landlords, landlords); setLS(LS.agents, agents); setLS(LS.approved, approved); let devices=getLS(LS.devices,{}); delete devices[oldPwd]; let subTime=localStorage.getItem(LS.sub+oldPwd); if(subTime){localStorage.setItem(LS.sub+newPwd, subTime); localStorage.removeItem(LS.sub+oldPwd);} setLS(LS.devices, devices); alert(`✅ Changed ${oldPwd} -> ${newPwd}`); renderAll();}
+function deleteAccount(pwd){if(!confirm(`DELETE ${pwd}? All tenants data will be lost!`)) return; setLS(LS.landlords, getLS(LS.landlords).filter(x=>x.password!==pwd)); setLS(LS.agents, getLS(LS.agents).filter(x=>x.password!==pwd)); let devices=getLS(LS.devices,{}); delete devices[pwd]; setLS(LS.devices, devices); localStorage.removeItem(LS.sub+pwd); localStorage.removeItem(LS.tenantsPrefix+pwd); alert('Deleted'); renderAll(); loadAdmin();}
 
 (function(){let role=localStorage.getItem('kc_role'); if(role==='landlord'){showPage('landlordPage'); loadLandlord();} else if(role==='agent'){showPage('agentPage'); loadAgent();} else if(role==='admin'){showPage('adminPage'); loadAdmin();}})();
 </script>
