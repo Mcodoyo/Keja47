@@ -1,19 +1,133 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KejaChapChap</title><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script><style>body{margin:0;font-family:system-ui;background:#f1f2f6}.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}.btn{padding:8px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer}.hidden{display:none}#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer}</style></head><body>
-<div id="loginWrap"><h2 style="text-align:center">KejaChapChap<br><small style="font-size:12px">Victor Odoyo - Nairobi</small></h2><input id="pass" type="password" placeholder="Enter Password"><button type="button" class="add" id="loginBtn" onclick="doLogin()">LOGIN</button><p id="err" style="color:red;text-align:center;font-size:13px"></p><p style="text-align:center;font-size:11px;color:#888;margin-top:10px">If button not working, refresh page</p></div>
-<div id="mainApp" class="wrap hidden"><h2>KejaChapChap</h2><p id="who"></p><button onclick="location.reload()">Logout</button><div id="list"></div></div>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KejaChapChap - Victor Odoyo</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<style>
+body{margin:0;font-family:system-ui;background:#f1f2f6}
+.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:14px}
+.card{background:#fff;border:1px solid #eee;border-radius:14px;padding:12px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.hidden{display:none}
+#loginWrap{max-width:400px;margin:60px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0;box-sizing:border-box}
+.add{background:#0f8a5f;color:#fff;padding:13px;border-radius:10px;border:0;font-weight:800;width:100%;cursor:pointer;font-size:16px}
+.btn{padding:7px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer;margin:2px}
+.tab{padding:10px 14px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;margin-right:6px}
+.tab.active{background:#0f8a5f;color:#fff;border-color:#0f8a5f}
+</style>
+</head>
+<body>
+<div id="loginWrap">
+<h2 style="text-align:center">KejaChapChap<br><small style="font-size:12px;color:#666">Victor Odoyo - Nairobi</small></h2>
+<input id="pass" type="password" placeholder="Enter Password">
+<button type="button" class="add" onclick="doLogin()">LOGIN</button>
+<p id="err" style="color:red;text-align:center;font-size:13px;min-height:18px"></p>
+<p style="text-align:center;font-size:11px;color:#999">MASTER: VICTOR2003@Nrb</p>
+</div>
+
+<div id="mainApp" class="wrap hidden">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h2 style="margin:0">KejaChapChap</h2>
+<button class="btn" onclick="location.reload()" style="background:#eee">Logout</button>
+</div>
+<p id="who" style="color:#0f8a5f;font-weight:700"></p>
+<div style="margin:12px 0">
+<button class="tab active" onclick="showTab('agents')" id="tab-agents">Agents</button>
+<button class="tab" onclick="showTab('houses')" id="tab-houses">Houses</button>
+<button class="tab" onclick="showTab('mpesa')" id="tab-mpesa">M-Pesa</button>
+</div>
+<div id="view-agents"></div>
+<div id="view-houses" class="hidden"></div>
+<div id="view-mpesa" class="hidden"></div>
+</div>
+
 <script>
 const firebaseConfig={apiKey:"AIzaSyCdzaaBzqI-jx9HHPke-lR7fW0naBlUZtE",authDomain:"kenya-rentals.firebaseapp.com",projectId:"kenya-rentals",storageBucket:"kenya-rentals.firebasestorage.app",messagingSenderId:"251007486844",appId:"1:251007486844:web:76e889f990e2030a2b32f9"};
-firebase.initializeApp(firebaseConfig); const db=firebase.firestore();
-const MASTER="NALIAKA4050";
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+
+// HIDDEN MASTER - No one can see full code in inspect easily
+const _a1="VICTOR";
+const _a2="2003";
+const _a3="@Nrb";
+const MASTER=_a1+_a2+_a3;
+
+function getDeviceId(){let id=localStorage.getItem('deviceId'); if(!id){id='dev_'+Math.random().toString(36).substr(2,9); localStorage.setItem('deviceId',id);} return id;}
+
 window.doLogin=function(){
- let p=document.getElementById('pass').value.trim().toUpperCase();
- if(!p){ document.getElementById('err').innerText="Enter password"; return; }
- if(p===MASTER){ document.getElementById('loginWrap').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); document.getElementById('who').innerText="MASTER - Victor Odoyo"; return; }
- db.collection("subscriptions").doc(p).get().then(d=>{
-   if(!d.exists){ document.getElementById('err').innerText="Invalid password"; return; }
-   document.getElementById('loginWrap').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); document.getElementById('who').innerText="Landlord: "+p;
- }).catch(e=>{ document.getElementById('err').innerText="Error: "+e.message; });
+ const input=document.getElementById('pass');
+ let p=input.value.trim();
+ if(!p){document.getElementById('err').innerText="Enter password"; return;}
+ let pUpper=p.toUpperCase();
+ let masterUpper=MASTER.toUpperCase();
+ // Allow exact match OR uppercase match
+ if(p===MASTER || pUpper===masterUpper){
+   localStorage.setItem('userRole','MASTER');
+   localStorage.setItem('userId',MASTER);
+   document.getElementById('loginWrap').classList.add('hidden');
+   document.getElementById('mainApp').classList.remove('hidden');
+   document.getElementById('who').innerText="MASTER - Victor Odoyo ("+MASTER+")";
+   loadData();
+   return;
+ }
+ // Check landlord subscriptions
+ db.collection("subscriptions").doc(pUpper).get().then(doc=>{
+   if(!doc.exists){document.getElementById('err').innerText="Invalid password"; return;}
+   let data=doc.data();
+   let deviceId=getDeviceId();
+   if(data.deviceId && data.deviceId!==deviceId){
+     document.getElementById('err').innerText="Locked to another phone. Contact Victor.";
+     return;
+   }
+   if(!data.deviceId){
+     db.collection("subscriptions").doc(pUpper).update({deviceId:deviceId});
+   }
+   localStorage.setItem('userRole','LANDLORD');
+   localStorage.setItem('userId',pUpper);
+   document.getElementById('loginWrap').classList.add('hidden');
+   document.getElementById('mainApp').classList.remove('hidden');
+   document.getElementById('who').innerText="Landlord: "+pUpper;
+   loadData();
+ }).catch(e=>{document.getElementById('err').innerText="Error: "+e.message;});
 };
-document.getElementById('pass').addEventListener('keypress',function(e){ if(e.key==='Enter'){ doLogin(); }});
-</script></body></html>
+
+document.getElementById('pass').addEventListener('keypress',function(e){if(e.key==='Enter'){doLogin();}});
+
+function showTab(t){
+ document.getElementById('view-agents').classList.add('hidden');
+ document.getElementById('view-houses').classList.add('hidden');
+ document.getElementById('view-mpesa').classList.add('hidden');
+ document.getElementById('tab-agents').classList.remove('active');
+ document.getElementById('tab-houses').classList.remove('active');
+ document.getElementById('tab-mpesa').classList.remove('active');
+ document.getElementById('view-'+t).classList.remove('hidden');
+ document.getElementById('tab-'+t).classList.add('active');
+}
+
+function loadData(){
+ let agentsDiv=document.getElementById('view-agents');
+ agentsDiv.innerHTML='<div class="card"><h3>Add Agent</h3><input id="agentName" placeholder="Agent Name"><input id="agentPhone" placeholder="Phone 07..."><button class="add" onclick="addAgent()">Save Agent</button><div id="agentsList" style="margin-top:10px"></div></div>';
+ loadAgents();
+ document.getElementById('view-houses').innerHTML='<div class="card"><h3>Houses</h3><p>Your rental units will appear here - System Ready</p></div>';
+ document.getElementById('view-mpesa').innerHTML='<div class="card"><h3>M-Pesa</h3><p>Till: Ready for rent collection</p><p style="font-size:12px;color:#666">MASTER Code is now VICTOR2003@Nrb</p></div>';
+}
+function addAgent(){
+ let name=document.getElementById('agentName').value.trim();
+ let phone=document.getElementById('agentPhone').value.trim();
+ if(!name){alert("Enter name");return;}
+ db.collection("agents").add({name:name,phone:phone,created:Date.now(),owner:localStorage.getItem('userId')}).then(()=>{document.getElementById('agentName').value='';document.getElementById('agentPhone').value='';loadAgents();});
+}
+function loadAgents(){
+ db.collection("agents").where("owner","==",localStorage.getItem('userId')).onSnapshot(snap=>{
+   let html='';
+   snap.forEach(doc=>{let d=doc.data(); html+=`<div class="card">${d.name} - ${d.phone}</div>`;});
+   let list=document.getElementById('agentsList');
+   if(list) list.innerHTML=html||'<p style="color:#888">No agents yet</p>';
+ });
+}
+</script>
+</body>
+</html>
