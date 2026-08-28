@@ -1,209 +1,116 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KejaChapChap - Rental Management Kenya</title>
-<style>
-body{font-family:Arial; margin:0; background:#f5f5f5; padding:10px}
-.card{background:white; padding:15px; border-radius:10px; margin:10px 0; box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-input{width:95%; padding:12px; margin:6px 0; border:1px solid #ccc; border-radius:8px}
-button{padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold}
-.green{background:#0a7a2c; color:white; width:100%}
-.red{background:#ff4444; color:white}
-.blue{background:#2196F3; color:white}
-.countdown-green{background:#d4edda; color:#155724; padding:5px 10px; border-radius:20px}
-.countdown-yellow{background:#fff3cd; color:#856404; padding:5px 10px; border-radius:20px}
-.countdown-red{background:#f8d7da; color:#721c24; padding:5px 10px; border-radius:20px; font-weight:bold}
-</style>
-</head>
-<body>
+ <!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KejaChapChap - Full System with Approval</title>
+<style>body{font-family:Arial;background:#f5f5f5;padding:10px}.card{background:white;padding:15px;border-radius:10px;margin:10px 0;box-shadow:0 2px 5px rgba(0,0,0,.1)}input,select{width:95%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px}button{padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}.green{background:#0a7a2c;color:white;width:100%}.blue{background:#2196F3;color:white}.red{background:#ff4444;color:white}.orange{background:#ff9800;color:white;width:100%}</style>
+</head><body>
 
 <div id="loginPage" class="card">
 <h2>KejaChapChap - Login</h2>
-<input id="loginPass" type="password" placeholder="Enter your password (1 password = 1 phone)">
+<select id="roleSelect"><option value="landlord">Landlord</option><option value="agent">Agent</option><option value="admin">Admin</option></select>
+<input id="loginPass" type="password" placeholder="Enter password (1 password = 1 phone)">
 <button class="green" onclick="login()">Login / Register</button>
-<p style="font-size:12px;">M-Pesa Till: 0141694057 - KSH 1000/month<br>Call: 0718255742</p>
+<p style="font-size:12px">M-Pesa Till: 0141694057 - KSH 1000/month | Call: 0718255742</p>
 <p id="loginMsg"></p>
 </div>
 
-<div id="mainPage" style="display:none;">
+<div id="mainPage" style="display:none">
+<div class="card"><h3 id="welcomeText"></h3><p id="subStatus"></p><button onclick="logout()">Logout</button></div>
 
-<div class="card">
-<h3>Dashboard</h3>
-<p>Total Tenants: <span id="totalTenants">0</span> | Collected: KSH <span id="totalCollected">0</span> | Arrears: KSH <span id="totalArrears">0</span></p>
-<p>Subscription: <span id="subStatus"></span></p>
+<!-- LANDLORD -->
+<div id="landlordSection">
+<div class="card"><h3>Dashboard</h3><p>Tenants: <span id="totalTenants">0</span> | Arrears: KSH <span id="totalArrears">0</span></p></div>
+
+<div class="card" style="border:2px solid #ff9800">
+<h3>⚙️ REQUIRED: Your Rent Payment Method</h3>
+<p style="font-size:13px;color:red">Enter YOUR M-Pesa/Till where YOUR tenants should pay. This is what tenants will see. NOT 0141694057.</p>
+<input id="landlordPayMethod" placeholder="Example: M-Pesa 0712345678 - John Mwangi OR Till 54321 OR Paybill 400200 Acc 1234">
+<input id="landlordNameForTenant" placeholder="Your name as landlord">
+<button class="orange" onclick="saveLandlordPayMethod()">Save My Payment Details</button>
+<p id="payMethodSavedMsg" style="color:green;display:none">✅ Saved! Tenants will now see YOUR number</p>
 </div>
 
-<div class="card">
-<h3>Add Tenant</h3>
-<input id="tName" placeholder="Tenant Name">
-<input id="tHouse" placeholder="House No">
-<input id="tPhone" placeholder="Phone e.g 254712345678">
-<input id="tRent" type="number" placeholder="Monthly Rent">
-<input id="tBalance" type="number" placeholder="Current Balance (0 if paid)">
-<button class="green" onclick="addTenant()">Add Tenant</button>
-</div>
-
-<div class="card">
-<h3>⚙️ My Rent Payment Details (IMPORTANT - Fix for reminders)</h3>
-<p style="font-size:12px;">Tenants will see this when you send reminder. NOT your Till 0141694057.</p>
-<input id="landlordPayMethod" placeholder="e.g: M-Pesa 0712345678 - John, or Till 12345, Paybill 400200 Acc 123">
-<input id="landlordNameForTenant" placeholder="Your name as landlord e.g: John">
-<button class="green" onclick="saveLandlordPayMethod()">Save My Payment Details</button>
-<p id="payMethodSavedMsg" style="color:green; display:none;">✅ Saved! Reminders will now use YOUR pay method</p>
-</div>
-
+<div class="card"><h3>Add Tenant</h3>
+<input id="tName" placeholder="Tenant Name"><input id="tHouse" placeholder="House No"><input id="tPhone" placeholder="2547..."><input id="tRent" type="number" placeholder="Monthly Rent"><input id="tBalance" type="number" placeholder="Balance"><button class="green" onclick="addTenant()">Add Tenant</button></div>
 <div id="tenantsList"></div>
+</div>
 
+<!-- AGENT -->
+<div id="agentSection" style="display:none">
+<div class="card"><h3>Agent Dashboard</h3><p>Your Agent Code: <b id="agentCode"></b></p><p>Pending Approval: <span id="agentPending">0</span> | Approved: <span id="agentCount">0</span></p><p>Total Commission: KSH <span id="agentComm">0</span></p></div>
+<div class="card"><h3>Register New Landlord</h3><p style="font-size:12px">After you register, Admin (0718255742) must approve before landlord can login</p><input id="refLandlordPass" placeholder="New landlord password"><input id="refLandlordPhone" placeholder="Landlord phone 071..."><button class="green" onclick="referLandlord()">Submit For Approval</button></div>
+<div id="agentLandlordsList"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminSection" style="display:none">
+<div class="card"><h3>Admin - Pending Approvals</h3><div id="pendingList"></div></div>
+<div class="card"><h3>Admin - All Landlords</h3><p>Total: <span id="adminTotal"></span> | Revenue: <span id="adminRevenue"></span></p><div id="adminList"></div></div>
+</div>
 </div>
 
 <script>
-let currentUserPassword = "";
-let tenants = [];
+let currentUser="", currentRole="", tenants=[];
+const ADMIN_PASS="0718255742"; // Your admin password = your number
 
 function login(){
-  let pass = document.getElementById('loginPass').value.trim();
-  if(!pass){ alert("Enter password"); return; }
-  currentUserPassword = pass;
+ let pass=document.getElementById('loginPass').value.trim();
+ let role=document.getElementById('roleSelect').value;
+ if(!pass)return alert("Enter password");
+ currentUser=pass; currentRole=role;
 
-  // Check subscription - 30 days
-  let subKey = "sub_" + pass;
-  let subDate = localStorage.getItem(subKey);
-  let now = Date.now();
-  if(!subDate){
-    localStorage.setItem(subKey, now);
-    subDate = now;
-  }
-  let daysPassed = (now - parseInt(subDate)) / (1000*60*60*24);
-  let daysLeftSub = 30 - Math.floor(daysPassed);
+ if(role=="admin" && pass!==ADMIN_PASS){document.getElementById('loginMsg').innerHTML="<span style=color:red>Wrong admin password</span>"; return;}
 
-  if(daysLeftSub <= 0){
-    document.getElementById('loginMsg').innerHTML = "<span style='color:red'>Subscription expired! Pay KSH 1000 to Till 0141694057 then call 0718255742 to activate. Your data is safe!</span>";
-    return;
-  }
+ if(role=="landlord"){
+   // Check if agent registered and needs approval
+   let approval=localStorage.getItem('approval_'+pass);
+   let isDirect=!localStorage.getItem('landlordAgent_'+pass);
+   if(!isDirect && approval!=="approved"){
+     let status=approval==="pending"?"PENDING APPROVAL - Wait for Admin (0718255742) to approve":"NOT FOUND - Ask your Agent to register you";
+     document.getElementById('loginMsg').innerHTML=`<span style=color:orange>${status}. After agent registers, admin must approve.</span>`;
+     return;
+   }
+   let sub=localStorage.getItem("sub_"+pass); let now=Date.now();
+   if(!sub){localStorage.setItem("sub_"+pass,now); sub=now}
+   let daysLeft=30-Math.floor((now-parseInt(sub))/(1000*60*60*24));
+   if(daysLeft<=0){document.getElementById('loginMsg').innerHTML=`<span style=color:red>Subscription expired! Pay Till 0141694057 Call 0718255742. Data safe, waiting for renewal.</span>`; return}
+   document.getElementById('subStatus').innerText="Subscription: "+daysLeft+" days left";
+   let s=localStorage.getItem("tenants_"+pass); if(s)tenants=JSON.parse(s);
+   loadLandlordPayMethod(); renderTenants();
+ }
+ if(role=="agent")renderAgent();
+ if(role=="admin")renderAdmin();
 
-  // Load tenants
-  let saved = localStorage.getItem('tenants_' + pass);
-  if(saved) tenants = JSON.parse(saved);
-
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('mainPage').style.display='block';
-  document.getElementById('subStatus').innerHTML = daysLeftSub + " days left";
-
-  loadLandlordPayMethod();
-  renderTenants();
+ document.getElementById('loginPage').style.display='none';
+ document.getElementById('mainPage').style.display='block';
+ document.getElementById('welcomeText').innerText=role+" : "+pass;
+ document.getElementById('landlordSection').style.display=role=="landlord"?"block":"none";
+ document.getElementById('agentSection').style.display=role=="agent"?"block":"none";
+ document.getElementById('adminSection').style.display=role=="admin"?"block":"none";
 }
+function logout(){location.reload()}
+function saveData(){localStorage.setItem("tenants_"+currentUser,JSON.stringify(tenants))}
+function addTenant(){let t={name:document.getElementById('tName').value,houseNo:document.getElementById('tHouse').value,phone:document.getElementById('tPhone').value,rent:parseInt(document.getElementById('tRent').value)||0,balance:parseInt(document.getElementById('tBalance').value)||0,lastPayDate:Date.now()}; if(!t.name||!t.phone)return alert("Fill name & phone"); tenants.push(t); saveData(); renderTenants();}
+function calculateDaysLeft(d){return 30-Math.floor((Date.now()-d)/(1000*60*60*24))}
+function renderTenants(){let h=""; tenants.forEach((t,i)=>{let dl=calculateDaysLeft(t.lastPayDate); let txt=dl+" days left"; if(dl<=0)txt="OVERDUE "+Math.abs(dl)+" days"; h+=`<div class=card><b>${t.name}</b> Hse ${t.houseNo} ${t.phone}<br>Bal KSH ${t.balance} | ${txt}<br><button class=blue onclick="payTenant(${i})">Pay</button> <button class=green onclick="sendReminder(${i})">WhatsApp Reminder</button> <button class=red onclick="tenants.splice(${i},1);saveData();renderTenants()">Del</button></div>`}); document.getElementById('tenantsList').innerHTML=h; document.getElementById('totalTenants').innerText=tenants.length;}
+function payTenant(i){let a=prompt("Amount paid"); if(!a)return; tenants[i].balance-=parseInt(a); if(tenants[i].balance<0)tenants[i].balance=0; tenants[i].lastPayDate=Date.now(); saveData(); renderTenants();}
 
-function saveData(){
-  localStorage.setItem('tenants_' + currentUserPassword, JSON.stringify(tenants));
-}
-
-function addTenant(){
-  let name = document.getElementById('tName').value;
-  let house = document.getElementById('tHouse').value;
-  let phone = document.getElementById('tPhone').value;
-  let rent = parseInt(document.getElementById('tRent').value) || 0;
-  let balance = parseInt(document.getElementById('tBalance').value) || 0;
-
-  if(!name ||!house ||!phone){ alert("Fill all fields"); return; }
-
-  tenants.push({
-    name, houseNo: house, phone, rent, balance,
-    lastPayDate: Date.now()
-  });
-  saveData();
-  renderTenants();
-  document.getElementById('tName').value=""; document.getElementById('tHouse').value="";
-}
-
-function calculateDaysLeft(lastPayDate){
-  let daysPassed = (Date.now() - lastPayDate) / (1000*60*60*24);
-  return 30 - Math.floor(daysPassed);
-}
-
-function renderTenants(){
-  let html = "";
-  tenants.forEach((t, i)=>{
-    let daysLeft = calculateDaysLeft(t.lastPayDate);
-    let countdownClass = "countdown-green";
-    let countdownText = daysLeft + " days left";
-
-    if(daysLeft <= 5 && daysLeft > 0){ countdownClass = "countdown-yellow"; countdownText = "⚠️ " + daysLeft + " days left!"; }
-    if(daysLeft <= 0){ countdownClass = "countdown-red"; countdownText = "🔴 OVERDUE " + Math.abs(daysLeft) + " days!"; }
-
-    html += `<div class="card">
-      <b>${t.name}</b> - House ${t.houseNo} - ${t.phone}<br>
-      Rent: ${t.rent} | Balance: KSH ${t.balance}<br>
-      <span class="${countdownClass}">${countdownText}</span><br><br>
-      <button class="blue" onclick="payTenant(${i})">Pay</button>
-      <button class="green" onclick="sendReminder(${i})">WhatsApp Reminder</button>
-      <button class="red" onclick="deleteTenant(${i})">Delete</button>
-    </div>`;
-  });
-  document.getElementById('tenantsList').innerHTML = html;
-  document.getElementById('totalTenants').innerText = tenants.length;
-}
-
-function payTenant(i){
-  let amount = prompt("Enter amount paid:");
-  if(!amount) return;
-  amount = parseInt(amount);
-  tenants[i].balance -= amount;
-  if(tenants[i].balance < 0) tenants[i].balance = 0;
-  tenants[i].lastPayDate = Date.now(); // RESET COUNTDOWN 30 DAYS
-  saveData();
-  renderTenants();
-}
-
-function deleteTenant(i){
-  if(confirm("Delete?")){ tenants.splice(i,1); saveData(); renderTenants(); }
-}
-
-// === CORRECTED SETTINGS ===
-function saveLandlordPayMethod(){
-  let payMethod = document.getElementById('landlordPayMethod').value;
-  let landlordName = document.getElementById('landlordNameForTenant').value;
-  if(!payMethod){ alert("Enter how tenants should pay YOU"); return; }
-  localStorage.setItem('landlordPayMethod_' + currentUserPassword, payMethod);
-  localStorage.setItem('landlordName_' + currentUserPassword, landlordName);
-  document.getElementById('payMethodSavedMsg').style.display='block';
-  setTimeout(()=>{ document.getElementById('payMethodSavedMsg').style.display='none'; }, 2000);
-}
-
-function loadLandlordPayMethod(){
-  let saved = localStorage.getItem('landlordPayMethod_' + currentUserPassword);
-  let savedName = localStorage.getItem('landlordName_' + currentUserPassword);
-  if(saved) document.getElementById('landlordPayMethod').value = saved;
-  if(savedName) document.getElementById('landlordNameForTenant').value = savedName;
-}
-
-// === FULLY CORRECTED REMINDER - NO 0141694057 INSIDE ===
+// === FIXED: NO 0141694057 IN REMINDER ===
+function saveLandlordPayMethod(){let p=document.getElementById('landlordPayMethod').value.trim(); let n=document.getElementById('landlordNameForTenant').value.trim(); if(!p){alert("IMPORTANT: Enter YOUR Till/M-Pesa where YOUR tenants should pay. Example: M-Pesa 0712xxx or Till 12345"); return} localStorage.setItem("landlordPayMethod_"+currentUser,p); localStorage.setItem("landlordName_"+currentUser,n); document.getElementById('payMethodSavedMsg').style.display='block'; setTimeout(()=>document.getElementById('payMethodSavedMsg').style.display='none',3000)}
+function loadLandlordPayMethod(){let s=localStorage.getItem("landlordPayMethod_"+currentUser); let sn=localStorage.getItem("landlordName_"+currentUser); if(s)document.getElementById('landlordPayMethod').value=s; if(sn)document.getElementById('landlordNameForTenant').value=sn}
 function sendReminder(i){
-  let t = tenants[i];
-  let myPayMethod = localStorage.getItem('landlordPayMethod_' + currentUserPassword);
-  let myName = localStorage.getItem('landlordName_' + currentUserPassword) || "Your Landlord";
-
-  if(!myPayMethod){
-    alert("⚠️ Please go to Settings and save YOUR M-Pesa / Till first! Otherwise tenant won't know where to pay.");
-    document.getElementById('landlordPayMethod').focus();
-    return;
-  }
-
-  let daysLeft = calculateDaysLeft(t.lastPayDate);
-  let countdownText = daysLeft + " days remaining";
-  if(daysLeft <= 5 && daysLeft > 0) countdownText = "⚠️ ONLY " + daysLeft + " DAYS LEFT!";
-  if(daysLeft <= 0) countdownText = "🔴 OVERDUE! " + Math.abs(daysLeft) + " days late";
-
-  let message = `Hello ${t.name} (House ${t.houseNo}),\n\n` +
-  `Rent Reminder:\n` +
-  `Balance: KSH ${t.balance}\n` +
-  `Countdown: ${countdownText}\n\n` +
-  `How to pay:\n${myPayMethod}\n\n` +
-  `Thank you!\n- ${myName}\nvia KejaChapChap`;
-
-  let whatsappUrl = `https://wa.me/${t.phone}?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank');
+ let t=tenants[i]; let myPay=localStorage.getItem("landlordPayMethod_"+currentUser); let myName=localStorage.getItem("landlordName_"+currentUser)||"Your Landlord";
+ if(!myPay){alert("⚠️ STOP: You have NOT entered YOUR payment details! Go to top section 'Your Rent Payment Method' and enter YOUR M-Pesa/Till first. Tenants cannot pay to 0141694057 - that's for your subscription only!"); document.getElementById('landlordPayMethod').focus(); return}
+ let dl=calculateDaysLeft(t.lastPayDate); let ct=dl+" days remaining"; if(dl<=5&&dl>0)ct="ONLY "+dl+" DAYS LEFT!"; if(dl<=0)ct="OVERDUE! "+Math.abs(dl)+" days late";
+ let msg=`Hello ${t.name} (House ${t.houseNo}),\n\nRent Reminder:\nBalance: KSH ${t.balance}\nCountdown: ${ct}\n\nHow to pay YOUR landlord:\n${myPay}\n\nThank you!\n- ${myName}\nvia KejaChapChap`;
+ window.open(`https://wa.me/${t.phone}?text=${encodeURIComponent(msg)}`,'_blank');
 }
-</script>
-</body>
-</html>
+
+// AGENT WITH APPROVAL
+function renderAgent(){document.getElementById('agentCode').innerText=currentUser; let pending=Object.keys(localStorage).filter(k=>k.startsWith('approval_') && localStorage.getItem('landlordAgent_'+k.replace('approval_',''))==currentUser && localStorage.getItem(k)=="pending").length; let approved=Object.keys(localStorage).filter(k=>k.startsWith('approval_') && localStorage.getItem('landlordAgent_'+k.replace('approval_',''))==currentUser && localStorage.getItem(k)=="approved").length; document.getElementById('agentPending').innerText=pending; document.getElementById('agentCount').innerText=approved; document.getElementById('agentComm').innerText=approved*200; let h=""; Object.keys(localStorage).filter(k=>k.startsWith('approval_')).forEach(k=>{let pass=k.replace('approval_',''); if(localStorage.getItem('landlordAgent_'+pass)==currentUser){let status=localStorage.getItem(k); h+=`<div class=card>Landlord: ${pass} - Status: ${status.toUpperCase()}</div>`}}); document.getElementById('agentLandlordsList').innerHTML=h;}
+function referLandlord(){let np=document.getElementById('refLandlordPass').value.trim(); let ph=document.getElementById('refLandlordPhone').value.trim(); if(!np||!ph)return alert("Enter password & phone"); localStorage.setItem('landlordAgent_'+np,currentUser); localStorage.setItem('landlordPhone_'+np,ph); localStorage.setItem('approval_'+np,"pending"); alert("Submitted! Admin must approve landlord "+np+" before they can login. Call Admin 0718255742"); renderAgent();}
+
+// ADMIN APPROVAL
+function renderAdmin(){let pendingKeys=Object.keys(localStorage).filter(k=>k.startsWith('approval_') && localStorage.getItem(k)=="pending"); let h1=""; if(pendingKeys.length==0)h1="<p>No pending</p>"; pendingKeys.forEach(k=>{let pass=k.replace('approval_',''); let agent=localStorage.getItem('landlordAgent_'+pass)||"Direct"; let phone=localStorage.getItem('landlordPhone_'+pass)||""; h1+=`<div class=card style=border:2px solid orange>Landlord: ${pass} (${phone})<br>Agent: ${agent}<br><button class=green onclick="approveLandlord('${pass}')">✅ Approve</button> <button class=red onclick="rejectLandlord('${pass}')">❌ Reject</button></div>`}); document.getElementById('pendingList').innerHTML=h1; let all=Object.keys(localStorage).filter(k=>k.startsWith('sub_')); document.getElementById('adminTotal').innerText=all.length; let active=0; let h2=""; all.forEach(k=>{let pass=k.replace('sub_',''); let sub=parseInt(localStorage.getItem(k)); let daysLeft=30-Math.floor((Date.now()-sub)/(1000*60*60*24)); let agent=localStorage.getItem('landlordAgent_'+pass)||"Direct"; if(daysLeft>0)active++; h2+=`<div class=card>${pass} | ${daysLeft} days left | Agent: ${agent} <button class=green onclick="localStorage.setItem('${k}',Date.now());renderAdmin()">Renew</button></div>`}); document.getElementById('adminList').innerHTML=h2; document.getElementById('adminRevenue').innerText=active*1000;}
+function approveLandlord(pass){localStorage.setItem('approval_'+pass,"approved"); localStorage.setItem('sub_'+pass,Date.now()); alert("Approved "+pass); renderAdmin();}
+function rejectLandlord(pass){if(confirm("Reject "+pass+"?")){localStorage.removeItem('approval_'+pass); localStorage.removeItem('landlordAgent_'+pass); renderAdmin();}}
+</script></body></html>
