@@ -1,204 +1,261 @@
  <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keja47 - Tafuta Nyumba Kenya | Verified</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keja47 - Find Verified Houses in Kenya</title>
 <style>
-body{font-family:Arial;margin:0;background:#f5f5f5}
-.header{background:#0d6efd;color:white;padding:12px;text-align:center;position:sticky;top:0;z-index:10}
-.search{background:white;padding:10px;display:flex;gap:5px;flex-wrap:wrap;position:sticky;top:60px;z-index:9;box-shadow:0 2px 5px rgba(0,0,0,.1)}
-.search input,.search select{flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;min-width:100px}
-.btn{padding:10px 14px;border-radius:20px;border:none;color:white;font-weight:bold;cursor:pointer}
-.house{background:white;margin:10px;border-radius:12px;overflow:hidden;max-width:600px;margin:auto;box-shadow:0 1px 5px rgba(0,0,0,.1)}
-.house img{width:100%;height:200px;object-fit:cover;background:#eee}
-.info{padding:12px}.price{color:#0d6efd;font-weight:bold;font-size:18px}
-.verified{background:#d4edda;color:#155724;padding:2px 8px;border-radius:10px;font-size:10px}
-</style></head>
+*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6f8;color:#222}
+.header{background:#0d6efd;color:#fff;padding:14px;text-align:center;position:sticky;top:0;z-index:100}
+.search-bar{background:#fff;padding:12px;display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:56px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.search-bar input,.search-bar select{flex:1;padding:11px;border-radius:22px;border:1px solid #ddd;min-width:110px}
+.btn{padding:11px 16px;border-radius:22px;border:none;color:#fff;font-weight:bold;cursor:pointer}
+.btn-blue{background:#0d6efd}.btn-green{background:#25D366}.btn-dark{background:#212529}
+.house{background:#fff;margin:12px auto;border-radius:14px;overflow:hidden;max-width:620px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.house img{width:100%;height:220px;object-fit:cover;background:#eee}
+.info{padding:14px}.price{color:#0d6efd;font-weight:bold;font-size:19px}.badge{background:#d4edda;color:#155724;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:bold}
+.card{background:#fff;max-width:520px;margin:20px auto;padding:22px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.1)}
+.card input,.card select{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:8px}
+.hidden{display:none!important}
+.top-links{text-align:center;padding:10px;font-size:13px}
+.top-links a{margin:0 8px;text-decoration:none;color:#0d6efd;font-weight:bold}
+.small{font-size:12px;color:#666}
+</style>
+</head>
 <body>
+
 <div class="header">
-<h3 style="margin:0">🏠 Keja47 Kenya</h3>
-<small>Verified na Admin 0718 255742 - Hakuna Scam - Tenant anapigia Landlord DIRECT</small>
+<h2 style="margin:0">🏠 Keja47 Kenya</h2>
+<div class="small" style="color:#fff">Verified Houses - Direct to Landlord - No Brokers</div>
 </div>
 
-<div class="search">
-<input id="q" placeholder="🔍 Tafuta: Umoja, Garissa Ndogo...">
-<select id="county"><option value="">County Yote</option><option>Nairobi</option><option>Garissa</option><option>Mombasa</option><option>Nakuru</option><option>Kisumu</option><option>Kiambu</option><option>Eldoret</option></select>
-<select id="type"><option value="">Aina Yote</option><option>Bedsitter</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option><option>Single Room</option></select>
-<button class="btn" style="background:#0d6efd" onclick="doSearch()">Search</button>
-<button class="btn" style="background:#25D366" onclick="doNearby()">📍 Nearby</button>
+<div class="search-bar">
+<input id="q" placeholder="Search estate...">
+<select id="fCounty"><option value="">All Counties</option><option>Nairobi</option><option>Garissa</option><option>Mombasa</option><option>Nakuru</option><option>Kisumu</option><option>Kiambu</option><option>Uasin Gishu</option></select>
+<select id="fType"><option value="">All Types</option><option>Bedsitter</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option></select>
+<button class="btn btn-blue" onclick="doSearch()">Search</button>
+<button class="btn btn-green" onclick="doNearby()">📍 Nearby</button>
 </div>
 
-<div style="text-align:center;padding:8px;font-size:12px">
-<a href="landlord.html">Landlord Login / Post House</a> | <a href="verify.html" style="color:red">🛡️ Verify 199</a> | <a href="admin.html" style="color:black">Admin</a>
+<div class="top-links">
+<a href="#" onclick="showPage('public')">Houses</a>
+<a href="#" onclick="showPage('landlordLogin')">Landlord Login</a>
+<a href="#" onclick="showPage('tenantCheck')">Check My Rent</a>
+<a href="#" onclick="showPage('adminLogin')">Admin</a>
 </div>
 
-<div id="list"></div>
+<!-- PUBLIC PAGE -->
+<div id="page-public">
+<div id="houseList"></div>
+</div>
+
+<!-- LANDLORD LOGIN PAGE -->
+<div id="page-landlordLogin" class="hidden">
+<div class="card">
+<h3 style="text-align:center">Landlord Login</h3>
+<input id="lPhone" placeholder="Phone 07XX">
+<input id="lPass" type="password" placeholder="Password">
+<button class="btn btn-blue" style="width:100%" onclick="landlordLogin()">Login</button>
+<p class="small" style="text-align:center;margin-top:10px">No account? Contact Admin 0718 255742</p>
+</div>
+</div>
+
+<!-- LANDLORD DASHBOARD - ONLY AFTER LOGIN -->
+<div id="page-landlordDash" class="hidden">
+<div class="card">
+<h3>Welcome <span id="dashName"></span></h3>
+<p class="small">Phone: <span id="dashPhone"></span> | Expiry: <b id="dashExp"></b></p>
+<hr>
+<h4>Add New House</h4>
+<input id="hEstate" placeholder="Estate Name e.g Umoja Innercore">
+<select id="hCounty"><option>Nairobi</option><option>Garissa</option><option>Mombasa</option><option>Nakuru</option><option>Kisumu</option><option>Kiambu</option></select>
+<select id="hType"><option>Bedsitter</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option></select>
+<input id="hPrice" type="number" placeholder="Rent KES per month">
+<input id="hDeposit" type="number" placeholder="Deposit KES">
+<input id="hDetails" placeholder="Details: Water, Security, Parking">
+<input id="hImage" placeholder="Image URL (optional)">
+<button class="btn btn-green" style="width:100%" onclick="publishHouse()">Publish House</button>
+<div id="myHousesList" style="margin-top:18px"></div>
+<button class="btn btn-dark" style="width:100%;margin-top:15px" onclick="logout()">Logout</button>
+</div>
+</div>
+
+<!-- TENANT CHECK PAGE -->
+<div id="page-tenantCheck" class="hidden">
+<div class="card">
+<h3 style="text-align:center">Check My Rent Status</h3>
+<input id="tPhone" placeholder="Enter your phone 07XX">
+<button class="btn btn-green" style="width:100%" onclick="checkRent()">Check</button>
+<div id="rentResult" style="margin-top:15px"></div>
+</div>
+</div>
+
+<!-- ADMIN LOGIN PAGE -->
+<div id="page-adminLogin" class="hidden">
+<div class="card">
+<h3 style="text-align:center">Admin Login</h3>
+<input id="aPass" type="password" placeholder="Admin PIN">
+<button class="btn btn-dark" style="width:100%" onclick="adminLogin()">Login</button>
+</div>
+</div>
+
+<!-- ADMIN DASHBOARD - ONLY AFTER LOGIN -->
+<div id="page-adminDash" class="hidden">
+<div class="card" style="max-width:700px">
+<h3>Super Admin - 0718 255742</h3>
+<h4>Register New Landlord</h4>
+<input id="rName" placeholder="Full Name">
+<input id="rPhone" placeholder="Login Phone 07XX">
+<input id="rMpesa" placeholder="M-Pesa Phone for Rent 07XX">
+<input id="rPass" placeholder="Password e.g Ali2026">
+<input id="rExpiry" type="date">
+<button class="btn btn-blue" style="width:100%" onclick="registerLandlord()">Create Landlord & Send WhatsApp</button>
+<hr>
+<h4>All Landlords</h4>
+<div id="allLandlords"></div>
+<hr>
+<h4>All Houses</h4>
+<div id="allHousesAdmin"></div>
+<button class="btn btn-dark" style="width:100%;margin-top:15px" onclick="logout()">Logout</button>
+</div>
+</div>
 
 <script>
-let allHouses = [];
+// DATA
+let landlords = JSON.parse(localStorage.getItem('keja47_landlords')||'[]');
+let houses = JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+let tenants = JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
+let currentLandlord = null;
 
-// Load from both houses.json + localStorage (landlords posting themselves)
-async function load(){
-  let fromJson = [];
-  try{ const r = await fetch('houses.json?v='+Date.now()); fromJson = await r.json(); }catch(e){}
-  let fromLocal = JSON.parse(localStorage.getItem('keja47_houses')||'[]');
-  // Merge
-  allHouses = [...fromJson, ...fromLocal].filter(h=>h.verified);
-  
-  // Demo if empty
-  if(allHouses.length==0){
-    allHouses = [
-      {estate:"Umoja Innercore",county:"Nairobi",type:"1 Bedroom",price:12000,deposit:12000,details:"Maji 24hrs, Token, Parking",landlordPhone:"0718255742",landlordName:"Mark Admin",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",verified:true},
-      {estate:"Garissa Ndogo",county:"Garissa",type:"Bedsitter",price:6000,deposit:6000,details:"Security, Near Soko",landlordPhone:"0718255742",landlordName:"Mark Admin",image:"https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=400",verified:true}
-    ];
-  }
-  render(allHouses);
+// DEFAULT DEMO HOUSES IF EMPTY
+if(houses.length===0){
+houses=[
+{ id:1, estate:"Umoja Innercore Phase 2", county:"Nairobi", type:"1 Bedroom", price:12000, deposit:12000, details:"24hr Water, Token, Secure", landlordPhone:"0718255742", landlordName:"Demo Landlord", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600", verified:true },
+{ id:2, estate:"Garissa Ndogo Market", county:"Garissa", type:"Bedsitter", price:6000, deposit:6000, details:"Water, Security, Near Stage", landlordPhone:"0718255742", landlordName:"Demo Landlord", image:"https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=600", verified:true }
+];
+localStorage.setItem('keja47_houses', JSON.stringify(houses));
 }
 
-function render(list){
-  const div = document.getElementById('list');
-  if(!list.length){div.innerHTML='<p style="text-align:center;padding:30px">Hakuna nyumba kwa search hiyo. Jaribu County nyingine.</p>';return;}
-  div.innerHTML = list.map(h=>`
-    <div class="house">
-      <img src="${h.image}" loading="lazy">
-      <div class="info">
-        <div style="display:flex;justify-content:space-between"><b>${h.estate}</b><span class="verified">✅ VERIFIED</span></div>
-        <small>${h.county} - ${h.type}</small><br>
-        <span class="price">${h.price.toLocaleString()} KES/month</span> | Deposit: <b>${h.deposit.toLocaleString()} KES</b><br>
-        <small>📍 ${h.estate}, ${h.county}</small><br>
-        <small>📝 ${h.details}</small><br>
-        <small>👤 Landlord: ${h.landlordName} - ${h.landlordPhone}</small>
-        <div style="display:flex;gap:5px;margin-top:10px">
-          <button class="btn" style="background:#25D366;flex:1" onclick="window.open('https://wa.me/254${h.landlordPhone.slice(-9)}?text=Habari%20nimeona%20nyumba%20${encodeURIComponent(h.estate)}%20kwa%20Keja47%20-%20Bado%20vacant?','_blank')">💬 WhatsApp DIRECT</button>
-          <button class="btn" style="background:#0d6efd;flex:1" onclick="window.open('tel:${h.landlordPhone}')">📞 Call</button>
-        </div>
-        <div style="background:#fff3cd;padding:6px;border-radius:6px;margin-top:8px;font-size:11px">⚠️ Usilipe bila Verify! <a href="verify.html?estate=${h.estate}">Verify 199 KES</a> - Pata Receipt</div>
-      </div>
-    </div>
-  `).join('');
+// NAVIGATION - SHOW ONLY ONE PAGE
+function showPage(name){
+['public','landlordLogin','landlordDash','tenantCheck','adminLogin','adminDash'].forEach(p=>{
+document.getElementById('page-'+p).classList.add('hidden');
+});
+document.getElementById('page-'+name).classList.remove('hidden');
+if(name==='public') renderHouses(houses);
+if(name==='adminDash') renderAdmin();
 }
 
+function renderHouses(list){
+const div=document.getElementById('houseList');
+if(!list.length){div.innerHTML='<p style="text-align:center;padding:30px">No houses found.</p>';return;}
+div.innerHTML=list.map(h=>`
+<div class="house">
+<img src="${h.image}" onerror="this.src='https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600'">
+<div class="info">
+<div style="display:flex;justify-content:space-between;align-items:center"><b>${h.estate}</b><span class="badge">✓ VERIFIED</span></div>
+<div class="small">${h.county} - ${h.type}</div>
+<div style="margin:6px 0"><span class="price">KES ${h.price}/mo</span> | Deposit: <b>KES ${h.deposit}</b></div>
+<div class="small">📍 ${h.estate}</div>
+<div class="small">📝 ${h.details}</div>
+<div class="small">👤 ${h.landlordName} - ${h.landlordPhone}</div>
+<div style="display:flex;gap:6px;margin-top:12px">
+<button class="btn btn-green" style="flex:1" onclick="window.open('https://wa.me/254${h.landlordPhone.slice(-9)}?text=Hello%20I%20saw%20${encodeURIComponent(h.estate)}%20on%20Keja47','_blank')">WhatsApp</button>
+<button class="btn btn-blue" style="flex:1" onclick="window.open('tel:${h.landlordPhone}')">Call</button>
+</div>
+</div>
+</div>`).join('');
+}
 function doSearch(){
-  const q=document.getElementById('q').value.toLowerCase();
-  const county=document.getElementById('county').value;
-  const type=document.getElementById('type').value;
-  let f=allHouses;
-  if(q) f=f.filter(h=>h.estate.toLowerCase().includes(q) || h.details.toLowerCase().includes(q));
-  if(county) f=f.filter(h=>h.county==county);
-  if(type) f=f.filter(h=>h.type==type);
-  render(f);
+const q=document.getElementById('q').value.toLowerCase();
+const c=document.getElementById('fCounty').value;
+const t=document.getElementById('fType').value;
+let f=houses;
+if(q) f=f.filter(h=>h.estate.toLowerCase().includes(q));
+if(c) f=f.filter(h=>h.county===c);
+if(t) f=f.filter(h=>h.type===t);
+renderHouses(f);
+}
+function doNearby(){ renderHouses(houses); }
+
+// LANDLORD
+function landlordLogin(){
+const ph=document.getElementById('lPhone').value.trim();
+const pw=document.getElementById('lPass').value.trim();
+const l=landlords.find(x=>x.phone===ph && x.password===pw);
+if(!l){alert('Invalid phone or password');return;}
+if(new Date(l.expiry)<new Date()){alert('Account expired. Contact Admin.');return;}
+currentLandlord=l;
+document.getElementById('dashName').innerText=l.name;
+document.getElementById('dashPhone').innerText=l.phone;
+document.getElementById('dashExp').innerText=l.expiry;
+showPage('landlordDash');
+showMyHouses();
+}
+function publishHouse(){
+const h={
+id:Date.now(),
+estate:document.getElementById('hEstate').value,
+county:document.getElementById('hCounty').value,
+type:document.getElementById('hType').value,
+price:document.getElementById('hPrice').value,
+deposit:document.getElementById('hDeposit').value,
+details:document.getElementById('hDetails').value,
+image:document.getElementById('hImage').value || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600',
+landlordPhone:currentLandlord.phone,
+landlordName:currentLandlord.name,
+verified:true
+};
+if(!h.estate||!h.price){alert('Estate and Price required');return;}
+houses.push(h);
+localStorage.setItem('keja47_houses', JSON.stringify(houses));
+alert('House published successfully');
+showMyHouses();
+}
+function showMyHouses(){
+const my=houses.filter(h=>h.landlordPhone===currentLandlord.phone);
+document.getElementById('myHousesList').innerHTML='<h4>My Houses ('+my.length+')</h4>'+my.map(h=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee"><span>${h.estate} - KES ${h.price}</span><button onclick="deleteHouse(${h.id})" style="color:red;border:none;background:none;cursor:pointer">Delete</button></div>`).join('')||'No houses yet';
+}
+function deleteHouse(id){ if(confirm('Delete house?')){ houses=houses.filter(h=>h.id!==id); localStorage.setItem('keja47_houses', JSON.stringify(houses)); showMyHouses(); } }
+
+// TENANT CHECK
+function checkRent(){
+const ph=document.getElementById('tPhone').value.trim();
+const t=tenants.find(x=>x.phone===ph);
+if(!t){document.getElementById('rentResult').innerHTML='<p style="color:red">No record found for '+ph+'</p>';return;}
+document.getElementById('rentResult').innerHTML=`<div style="background:#f8f9fa;padding:12px;border-radius:8px"><b>${t.name}</b><br>House: ${t.estate}<br>Due: ${t.dueDate}<br>Status: <b style="color:${t.paid?'green':'red'}">${t.paid?'PAID':'UNPAID'}</b></div>`;
 }
 
-function doNearby(){
-  if(!navigator.geolocation){alert('Ruhusu location');return;}
-  navigator.geolocation.getCurrentPosition(pos=>{
-    alert('Uko: '+pos.coords.latitude.toFixed(2)+','+pos.coords.longitude.toFixed(2)+' - Tunakuonyesha nyumba zote karibu!');
-    render(allHouses);
-  });
+// ADMIN
+function adminLogin(){
+if(document.getElementById('aPass').value!=='0718255742'){alert('Wrong PIN');return;}
+showPage('adminDash');
 }
-load();
-</script></body></html><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ADMIN - Keja47</title>
-<style>body{font-family:Arial;background:#111;color:white;padding:10px}.card{background:white;color:black;padding:15px;border-radius:10px;margin-bottom:10px;max-width:700px;margin:auto;margin-bottom:15px}input{width:100%;padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:6px;box-sizing:border-box}.btn{padding:10px;border:none;border-radius:6px;color:white;font-weight:bold;cursor:pointer}.blue{background:#0d6efd}.green{background:green}.red{background:red}table{width:100%;font-size:13px;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd}</style></head>
-<body>
-<h2 style="text-align:center">🔐 SUPER ADMIN - Keja47<br>0718 255742</h2>
-<div class="card">
-<h3>+ Sajili Landlord Mpya</h3>
-<input id="lname" placeholder="Jina: Mfano Ali Hassan"><input id="lphone" placeholder="Simu 07XX"><input id="lmpesa" placeholder="M-Pesa yake ya kodi 07XX"><input id="lpass" placeholder="Password: Ali2026"><input id="lexpiry" type="date">
-<button class="btn blue" style="width:100%" onclick="createLandlord()">✅ Create Landlord + Tuma WhatsApp</button>
-</div>
-<div class="card"><h3>👥 Landlords (<span id="lcount">0</span>)</h3><table id="lTable"><tr><th>Jina/MPesa</th><th>Login</th><th>Expiry</th><th>Action</th></tr></table></div>
-<div class="card"><h3>🏠 Nyumba Zote Public</h3><div id="hList"></div></div>
-<p style="text-align:center"><a href="index.html" style="color:white">Public Site</a> | <a href="landlord.html" style="color:white">Landlord Login</a></p>
-<script>
-let landlords=JSON.parse(localStorage.getItem('keja47_landlords')||'[]');
-let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
-function createLandlord(){
-  const l={id:Date.now(),name:lname.value,phone:lphone.value,mpesa:lmpesa.value,password:lpass.value,expiry:lexpiry.value,created:new Date().toLocaleDateString()};
-  if(!l.name||!l.phone||!l.password||!l.expiry){alert('Jaza yote!');return;}
-  landlords.push(l); localStorage.setItem('keja47_landlords',JSON.stringify(landlords));
-  const msg=`Habari ${l.name}, umesajiliwa Keja47! Login: ${l.phone} Pass: ${l.password} Expiry: ${l.expiry} Link: https://mcodoyo.github.io/Keja47/landlord.html`;
-  window.open(`https://wa.me/254${l.phone.slice(1)}?text=${encodeURIComponent(msg)}`,'_blank'); location.reload();
+function registerLandlord(){
+const l={
+id:Date.now(),
+name:document.getElementById('rName').value,
+phone:document.getElementById('rPhone').value,
+mpesa:document.getElementById('rMpesa').value,
+password:document.getElementById('rPass').value,
+expiry:document.getElementById('rExpiry').value
+};
+if(!l.name||!l.phone||!l.password||!l.expiry){alert('Fill all fields');return;}
+landlords.push(l);
+localStorage.setItem('keja47_landlords', JSON.stringify(landlords));
+const msg=`Hello ${l.name}, you are registered on Keja47. Login: ${l.phone} Password: ${l.password} Expiry: ${l.expiry} Link: https://mcodoyo.github.io/Keja47/`;
+window.open(`https://wa.me/254${l.phone.slice(-9)}?text=${encodeURIComponent(msg)}`,'_blank');
+renderAdmin();
 }
-function render(){
-  const t=document.getElementById('lTable'); landlords.forEach(l=>{
-    const exp=new Date(l.expiry)<new Date(); const r=t.insertRow();
-    r.innerHTML=`<td>${l.name}<br><small>${l.mpesa}</small></td><td>${l.phone}<br><b>${l.password}</b></td><td style="color:${exp?'red':'green'}">${l.expiry}${exp?'<br>❌EXPIRED':''}</td><td><button class="btn green" onclick="extend('${l.phone}')">Extend</button> <button class="btn red" onclick="delL(${l.id})">Del</button></td>`;
-  });
-  document.getElementById('lcount').innerText=landlords.length;
-  document.getElementById('hList').innerHTML=houses.map(h=>`🏠 ${h.estate} - ${h.price} KES - ${h.landlordName} (${h.landlordPhone})`).join('<br>')||'Hakuna';
+function renderAdmin(){
+document.getElementById('allLandlords').innerHTML=landlords.map(l=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:13px"><span>${l.name} (${l.phone}) - Exp: ${l.expiry}</span><button onclick="removeLandlord(${l.id})" style="color:red;border:none;background:none">Remove</button></div>`).join('')||'No landlords';
+document.getElementById('allHousesAdmin').innerHTML=houses.map(h=>`<div style="padding:4px 0;font-size:13px">${h.estate} - ${h.county} - KES ${h.price} - ${h.landlordName}</div>`).join('')||'No houses';
 }
-function extend(ph){const d=prompt('Expiry mpya YYYY-MM-DD:'); if(!d)return; landlords=landlords.map(l=>l.phone==ph?{...l,expiry:d}:l); localStorage.setItem('keja47_landlords',JSON.stringify(landlords)); location.reload();}
-function delL(id){if(confirm('Delete?')){landlords=landlords.filter(l=>l.id!=id); localStorage.setItem('keja47_landlords',JSON.stringify(landlords)); location.reload();}}
-render();
-</script></body></html><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Landlord Dashboard - Keja47</title>
-<style>body{font-family:Arial;background:#f0f2f5;padding:10px;margin:0}.card{background:white;padding:15px;border-radius:12px;margin-bottom:15px;max-width:650px;margin:auto;margin-bottom:15px;box-shadow:0 1px 5px rgba(0,0,0,.1)}input,select,textarea{width:100%;padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:6px;box-sizing:border-box}.btn{padding:10px 15px;border:none;border-radius:6px;color:white;font-weight:bold;cursor:pointer;margin:2px}.blue{background:#0d6efd}.green{background:#25D366}.red{background:#dc3545}.orange{background:orange}table{width:100%;font-size:13px;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #eee}.paid{color:green;font-weight:bold}.unpaid{color:red;font-weight:bold}.countdown{font-size:11px;background:#fff3cd;padding:2px 6px;border-radius:10px}</style></head>
-<body>
-<div id="loginDiv" class="card" style="margin-top:40px">
-<h3>🏠 Landlord Login</h3><input id="loginPhone" placeholder="Simu yako 07XX"><input id="loginPass" type="password" placeholder="Password kutoka Admin 0718 255742"><button class="btn blue" style="width:100%" onclick="doLogin()">Login</button><p style="font-size:11px;text-align:center">Huna password? WhatsApp Admin 0718 255742</p>
-</div>
+function removeLandlord(id){ if(confirm('Remove landlord?')){ landlords=landlords.filter(l=>l.id!==id); localStorage.setItem('keja47_landlords', JSON.stringify(landlords)); renderAdmin(); } }
+function logout(){ currentLandlord=null; showPage('public'); }
 
-<div id="dashDiv" style="display:none">
-<div style="max-width:650px;margin:auto">
-<div class="card"><span>Karibu <b id="ln"></b> | MPesa: <b id="lm"></b> | Expiry: <b id="le"></b></span> <button class="btn red" style="float:right" onclick="logout()">Logout</button></div>
-
-<div class="card">
-<h3>🏠 Weka Nyumba Vacant (Public Mara Moja)</h3>
-<input id="estate" placeholder="Estate: Umoja Innercore"><select id="county"><option>Nairobi</option><option>Garissa</option><option>Mombasa</option><option>Nakuru</option><option>Kisumu</option><option>Kiambu</option><option>Eldoret</option></select><select id="type"><option>Bedsitter</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option><option>Single Room</option></select><input id="price" type="number" placeholder="Rent KES"><input id="deposit" type="number" placeholder="Deposit KES"><textarea id="details" placeholder="Maji, Stima, Parking..."></textarea><input id="photo" placeholder="Link ya picha (optional)"><button class="btn blue" style="width:100%" onclick="postHouse()">📤 Weka Nyumba Public - Tenant Atakupigia DIRECT</button>
-</div>
-
-<div class="card">
-<h3>+ Ongeza Mpangaji</h3><input id="tname" placeholder="Jina: Aisha"><input id="tphone" placeholder="Simu 07XX"><input id="troom" placeholder="Chumba: Block A Room 3"><input id="trent" type="number" placeholder="Kodi 8000"><input id="tdate" type="number" placeholder="Due date 5"><button class="btn green" style="width:100%" onclick="addTenant()">💾 Hifadhi Mpangaji</button>
-</div>
-
-<div class="card">
-<h3>📋 Wapangaji Wangu (<span id="tcount">0</span>)</h3><table id="tTable"><tr><th>Jina/Countdown</th><th>Chumba</th><th>Status</th><th>Action</th></tr></table>
-<h4 style="margin-top:15px">💰 Mwezi Huu: Wamelipa <span id="paidC" style="color:green">0</span> | Hawajalipa <span id="unpaidC" style="color:red">0</span> | Jumla: <span id="totalP">0 KES</span></h4>
-<button class="btn green" style="width:100%" onclick="sendAllReminders()">📲 Tuma Reminder WhatsApp kwa Wote Hawajalipa</button>
-</div>
-
-<p style="text-align:center"><a href="index.html">← Public Search</a></p>
-</div>
-</div>
-
-<script>
-let landlords=JSON.parse(localStorage.getItem('keja47_landlords')||'[]');
-let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
-let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
-let current=JSON.parse(localStorage.getItem('keja47_current')||'null');
-
-function doLogin(){const ph=loginPhone.value, pa=loginPass.value; const f=landlords.find(l=>l.phone==ph && l.password==pa); if(!f){alert('Wrong! Piga Admin 0718255742');return;} if(new Date(f.expiry)<new Date()){alert('Password expired '+f.expiry+' Lipa Admin!');return;} localStorage.setItem('keja47_current',JSON.stringify(f)); location.reload();}
-function check(){if(!current){loginDiv.style.display='block'; dashDiv.style.display='none';}else{loginDiv.style.display='none'; dashDiv.style.display='block'; ln.innerText=current.name; lm.innerText=current.mpesa; le.innerText=current.expiry; renderTenants();}}
-function logout(){localStorage.removeItem('keja47_current'); location.reload();}
-
-function postHouse(){
-  const h={id:Date.now(),landlordPhone:current.phone,landlordName:current.name,estate:estate.value,county:county.value,type:type.value,price:parseInt(price.value),deposit:parseInt(deposit.value),details:details.value,image:photo.value||'https://via.placeholder.com/400x200?text='+encodeURIComponent(estate.value),verified:true};
-  if(!h.estate||!h.price){alert('Jaza estate na bei!');return;}
-  houses.push(h); localStorage.setItem('keja47_houses',JSON.stringify(houses)); alert('✅ Nyumba imewekwa Public! Tenant ataku-call DIRECT!'); location.reload();
-}
-
-function addTenant(){
-  const t={id:Date.now(),landlordPhone:current.phone,name:tname.value,phone:tphone.value,room:troom.value,rent:parseInt(trent.value),dueDate:parseInt(tdate.value),paidThisMonth:false,lastPaid:null};
-  if(!t.name||!t.phone){alert('Jaza jina na simu');return;}
-  tenants.push(t); localStorage.setItem('keja47_tenants',JSON.stringify(tenants)); location.reload();
-}
-
-function renderTenants(){
-  const my=tenants.filter(t=>t.landlordPhone==current.phone);
-  const table=document.getElementById('tTable'); let paid=0,unpaid=0,total=0; const today=new Date().getDate();
-  my.forEach(t=>{
-    const days=t.dueDate-today; const cd=days>0?`${days} days left`:days==0?'LEO!':`Overdue ${Math.abs(days)} days`;
-    if(t.paidThisMonth){paid++; total+=t.rent;}else unpaid++;
-    const r=table.insertRow(); r.innerHTML=`<td><b>${t.name}</b><br><small>${t.phone}</small><br><span class="countdown">${cd}</span></td><td>${t.room}<br><small>${t.rent} KES</small></td><td class="${t.paidThisMonth?'paid':'unpaid'}">${t.paidThisMonth?'✅ AMELIPA':'❌ HAJALIPA'}</td><td><button class="btn green" onclick="markPaid(${t.id})">Lipisha</button><br><button class="btn orange" onclick="remindOne('${t.phone}','${t.name}',${t.rent},'${t.room}')">WhatsApp</button><br><button class="btn" style="background:#0084FF" onclick="smsOne('${t.phone}','${t.name}',${t.rent})">SMS</button></td>`;
-  });
-  tcount.innerText=my.length; paidC.innerText=paid; unpaidC.innerText=unpaid; totalP.innerText=total+' KES';
-}
-function markPaid(id){tenants=tenants.map(t=>t.id==id?{...t,paidThisMonth:true,lastPaid:new Date().toLocaleDateString()}:t); localStorage.setItem('keja47_tenants',JSON.stringify(tenants)); location.reload();}
-function remindOne(ph,name,rent,room){const msg=`Habari ${name}, kodi yako ya ${room} ya ${rent} KES inafaa tarehe 5. Lipa kwa ${current.mpesa}. Asante - Keja47`; window.open(`https://wa.me/254${ph.slice(1)}?text=${encodeURIComponent(msg)}`,'_blank');}
-function smsOne(ph,name,rent){const msg=`Habari ${name}, kodi ${rent} KES bado. Lipa ${current.mpesa} - Keja47`; window.open(`sms:${ph}?body=${encodeURIComponent(msg)}`,'_blank');}
-function sendAllReminders(){tenants.filter(t=>t.landlordPhone==current.phone && !t.paidThisMonth).forEach(t=>remindOne(t.phone,t.name,t.rent,t.room));}
-check();
-</script></body></html><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Rent</title><style>body{font-family:Arial;background:#eef2f7;padding:15px}.card{background:white;padding:20px;border-radius:12px;max-width:400px;margin:auto;text-align:center}.big{font-size:32px;font-weight:bold}.paid{color:green}.unpaid{color:red}.btn{padding:12px;background:#25D366;color:white;border:none;border-radius:8px;width:100%;margin-top:10px;font-weight:bold}</style></head><body><div class="card" id="c">Loading...</div><script>
-let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
-const ph=new URLSearchParams(location.search).get('phone');
-const t=tenants.find(x=>x.phone==ph);
-if(!t){c.innerHTML=`<h3>Angalia Kodi Yako</h3><input id="p" placeholder="07XX"><button class="btn" onclick="location.href='tenant.html?phone='+document.getElementById('p').value">Angalia</button>`;}
-else{const days=t.dueDate-new Date().getDate(); c.innerHTML=`<h2>🏠 ${t.room}</h2><p>Habari <b>${t.name}</b></p><div class="big ${t.paidThisMonth?'paid':'unpaid'}">${t.rent} KES</div><p>Due tarehe ${t.dueDate}</p><p class="${t.paidThisMonth?'paid':'unpaid'}" style="font-size:18px;font-weight:bold">${t.paidThisMonth?'✅ UMELIPA!':'❌ Bado - '+days+' days left'}</p><p><small>Last Paid: ${t.lastPaid||'Bado'}</small></p><button class="btn" onclick="window.open('https://wa.me/254718255742?text=Nimeona%20kodi%20yangu','_blank')">💬 Ongea na Landlord</button>`;}
-</script></body></html>
+// INIT
+renderHouses(houses);
+</script>
+</body>
+</html>
