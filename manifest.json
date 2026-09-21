@@ -1,13 +1,15 @@
-{
-  "name": "KejaChapChap - Keja47",
+ {
+  "name": "KejaChapChap",
   "short_name": "KejaChapChap",
-  "start_url": "index.html",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#0d6efd",
-  "theme_color": "#0d6efd",
-  "icons": [{
-    "src": "logo.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }]
+  "background_color": "#2563eb",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "IMG-20260921-WA0618.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
 }
