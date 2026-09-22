@@ -3,125 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keja47 RENT SHIELD - All in One</title>
+<title>KEJA47 - Rent Shield</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(135deg,#e0f7fa 0%,#f1f8e9 100%);font-family:'Segoe UI',sans-serif;padding-bottom:80px}
-.header{background:linear-gradient(90deg,#0d47a1 0%,#00c853 100%);color:white;padding:20px 15px;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(0,0,0,0.2);text-align:center}
-.header h1{font-size:22px;font-weight:900}
-.header p{font-size:13px;opacity:0.95;margin-top:4px}
-.top-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:12px}
-.top-nav button{border:none;padding:10px 14px;border-radius:25px;font-weight:700;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.15);font-size:13px}
-.btn-public{background:#0d47a1;color:white}
-.btn-landlord{background:#00c853;color:white}
-.btn-rent{background:#ff9800;color:white}
-.btn-admin{background:#263238;color:white}
-.card{background:white;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.08);margin:10px;padding:15px}
-.scam-box{background:linear-gradient(135deg,#e3f2fd,#e8f5e9);border-left:6px solid #0d47a1;border-radius:15px}
-input,select,textarea{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ccc;font-size:14px}
-.house-card{background:white;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.1);overflow:hidden;margin:12px 10px}
-.house-card img{width:100%;height:200px;object-fit:cover}
-.house-card .info{padding:12px}
-.badge{display:inline-block;background:#e8f5e9;color:#2e7d32;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.badge-unverified{background:#fff3e0;color:#e65100}
-.hide{display:none}
-.preview-img{width:75px;height:75px;object-fit:cover;border-radius:10px;border:2px solid #00c853}
-.admin-secret{background:#fff8e1;border:2px dashed #ff9800;border-radius:12px;padding:12px;margin-top:10px}
+body{background:#f5f7fb;font-family:'Segoe UI',sans-serif;padding-bottom:20px}
+.header{background:linear-gradient(90deg,#0d47a1 0%,#00c853 100%);color:white;padding:18px 15px;border-radius:0 0 24px 24px;text-align:center;cursor:pointer}
+.header h1{font-size:20px;font-weight:900}
+.nav{display:flex;gap:8px;justify-content:center;padding:12px;flex-wrap:wrap}
+.nav button{border:none;padding:11px 18px;border-radius:24px;font-weight:800;font-size:13px;box-shadow:0 3px 8px rgba(0,0,0,0.12);cursor:pointer}
+.btn-blue{background:#0d47a1;color:white}.btn-green{background:#00c853;color:white}.btn-orange{background:#ff9800;color:white}
+.card{background:white;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.06);margin:10px;padding:14px}
+input,select,textarea{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;font-size:14px}
+.house-card{background:white;border-radius:16px;overflow:hidden;margin:10px;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.house-card img{width:100%;height:190px;object-fit:cover}
+.badge{font-size:10px;padding:4px 8px;border-radius:12px;font-weight:800}.badge-v{background:#e8f5e9;color:#1b5e20}.badge-p{background:#fff3e0;color:#e65100}
+.hide{display:none}.preview{width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid #00c853}.small{font-size:11px;color:#666}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>🏠 Keja47 RENT SHIELD 🔒 - All in One</h1>
-<p>47 Counties | Vacant Houses | Tenants | Scam Check | Receipt + Video | Blacklist</p>
+<div class="header" id="headerTap">
+<h1>🏠 KEJA47 RENT SHIELD</h1>
+<div style="font-size:12px;opacity:0.9;margin-top:3px">47 Counties • Verified Houses • Secure Rent</div>
+</div>
+<div class="nav">
+<button class="btn-blue" onclick="show('public')">🏠 Houses</button>
+<button class="btn-green" onclick="askLandlord()">👤 Landlord</button>
+<button class="btn-orange" onclick="show('tenant')">🧾 My Rent</button>
 </div>
 
-<div style="background:linear-gradient(90deg,#ffeb3b,#ffc107);padding:8px 12px;text-align:center;font-size:12px;font-weight:700;border-radius:0 0 12px 12px;margin:0 10px;">
-⚠️ Scam Check by Admin | Deposit Video Proof = Refund Guarantee | Admin Sets Fee - No Hardcode
+<div id="publicSec">
+<div class="card" style="display:flex;gap:8px;flex-wrap:wrap">
+<input id="sEstate" placeholder="Search estate..." style="flex:2;min-width:120px">
+<select id="sCounty" style="flex:1;min-width:130px"><option value="">All 47 Counties</option><option>Baringo</option><option>Bomet</option><option>Bungoma</option><option>Busia</option><option>Elgeyo-Marakwet</option><option>Embu</option><option>Garissa</option><option>Homa Bay</option><option>Isiolo</option><option>Kajiado</option><option>Kakamega</option><option>Kericho</option><option>Kiambu</option><option>Kilifi</option><option>Kirinyaga</option><option>Kisii</option><option>Kisumu</option><option>Kitui</option><option>Kwale</option><option>Laikipia</option><option>Lamu</option><option>Machakos</option><option>Makueni</option><option>Mandera</option><option>Marsabit</option><option>Meru</option><option>Migori</option><option>Mombasa</option><option>Murang'a</option><option>Nairobi</option><option>Nakuru</option><option>Nandi</option><option>Narok</option><option>Nyamira</option><option>Nyandarua</option><option>Nyeri</option><option>Samburu</option><option>Siaya</option><option>Taita-Taveta</option><option>Tana River</option><option>Tharaka-Nithi</option><option>Trans Nzoia</option><option>Turkana</option><option>Uasin Gishu</option><option>Vihiga</option><option>Wajir</option><option>West Pokot</option></select>
+<button onclick="loadPublic()" style="background:#0d47a1;color:white;border:none;padding:10px 18px;border-radius:20px;font-weight:800">Search</button>
+</div>
+<div id="publicList"></div>
 </div>
 
-<div class="top-nav">
-<button class="btn-public" onclick="showSection('public')">🏠 Public Houses (47 Counties)</button>
-<button class="btn-landlord" onclick="askLandlordPass()">👤 Landlord Panel</button>
-<button class="btn-rent" onclick="showSection('rent')">🧾 My Rent + Receipt</button>
-<button class="btn-admin" onclick="askAdminPass()">🔒 Admin Panel</button>
-</div>
-
-<div class="card scam-box">
-<b>🔍 SCAM CHECK - Verify Any House Before Paying Deposit</b><br>
-<small>Protected by Admin | Video Proof = Refund Guarantee</small>
-<input id="scamLink" placeholder="Paste Facebook / Jiji link or Estate Name" style="margin-top:8px">
-<button onclick="requestVerification()" style="width:100%;margin-top:8px;background:linear-gradient(90deg,#ff9800,#f57c00);color:white;padding:13px;border:none;border-radius:25px;font-weight:900;">Request Verification - Contact Admin</button>
-<small style="color:#555;display:block;margin-top:6px;">Fee decided by Admin - WhatsApp 0718 255742 for quote (No fixed price displayed)</small>
-</div>
-
-<div class="card">
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<input id="searchEstate" placeholder="Search estate..." style="flex:1">
-<select id="searchCounty" style="flex:1"><option value="">All 47 Counties</option><option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option></select>
-<button onclick="filterHouses()" style="background:#0d47a1;color:white;border:none;padding:10px 20px;border-radius:25px">Search</button>
-</div>
-</div>
-
-<div id="publicSection"><div id="publicList"></div></div>
-
-<div id="landlordSection" class="hide">
-<div class="card" style="border-top:5px solid #00c853">
-<h3>🏠 Post New Vacant House - Public Advert</h3>
-<input id="estateName" placeholder="Estate e.g Bulla, Garissa Ndogo">
-<select id="county"><option>Garissa</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>All 47 Counties</option></select>
-<select id="houseType"><option>Bedsitter</option><option>Single Room</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option></select>
-<input id="rent" type="number" placeholder="Rent KSH per month">
-<textarea id="desc" placeholder="Description: Water 24/7, tokens..."></textarea>
-<input id="landlordContact" placeholder="Your WhatsApp Number e.g 0718...">
-<label style="background:#e8f5e9;padding:12px;border-radius:12px;display:block;border:2px dashed #00c853;margin:8px 0;">
-📸 Add House Pictures (Up to 4) - For Advert
-<input type="file" id="housePics" accept="image/*" multiple onchange="previewPics(this)" style="margin-top:6px">
+<div id="landlordSec" class="hide">
+<div class="card" style="border-top:4px solid #00c853">
+<h3>👤 Landlord Panel - Post House</h3>
+<input id="lName" placeholder="Landlord Full Name">
+<input id="lPhone" placeholder="Landlord WhatsApp e.g 0718...">
+<input id="lIdNo" placeholder="ID Number">
+<hr style="margin:10px 0">
+<h4>🏠 House Details - Set Your Rent</h4>
+<input id="hEstate" placeholder="Estate Name e.g Garissa Ndogo Market">
+<select id="hCounty"><option>Baringo</option><option>Bomet</option><option>Bungoma</option><option>Busia</option><option>Elgeyo-Marakwet</option><option>Embu</option><option>Garissa</option><option>Homa Bay</option><option>Isiolo</option><option>Kajiado</option><option>Kakamega</option><option>Kericho</option><option>Kiambu</option><option>Kilifi</option><option>Kirinyaga</option><option>Kisii</option><option>Kisumu</option><option>Kitui</option><option>Kwale</option><option>Laikipia</option><option>Lamu</option><option>Machakos</option><option>Makueni</option><option>Mandera</option><option>Marsabit</option><option>Meru</option><option>Migori</option><option>Mombasa</option><option>Murang'a</option><option>Nairobi</option><option>Nakuru</option><option>Nandi</option><option>Narok</option><option>Nyamira</option><option>Nyandarua</option><option>Nyeri</option><option>Samburu</option><option>Siaya</option><option>Taita-Taveta</option><option>Tana River</option><option>Tharaka-Nithi</option><option>Trans Nzoia</option><option>Turkana</option><option>Uasin Gishu</option><option>Vihiga</option><option>Wajir</option><option>West Pokot</option></select>
+<select id="hType"><option>Bedsitter</option><option>Single Room</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option><option>Maisonette</option></select>
+<input id="hRent" type="number" placeholder="Set Rent KSH per month e.g 8000">
+<textarea id="hDesc" placeholder="House features: water, parking, tokens..."></textarea>
+<label style="background:#e8f5e9;padding:10px;border-radius:10px;display:block;border:1.5px dashed #00c853;margin:6px 0">
+📸 House Pictures (max 4) - Public Advert
+<input type="file" id="hPics" accept="image/*" multiple onchange="preview()">
 </label>
-<div id="preview" style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0"></div>
-<button onclick="publishHouse()" style="background:linear-gradient(90deg,#0d47a1,#00c853);color:white;width:100%;padding:14px;border:none;border-radius:25px;font-weight:900;">✅ Publish to Public</button>
-<div id="myHousesList" style="margin-top:15px"></div>
+<div id="previewBox" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+<button onclick="postHouse()" style="background:linear-gradient(90deg,#0d47a1,#00c853);color:white;width:100%;padding:13px;border:none;border-radius:24px;font-weight:900;margin-top:8px">✅ Publish House</button>
+</div>
+<div class="card" style="border-top:4px solid #ff9800">
+<h3>🧑‍🤝‍🧑 Register Tenant (View Only)</h3>
+<small class="small">Tenant can only VIEW - cannot edit</small>
+<select id="tHouseSelect"></select>
+<input id="tName" placeholder="Tenant Full Name">
+<input id="tPhone" placeholder="Tenant Phone e.g 0712...">
+<input id="tId" placeholder="Tenant ID Number">
+<input id="tUnit" placeholder="House Unit No e.g A1">
+<input id="tRentPaid" type="number" placeholder="Rent Paid KSH">
+<button onclick="registerTenant()" style="background:#ff9800;color:white;width:100%;padding:12px;border:none;border-radius:24px;font-weight:800;margin-top:6px">➕ Register Tenant</button>
+<div id="myTenants" style="margin-top:10px"></div>
+</div>
+<div class="card"><h4>📋 My Posted Houses</h4><div id="myHouses"></div></div>
+</div>
+
+<div id="tenantSec" class="hide">
+<div class="card">
+<h3>🧾 My Rent - View Only</h3>
+<small class="small">Enter phone landlord used to register you</small>
+<input id="vtPhone" placeholder="Enter Your Phone">
+<button onclick="viewTenant()" style="background:#0d47a1;color:white;width:100%;padding:12px;border:none;border-radius:24px;font-weight:800">View My Details</button>
+<div id="tenantDetails" style="margin-top:12px"></div>
 </div>
 </div>
 
-<div id="rentSection" class="hide">
-<div class="card"><h3>🧾 My Rent</h3><input id="tenantPhone" placeholder="Enter your phone"><button onclick="alert('Receipt feature')" style="background:#ff9800;color:white;border:none;padding:10px 20px;border-radius:20px;margin-top:8px">Check My Rent</button></div>
+<div id="adminSec" class="hide">
+<div class="card" style="border:2px solid #c62828">
+<h3 style="color:#c62828">🔒 ADMIN ONLY - Victor (Hidden)</h3>
+<small>Tap header 5x to open - Public cannot see</small>
+<div style="margin-top:12px"><h4>🏠 Houses + Landlords to Verify</h4><div id="adminHouses"></div></div>
+<div style="margin-top:15px"><h4>👥 Landlords Registered</h4><div id="adminLandlords"></div></div>
+<div style="margin-top:15px"><h4>🧑‍🤝‍🧑 Tenants Registered</h4><div id="adminTenants"></div></div>
+<div style="margin-top:15px;background:#fff8e1;padding:10px;border-radius:10px">
+<input id="newLPass" placeholder="New landlord password"><button onclick="changeLPass()" style="background:#263238;color:white;border:none;padding:8px 14px;border-radius:20px;margin-top:6px">Save Password</button>
 </div>
-
-<div id="adminSection" class="hide">
-<div class="card" style="border-top:5px solid #263238">
-<h3>🔒 Admin Panel - Secret Settings</h3>
-<div class="admin-secret">
-<label><b>Set Verification Fee (Secret - Not Public)</b></label>
-<input id="adminFee" type="number" placeholder="e.g 250">
-<button onclick="saveFee()" style="background:#ff9800;color:white;border:none;padding:8px 16px;border-radius:20px;margin-top:5px">Save Fee Secretly</button>
-<p style="font-size:11px;">Current secret fee: <span id="currentFee">Not set</span></p>
-</div>
-<div class="admin-secret">
-<label><b>Set Landlord Password (Secret)</b></label>
-<input id="adminLandlordPass" type="text" placeholder="Set new secret password">
-<button onclick="saveLandlordPass()" style="background:#263238;color:white;border:none;padding:8px 16px;border-radius:20px;margin-top:5px">Save Password</button>
-</div>
-<div id="adminHouseVerify" style="margin-top:10px"></div>
 </div>
 </div>
 
 <script>
-let houseImagesBase64=[];
-let landlordPassword=localStorage.getItem('keja47_landlordPass')||'keja47landlord';
-function askLandlordPass(){let p=prompt('Enter Landlord Password (Ask Admin 0718 255742)');if(p===landlordPassword){showSection('landlord');}else if(p!==null){alert('Wrong! Contact Admin');}}
-function askAdminPass(){let p=prompt('Enter Admin Password');if(p==='VictorAdmin47'||p==='mcodoyo'){showSection('admin');loadAdmin();}else if(p!==null){alert('Wrong admin');}}
-function showSection(n){['public','landlord','rent','admin'].forEach(s=>document.getElementById(s+'Section').classList.add('hide'));document.getElementById(n+'Section').classList.remove('hide');if(n==='public')showPublicHouses();}
-function previewPics(input){houseImagesBase64=[];document.getElementById('preview').innerHTML='';Array.from(input.files).slice(0,4).forEach(file=>{let r=new FileReader();r.onload=e=>{houseImagesBase64.push(e.target.result);document.getElementById('preview').innerHTML+=`<img src="${e.target.result}" class="preview-img">`;};r.readAsDataURL(file);});}
-function publishHouse(){let estate=document.getElementById('estateName').value.trim(),county=document.getElementById('county').value,type=document.getElementById('houseType').value,rent=document.getElementById('rent').value,desc=document.getElementById('desc').value,contact=document.getElementById('landlordContact').value;if(!estate||!rent)return alert('Fill estate and rent');let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');houses.unshift({id:Date.now(),estate,county,type,rent,desc,contact,pics:houseImagesBase64,verified:false,date:new Date().toLocaleDateString()});localStorage.setItem('keja47_houses',JSON.stringify(houses));alert('✅ Published to Public!');showSection('public');}
-function showPublicHouses(){let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');let sE=(document.getElementById('searchEstate')?.value||'').toLowerCase(),sC=document.getElementById('searchCounty')?.value||'';let f=houses.filter(h=>(!sE||h.estate.toLowerCase().includes(sE))&&(!sC||h.county===sC));let html='';if(f.length===0)html=`<div class="card" style="text-align:center;padding:30px">No houses yet. Landlord click Landlord Panel.</div>`;f.forEach(h=>{let first=h.pics&&h.pics[0]?h.pics[0]:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600';html+=`<div class="house-card"><img src="${first}"><div class="info"><b>🏠 ${h.estate} - ${h.county}</b> <span class="${h.verified?'badge':'badge badge-unverified'}">${h.verified?'✅ Verified':'⏳ Pending'}</span><div>${h.type} | KSH ${h.rent}</div><div style="font-size:12px;color:#555">${h.desc}</div>${h.pics&&h.pics.length>1?`<div style="display:flex;gap:4px;margin-top:8px">${h.pics.slice(1,4).map(p=>`<img src="${p}" style="width:50px;height:50px;object-fit:cover;border-radius:8px">`).join('')}</div>`:''}<div style="display:flex;gap:6px;margin-top:10px"><button onclick="contactLandlord('${h.contact}','${h.estate}')" style="flex:1;background:#25D366;color:white;border:none;padding:10px;border-radius:20px;font-weight:700">💬 WhatsApp Landlord</button><button onclick="requestVerification()" style="flex:1;background:#e3f2fd;color:#0d47a1;border:1px solid #0d47a1;padding:10px;border-radius:20px;font-weight:700">🔍 Scam Check</button></div><small>${h.date}</small></div></div>`;});document.getElementById('publicList').innerHTML=html;}
-function filterHouses(){showSection('public');showPublicHouses();}
-function contactLandlord(c,e){if(!c)return alert('Ask Admin 0718 255742');window.open(`https://wa.me/254${c.replace(/^0/,'')}?text=Interested in ${encodeURIComponent(e)} from Keja47`);}
-function requestVerification(){let l=document.getElementById('scamLink')?.value||'';window.open(`https://wa.me/254718255742?text=Hello Admin verify: ${encodeURIComponent(l)}`);}
-function saveFee(){let f=document.getElementById('adminFee').value;localStorage.setItem('keja47_fee',f);document.getElementById('currentFee').innerText='KSH '+f+' (SECRET)';alert('Fee saved secretly!');}
-function saveLandlordPass(){let p=document.getElementById('adminLandlordPass').value;if(!p)return alert('Enter password');localStorage.setItem('keja47_landlordPass',p);landlordPassword=p;alert('Password changed to: '+p);}
-function loadAdmin(){let fee=localStorage.getItem('keja47_fee')||'Not set';document.getElementById('currentFee').innerText=fee!=='Not set'?'KSH '+fee:'Not set';let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');document.getElementById('adminHouseVerify').innerHTML=houses.map(h=>`<div style="border:1px solid #ddd;padding:8px;border-radius:10px;margin:6px 0"><b>${h.estate}</b> - ${h.rent} <button onclick="verifyHouse(${h.id})" style="background:#00c853;color:white;border:none;padding:4px 10px;border-radius:15px">${h.verified?'Verified':'Verify'}</button></div>`).join('');}
-function verifyHouse(id){let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');let h=houses.find(x=>x.id===id);if(h)h.verified=true;localStorage.setItem('keja47_houses',JSON.stringify(houses));loadAdmin();showPublicHouses();}
-showPublicHouses();
+let pics=[];
+let tapCount=0;
+let landlordPass=localStorage.getItem('keja47_lPass')||'keja47';
+document.getElementById('headerTap').addEventListener('click',()=>{
+  tapCount++;
+  if(tapCount>=5){
+    let p=prompt('Admin Password:');
+    if(p==='Victor47'||p==='mcodoyo'||p==='0718255742'){
+      show('admin'); loadAdmin();
+    }
+    tapCount=0;
+  }
+  setTimeout(()=>tapCount=0,3000);
+});
+function show(s){
+  ['public','landlord','tenant','admin'].forEach(x=>document.getElementById(x+'Sec').classList.add('hide'));
+  document.getElementById(s+'Sec').classList.remove('hide');
+  if(s==='public') loadPublic();
+  if(s==='landlord') loadLandlord();
+}
+function askLandlord(){
+  let p=prompt('Landlord Password - Ask Admin 0718 255742');
+  if(p===landlordPass) show('landlord');
+  else if(p!==null) alert('Wrong - Contact Admin 0718 255742');
+}
+function preview(){
+  pics=[];
+  let box=document.getElementById('previewBox');
+  box.innerHTML='';
+  let files=Array.from(document.getElementById('hPics').files).slice(0,4);
+  files.forEach(f=>{
+    let r=new FileReader();
+    r.onload=e=>{
+      pics.push(e.target.result);
+      box.innerHTML+=`<img src="${e.target.result}" class="preview">`;
+    };
+    r.readAsDataURL(f);
+  });
+}
+function postHouse(){
+  let landlord={
+    name:document.getElementById('lName').value.trim(),
+    phone:document.getElementById('lPhone').value.trim(),
+    id:document.getElementById('lIdNo').value.trim()
+  };
+  let rentVal=document.getElementById('hRent').value.trim();
+  let estateVal=document.getElementById('hEstate').value.trim();
+  if(!estateVal||!rentVal||!landlord.name) return alert('Fill Landlord Name, Estate, and RENT (important!)');
+  let house={
+    id:Date.now(),
+    estate:estateVal,
+    county:document.getElementById('hCounty').value,
+    type:document.getElementById('hType').value,
+    rent:rentVal,
+    desc:document.getElementById('hDesc').value||'No description',
+    landlord:landlord,
+    pics:[...pics],
+    verified:false,
+    date:new Date().toLocaleDateString()
+  };
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  houses.unshift(house);
+  localStorage.setItem('keja47_houses', JSON.stringify(houses));
+  let landlords=JSON.parse(localStorage.getItem('keja47_landlords')||'[]');
+  if(!landlords.find(l=>l.phone===landlord.phone)){
+    landlords.push(landlord);
+    localStorage.setItem('keja47_landlords', JSON.stringify(landlords));
+  }
+  alert('✅ Published: '+estateVal+' KSH '+rentVal+' - Pending Admin Verification');
+  document.getElementById('hEstate').value=''; document.getElementById('hRent').value=''; document.getElementById('hDesc').value='';
+  pics=[]; document.getElementById('previewBox').innerHTML='';
+  show('public');
+}
+function loadPublic(){
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  let qE=(document.getElementById('sEstate').value||'').toLowerCase();
+  let qC=document.getElementById('sCounty').value;
+  let filtered=houses.filter(h=>(!qE||h.estate.toLowerCase().includes(qE)) && (!qC||h.county===qC));
+  let html='';
+  if(filtered.length===0) html='<div class="card" style="text-align:center;color:#777">No houses in this county yet. Landlords post here.</div>';
+  filtered.forEach(h=>{
+    let first=h.pics&&h.pics[0]?h.pics[0]:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600';
+    let rentDisplay = (h.rent && h.rent!=='undefined') ? h.rent : '0';
+    html+=`<div class="house-card"><img src="${first}"><div style="padding:10px"><div style="display:flex;justify-content:space-between;align-items:center"><b>🏠 ${h.estate} - ${h.county}</b><span class="${h.verified?'badge badge-v':'badge badge-p'}">${h.verified?'✅ Verified':'⏳ Pending'}</span></div><div style="font-size:13px;margin:4px 0">${h.type} | <b>KSH ${rentDisplay}</b> /mo</div><div class="small">${h.desc}</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="contactL('${h.landlord.phone}','${h.estate}')" style="flex:1;background:#25D366;color:white;border:none;padding:10px;border-radius:20px;font-weight:700">WhatsApp Landlord</button><button onclick="document.getElementById('vtPhone').value=''; show('tenant')" style="flex:1;background:#e3f2fd;color:#0d47a1;border:1px solid #0d47a1;padding:10px;border-radius:20px;font-weight:700">View Details</button></div><div class="small" style="margin-top:5px">Landlord: ${h.landlord.name} • ${h.date}</div></div></div>`;
+  });
+  document.getElementById('publicList').innerHTML=html;
+  let sel=document.getElementById('tHouseSelect');
+  if(sel) sel.innerHTML=houses.map(h=>`<option value="${h.id}">${h.estate} - KSH ${h.rent}</option>`).join('');
+}
+function loadLandlord(){
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  document.getElementById('myHouses').innerHTML=houses.slice(0,10).map(h=>`<div style="padding:6px;border-bottom:1px solid #eee"><b>${h.estate}</b> - KSH ${h.rent} - ${h.verified?'✅ Verified':'⏳ Pending Admin'}</div>`).join('')||'No houses yet';
+  let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
+  document.getElementById('myTenants').innerHTML=tenants.slice(0,10).map(t=>`<div style="padding:6px;border-bottom:1px solid #eee">${t.name} - ${t.phone} - ${t.houseEstate} Unit ${t.unit}</div>`).join('')||'No tenants';
+  loadPublic();
+}
+function registerTenant(){
+  let hid=document.getElementById('tHouseSelect').value;
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  let house=houses.find(h=>h.id==hid);
+  let tenant={
+    id:Date.now(),
+    houseId:hid,
+    houseEstate:house?house.estate:'',
+    rent:house?house.rent:'',
+    name:document.getElementById('tName').value.trim(),
+    phone:document.getElementById('tPhone').value.trim(),
+    idNo:document.getElementById('tId').value.trim(),
+    unit:document.getElementById('tUnit').value.trim(),
+    paid:document.getElementById('tRentPaid').value,
+    date:new Date().toLocaleDateString()
+  };
+  if(!tenant.name||!tenant.phone) return alert('Fill tenant name and phone');
+  let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
+  tenants.unshift(tenant);
+  localStorage.setItem('keja47_tenants', JSON.stringify(tenants));
+  alert('✅ Tenant Registered - Can view in My Rent (view only)');
+  loadLandlord();
+}
+function viewTenant(){
+  let phone=document.getElementById('vtPhone').value.trim();
+  let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  let t=tenants.find(x=>x.phone===phone);
+  if(!t) return document.getElementById('tenantDetails').innerHTML='<div class="card" style="background:#ffebee">No details found for this phone. Ask landlord to register you.</div>';
+  let h=houses.find(x=>x.id==t.houseId);
+  document.getElementById('tenantDetails').innerHTML=`<div class="card" style="border:2px solid #00c853"><h4>🧾 Tenant Details - View Only</h4><p><b>Name:</b> ${t.name}</p><p><b>Phone:</b> ${t.phone}</p><p><b>ID:</b> ${t.idNo}</p><p><b>Estate:</b> ${t.houseEstate} ${h?'- '+h.county:''}</p><p><b>Unit:</b> ${t.unit}</p><p><b>Rent:</b> KSH ${t.rent}/mo</p><p><b>Paid:</b> KSH ${t.paid||'0'}</p><p><b>Date:</b> ${t.date}</p><p style="background:#e8f5e9;padding:8px;border-radius:8px;margin-top:8px">Landlord: ${h?h.landlord.name:''} - ${h?h.landlord.phone:''}</p><small class="small">You cannot edit - contact landlord for changes</small></div>`;
+}
+function contactL(phone,estate){
+  if(!phone) return alert('Contact Admin 0718 255742');
+  window.open(`https://wa.me/254${phone.replace(/^0/,'')}?text=Hello, interested in ${encodeURIComponent(estate)} from Keja47`);
+}
+function loadAdmin(){
+  let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]');
+  document.getElementById('adminHouses').innerHTML=houses.map(h=>`<div style="border:1px solid #ddd;padding:8px;border-radius:10px;margin:5px 0"><b>${h.estate}</b> (${h.county}) - KSH ${h.rent}<br><small>Landlord: ${h.landlord.name} - ${h.landlord.phone} - ID ${h.landlord.id}</small><br><button onclick="verifyH(${h.id})" style="background:${h.verified?'#888':'#00c853'};color:white;border:none;padding:5px 12px;border-radius:15px;margin-top:4px">${h.verified?'Verified':'Verify House'}</button> <button onclick="delH(${h.id})" style="background:#c62828;color:white;border:none;padding:5px 10px;border-radius:15px">Delete</button></div>`).join('')||'No houses';
+  let landlords=JSON.parse(localStorage.getItem('keja47_landlords')||'[]');
+  document.getElementById('adminLandlords').innerHTML=landlords.map(l=>`<div style="padding:6px;border-bottom:1px solid #eee">${l.name} - ${l.phone} - ID ${l.id}</div>`).join('')||'No landlords yet';
+  let tenants=JSON.parse(localStorage.getItem('keja47_tenants')||'[]');
+  document.getElementById('adminTenants').innerHTML=tenants.map(t=>`<div style="padding:6px;border-bottom:1px solid #eee">${t.name} - ${t.phone} - ${t.houseEstate} - KSH ${t.rent}</div>`).join('')||'No tenants yet';
+}
+function verifyH(id){let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]'); let h=houses.find(x=>x.id===id); if(h) h.verified=true; localStorage.setItem('keja47_houses', JSON.stringify(houses)); loadAdmin(); loadPublic();}
+function delH(id){if(!confirm('Delete this house?')) return; let houses=JSON.parse(localStorage.getItem('keja47_houses')||'[]').filter(x=>x.id!==id); localStorage.setItem('keja47_houses', JSON.stringify(houses)); loadAdmin(); loadPublic();}
+function changeLPass(){let p=document.getElementById('newLPass').value; if(!p) return alert('Enter password'); localStorage.setItem('keja47_lPass',p); landlordPass=p; alert('Landlord password changed to: '+p+' - Tell landlords');}
+loadPublic();
 </script>
 </body>
 </html>
